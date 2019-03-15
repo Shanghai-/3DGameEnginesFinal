@@ -1,0 +1,84 @@
+WARMUP2
+
+I will elaborate on this more later, but basically the MainScreen of my warmup
+app now creates a bunch of GameObjects with Components and shoves them into a
+GameWorld with matching systems, which takes care of all of the logic for it.
+This is rad and makes me feel good. Currently the input handling for the
+player is built into the Physics component, which is bad and makes me feel not
+good, but I don't have the time to fix it atm. Otherwise, things are honestly
+pretty okay in here, though admittedly the commenting is garbage.
+
+No ruberic in the folder :(
+
+====================================
+WARMUP1
+
+I implemented my engine framing (Application and Screen) pretty much exactly following
+the slides from class. I used a vector to keep track of Screens in the Application,
+which allows for multiple screens to be active and drawing over each other at any given
+time. I was also planning to allow screens to consume or pass inputs, so that lower
+screens in the stack could still get inputs if upper screens wanted to let them, but I
+decided to hold off on that because during my design check I learned that input
+handling will change slightly in the next project.
+
+The actual game is a single screen, where the player tracks its acceleration,
+velocity, and position and does basic hack-y physics to move and jump. The controls
+are standard (WASD move, mouse look, space jump).
+
+
+[ ] - Basic Requirements
+[ ] - Full Requirements
+[ ] - Extra Requirements
+Total: -/3
+
+
+
+========================================
+Basic Requirements
+========================================
+[ ] - Handin only crashes on edge cases
+[ ] - Your game renders a quad in 3D
+[ ] - Moving the mouse pans the camera
+[ ] - Pressing W, A, S, or D moves the camera
+
+
+Primary Requirements
+========================================
+    Engine
+    ====================================
+    [ ] - Screen management
+        [ ] - Virtual Application class representing a whole game which supports:
+            [ ] - Timed updates (tick)
+            [ ] - Render events (draw)
+            [ ] - Input events (mouse and keyboard)
+            [ ] - Window size updates (resize)
+            [ ] - Adding and removing screens
+            [ ] - Switching screens
+        [ ] - Virtual Screen class representing a logical subscreen of a game which (minimally) supports:
+            [ ] - Timed updates (tick)
+            [ ] - Render events (draw)
+            [ ] - Input events (mouse and keyboard)
+            [ ] - Window size updates (resize)
+    [ ] - Your engine uses the provided Camera object, or you’ve built your own Camera object
+    [ ] - Your engine uses the provided Graphics object, or you’ve built your own Graphics object
+
+
+    Game
+    ====================================
+    [ ] - Game never crashes
+    [ ] - Game runs on department machines at 20+ FPS
+    [ ] - Ground consists of planar geometry with a grass texture
+    [ ] - The player can move using standard first person camera controls, meaning:
+    [ ] - Horizontal mouse movements change the yaw of the camera
+        [ ] - Vertical mouse movements change the pitch of the camera
+        [ ] - Standard WASD keyboard controls (W moves forwards, S moves backwards, A strafes left, D strafes right) change the eye of the camera
+
+
+Extra Credit
+======================================
+[ ] - The player must never fall through the ground at y = 0
+[ ] - The player must be able to jump off the ground using the spacebar or a mouse button
+[ ] - Gravity must act downwards on the player
+[ ] - The player can only jump when on the ground
+[ ] - The game must have at least two screens, one of which requires player input to get to the other
+[ ] - The ground must consist of planar geometry with a *tiled* grass texture

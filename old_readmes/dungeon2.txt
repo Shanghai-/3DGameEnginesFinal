@@ -1,0 +1,92 @@
+For this week I bring you no new features and all refactoring!
+
+I have rewritten a huge chunk of my game engine to support a totally different
+design paradigm and make several things less unsafe. Overview of changes:
+
+ - Complete separation of Systems and Components on a theoretical level.
+   Systems CANNOT store state, and Components CANNOT modify state. Components
+   are basically collections of data with fancy accessors, but have no behaviors
+   of their own, while Systems are free to operate over collections of
+   Components but MAY NOT store state.
+
+ - All Systems in the GameWorld are now held in shared_pointers instead of raw
+   pointers
+
+ - The System map in the GameWorld is now indexed by Component type name string
+   rather than an error-prone generic string (that is, we use
+   typeid(SomeSpecificComponentSubclass).name() instead of
+   "SomeSpecificSubclass"). When Components are added to the GameWorld, we
+   simply index into this map by its typestring and add it to all Systems
+   registered for that type.
+
+ - System tick order is now deterministic. Systems take in an integer priority
+   when they are instantiated, with lower number Systems being ticked before
+   higher number Systems.
+
+ - Systems store collections of the specific Component subclass they need to
+   operate over instead of generic Components now, which means we don't need to
+   cast every single Component every single frame.
+
+ - Multiple different Systems are permitted to register for the same Component
+   type, which will ABSOLUTELY prevent headaches down the line.
+
+ - Colliders now use separated-out Collision Volumes, which each implement
+   collision methods for the various other Volume types.
+
+ - Added a CollisionResponse abstract class which can be overridden to generate
+   game- or object-specific responses to collisions.
+
+ - Active Camera setting and Camera manipulation are now taken care of by the
+   CCamera Component and CameraSystem System. This includes creation of the
+   Camera object.
+
+ - Added an extensible CameraSystem class along with convenience FPSCameraSystem
+   class to make it easier to keep track of cameras without special casing.
+
+ - Components now have a GetSibling<>() method for convenience - no more
+   component->getParent()->getComponent<>() mess
+
+
+As a note, the refactor did break my frustum culling from last week. I suspect
+I just used the wrong vector somewhere in generating the clip planes, so I'll
+hopefully have that fixed soon.
+
+==============================================================================
+
+﻿[ ] - Full Requirements
+[ ] - Extra Requirements
+Total: -/3
+
+Standard Retries: -
+Extra Retries: -
+
+========================================
+
+Basic Requirements
+====================================
+[ ] - Player should be able to move and collide with environment in some way
+[ ] - Game runs on department machines at 20+ FPS
+
+
+Full Requirements
+========================================
+    Engine
+    ====================================
+    [ ] - Collisions
+        [ ] - AAB-AAB
+        [ ] - AAB-Cylinder
+        [ ] - AAB-Sphere
+    [ ] - Raycasting AABs
+    [ ] - Frustum Culling
+    [ ] - Multiple chunk-generation
+        [ ] - Chunk streaming
+
+
+
+Extra Credit
+======================================
+[ ] - Raycasting with shapes other than AABs
+[ ] - Procedural item and enemy spawning
+[ ] - Chunk saving and loading (in memory is fine)
+[ ] - Dungeon is infinite (generated as needed)
+[ ] - No thrashing when loading chunks

@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>grass.png</file>
+        <file>dungeontex.png</file>
+        <file>heart.png</file>
+        <file>gold.png</file>
+        <file>heart_empty.png</file>
+        <file>title.png</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,92 @@
+Content update week! Now we have AI, enemies, health pickups, and more!
+
+One big note is that the AIs don't have collision with the walls right now.
+I put it in before and it was okay, but it dropped the framerate to ~28 FPS.
+Since the navmesh nodes never go inside walls anyway, I figured it was worth it
+to disable the AI collision and maintain a crisp ~60 FPS. The collision made
+their behavior even jumpier/wonkier too along with the low FPS. I'd love to fix
+it but I suspect there's a deeper systemic issue. We'll talk at hours at some
+point.
+
+Also, AI can aggro through walls, and if they're close enough, can shoot
+through walls too. However, you can also shoot through walls! So really,
+everyone wins.
+
+Implementation loctions:
+  A* - engine/ai/AStarNode and AStarSearch. Also, engine/components/CNavMesh,
+       which stores a graph of AStarNodes in a component so they can be
+       associated with specific areas of the world, passed through Blackboards,
+       etc.
+  Behavior trees - engine/ai/* for abstract contracts (BTNode, Status, Action,
+                   Condition) and implementations (Selector, Sequence,
+                   Blackboard)
+  Game-side AI - dungeon_crawler/ai/* - especially EnemyAISystem.
+
+Extra credit:
+  Additional AI components also in engine/ai/ (specifically RandomSelector,
+      RepeatUntilDone, and Inverter).
+
+  "Mark interesting locations" is what CChunkInfo does along with ChunkLoader.
+      CChunkInfo contains a list of all rooms in the chunk, and the ChunkLoader
+      picks big rooms to spawn enemies and small rooms deep in the tree (usually
+      dead ends) to spawn health pickups.
+
+  Enemies and items should appear in interesting locations - see above
+
+  "The player should be able to interact with items" red sphere health pickups
+      increase the player's health, but only if they are below max health!
+      In other words, you have to get hit before you can pick up a health thing.
+
+
+=====================================================================
+
+﻿[ ] - Basic Requirements
+[ ] - Full Requirements
+[ ] - Extra Requirements
+Total: -/3
+
+========================================
+
+Basic Requirements
+====================================
+[ ] - Handin only crashes on edge cases
+[ ] - An enemy appears and can interact with the player
+
+Full Requirements
+========================================
+    [ ] - Engine has an A* implementation
+    [ ] - Engine has an AI System / AIComponent, using either
+        [ ] - Behavior Trees
+            [ ] - BTNode (virtual)
+            [ ] - BTStatus (enum)
+            [ ] - Selector
+            [ ] - Sequence
+            [ ] - Action (virtual)
+            [ ] - Condition (virtual)
+            [ ] - Blackboard (minimally a map)
+        [ ] - GOAP
+            [ ] - GameState (minimally a map)
+            [ ] - Action (virtual)
+            [ ] - Condition (virtual)
+            [ ] - IsSetCondition
+            [ ] - IsNotSetCondition or NotCondition
+            [ ] - SetAction
+            [ ] - RemoveAction
+    [ ] - Enemy should act based on AIComponent
+    [ ] - All AI tools should be used in game
+
+
+
+Extra Credit
+======================================
+[ ] - Additional AI components
+    [ ] - For behavior trees
+        [ ] - RandomSelector
+        [ ] - Invertor
+        [ ] - One additional control node
+    [ ] - For GOAP
+        [ ] - GameState should map strings to ints
+        [ ] - Three additional actions/conditions
+[ ] - Mark interesting locations
+[ ] - Enemies and items should appear in interesting locations
+[ ] - The player should be able to interact with items

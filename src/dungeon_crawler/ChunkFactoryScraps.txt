@@ -1,0 +1,130 @@
+void ChunkFactory::AddRoom(SpacePartMap::map_leaf *room, std::vector<float> *points)
+{
+    glm::vec3 centerPoint((room->col - 12) * SQUARE_SIZE, 0, (room->row - 12) * SQUARE_SIZE);
+    glm::vec3 tileOrigin = centerPoint - glm::vec3(SQUARE_SIZE / 2, 0, SQUARE_SIZE / 2);
+
+    /* std::cout << "Position: (" << room->row << "," << room->col << ")" << std::endl;
+    std::cout << "Dimensions: " << room->width << " x " << room->height << std::endl;
+    std::cout << "Subtracted: (" << room->row - 12 << "," << room->col - 12 << ")" << std::endl;
+    std::cout << "CenterPoint: (" << centerPoint.x << "," << centerPoint.z << ")" << std::endl;
+    std::cout << "Origin: (" << tileOrigin.x << "," << tileOrigin.z << ")" << std::endl; */
+
+
+    // Push degenerate vertex
+    unsigned int psize = points->size();
+    if (psize >= VERTEX_LENGTH) {
+        for (int i = psize - VERTEX_LENGTH; i < psize; i++) {
+            points->push_back(points->at(i));
+        }
+    }
+
+    assert(room->ceiling_height > 1);
+
+    glm::vec3 newOrigin;
+    for (int h = 0; h < room->ceiling_height; h++) {
+        newOrigin = tileOrigin + glm::vec3(0, h * SQUARE_SIZE, 0);
+
+        // North Wall
+        glm::vec3 normal = glm::vec3(0.0f, 0.0f, 1.0f);
+        glm::vec3 basePos;
+        for (int i = 0; i <= room->width; i++) {
+            basePos = newOrigin + glm::vec3(SQUARE_SIZE * i, 0, 0);
+            glm::vec3 ascentPos = basePos + glm::vec3(0, SQUARE_SIZE, 0);
+            glm::vec2 texCoords = GetTextureCoord(WALL);
+
+            if (i == 0 && points->size() >= VERTEX_LENGTH) {
+                AddVertex(ascentPos, normal, texCoords, points); // Push degenerate vert
+            }
+
+            AddVertex(ascentPos, normal, texCoords, points);
+            AddVertex(basePos, normal, GetTextureCoord(WALL), points); // TODO: random textures
+        }
+
+        // East Wall
+        normal = glm::vec3(-1.0f, 0.0f, 0.0f);
+        newOrigin = basePos;
+        for (int i = 0; i <= room->height; i++) {
+            basePos = newOrigin + glm::vec3(0, 0, SQUARE_SIZE * i);
+            glm::vec3 ascentPos = basePos + glm::vec3(0, SQUARE_SIZE, 0);
+
+            AddVertex(ascentPos, normal, GetTextureCoord(WALL), points);
+            AddVertex(basePos, normal, GetTextureCoord(WALL), points); // TODO: random textures
+        }
+
+        // South Wall
+        normal = glm::vec3(0.0f, 0.0f, -1.0f);
+        newOrigin = basePos;
+        for (int i = 0; i <= room->width; i++) {
+            basePos = newOrigin - glm::vec3(SQUARE_SIZE * i, 0, 0);
+            glm::vec3 ascentPos = basePos + glm::vec3(0, SQUARE_SIZE, 0);
+
+            AddVertex(ascentPos, normal, GetTextureCoord(WALL), points); // TODO: random textures
+            AddVertex(basePos, normal, GetTextureCoord(WALL), points);
+        }
+
+        // West Wall
+        normal = glm::vec3(1.0f, 0.0f, 0.0f);
+        newOrigin = basePos;
+        for (int i = 0; i <= room->height; i++) {
+            basePos = newOrigin - glm::vec3(0, 0, SQUARE_SIZE * i);
+            glm::vec3 ascentPos = basePos + glm::vec3(0, SQUARE_SIZE, 0);
+
+            AddVertex(ascentPos, normal, GetTextureCoord(WALL), points); // TODO: random textures
+            AddVertex(basePos, normal, GetTextureCoord(WALL), points);
+        }
+
+        // degen
+        AddVertex(basePos, normal, glm::vec2(0.3f, 0.4f), points);
+    }
+
+    // Floor
+    glm::vec3 normal = glm::vec3(0.0f, 1.0f, 0.0f);
+    for (int i = 0; i < room->height; i++) {
+        newOrigin = tileOrigin + glm::vec3(0.0f, 0.0f, SQUARE_SIZE * i);
+
+        for (int j = 0; j <= room->width; j++) {
+            glm::vec3 basePos = newOrigin + glm::vec3(SQUARE_SIZE * j, 0.0f, 0.0f);
+            glm::vec3 ascentPos = basePos + glm::vec3(0.0f, 0.0f, SQUARE_SIZE);
+            glm::vec2 texCoords = GetTextureCoord(FLOOR);
+
+            if (j == 0) {
+                AddVertex(basePos, normal, texCoords, points);
+            }
+
+            AddVertex(basePos, normal, texCoords, points);
+
+            texCoords = GetTextureCoord(FLOOR);
+            AddVertex(ascentPos, normal, texCoords, points);
+
+            if (j == room->width) {
+                AddVertex(ascentPos, normal, texCoords, points);
+            }
+        }
+    }
+
+    // Ceiling
+    normal = glm::vec3(0.0f, -1.0f, 0.0f);
+    glm::vec3 ceilOrigin = tileOrigin + glm::vec3(0.0f, room->ceiling_height * SQUARE_SIZE, 0.0f);
+    for (int i = 0; i < room->height; i++) {
+        newOrigin = ceilOrigin + glm::vec3(0.0f, 0.0f, SQUARE_SIZE * i);
+
+        for (int j = 0; j <= room->width; j++) {
+            glm::vec3 basePos = newOrigin + glm::vec3(SQUARE_SIZE * j, 0.0f, 0.0f);
+            glm::vec3 ascentPos = basePos + glm::vec3(0.0f, 0.0f, SQUARE_SIZE);
+            glm::vec2 texCoords = GetTextureCoord(CEILING);
+
+            if (j == 0) {
+                AddVertex(ascentPos, normal, texCoords, points);
+            }
+
+            AddVertex(ascentPos, normal, texCoords, points);
+
+            texCoords = GetTextureCoord(CEILING);
+            AddVertex(basePos, normal, texCoords, points);
+
+            if (j == room->width && i < room->height - 1) {
+                AddVertex(basePos, normal, texCoords, points);
+            }
+        }
+    }
+}

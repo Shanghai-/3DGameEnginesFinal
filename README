@@ -1,0 +1,102 @@
+I implemented my UI system parallel to my GameObject system - applying the same
+paradigm of Objects, Components, and Systems, but using separate classes from
+the GameObject versions to help enforce some differences between the two.
+
+WEIRD KNOWN BUG: Sometimes the world will just flash out of existence for a
+sec?? I think it's Frustum Culling being weird and culling everything for one
+frame but I'm not sure.
+
+Requirement locations:
+  Player can Pause and Unpause the game - dungeon_crawler/PauseScreen and
+    dungeon_crawler/GameplayScreen. Pressing "P" on the Gameplay screen pauses
+    the game, and pressing "P" on the pause screen resumes it. I render my
+    pause screen as a layer over the gameplay screen, but stop ticks to the
+    gameplay screen. This means that the world stops updating, but it still
+    renders visually, which looks cool!
+
+  While paused, application uses a different screen - see PauseScreen, as above.
+    My Application class uses onFocusGained() and onFocusLost() methods to help
+    control the flow of change between the two screens.
+
+  Pause screen has text - dungeon_crawler/PauseScreen, constructor.
+
+  UI Toolkit for Menus: Text - engine/ui/UIText and engine/ui/TextDrawer. I use
+    a text Component attached to a UIObject to draw Text, with the system using
+    the text component's Font to get FontMetrics and center/otherwise align
+    the text.
+
+  UI Toolkit for Menus: Buttons - engine/ui/UIHitbox and engine/ui/UIClickSystem.
+    An arbitrary rectangular hitbox can be added to any UIComponent to allow it
+    to respond to clicks. engine/UI/ClickResponse.h defines a generic responder
+    contract that can be extended for each button's specific behavior as needed.
+    In dungeon_crawler/StartButtonResp, I implement a responder that switches
+    to the gameplay screen on click. To see how the button itself is constructed
+    (renderable component + text component + hitbox component), see
+    dungeon_crawler/LandingScreen.
+
+  UI Toolkit for Menus: Images - engine/ui/UIRenderable and engine/ui/UIDrawer
+    renders textured meshes, which includes images. If the user draws a UIQuad
+    and textures it with the image they desire, they get an image. I use this in
+    dungeon_crawler/LandingScreen to draw the game's logo.
+
+  At least three screens - dungeon_crawler/LandingScreen,
+    dungeon_crawler/PauseScreen, and dungeon_crawler/GameplayScreen
+
+  Text, buttons, and images appear somewhere in the screens - Images in
+    LandingScreen and GameplayScreen, button in LandingScreen, text in all 3.
+
+  HUD appears on game screen - UI elements added in GameplayScreen's constructor
+
+  HUD contains information that updates during gameplay - Using a special System
+    I implemented for UIObjects called the UIScriptSystem, I wrote a health
+    tracker much like Minecraft's that changes dynamically. The System is
+    engine/ui/UIScriptSys, and it sends several useful events (onTick, onDraw,
+    onResize) to all ScriptComponents attached to UIObjects. In dungeon_crawler/
+    HealthScript, I implement the Script contract such that on every tick, I
+    check the player's health and set the materials of the hearts as is
+    appropriate.
+
+  Engine provides support for loading OBJs - In engine/components/CRenderable.
+    If the component cannot find a matching shape for the name it was given, it
+    tries to use that name as the path to an OBJ to import. If it succeeds, it
+    adds that shape to the Graphics map (so that we don't re-load it for every
+    single other Renderable that uses it). If it fails, it writes to error and
+    appears as a cube instead.
+
+  At least one OBJ appears in game - The heart pickups are now heart models.
+    Model source: https://www.turbosquid.com/FullPreview/Index.cfm/ID/1263821
+
+====================================================
+
+[ ] - Basic Requirements
+[ ] - Full Requirements
+[ ] - Extra Requirements
+Total: -/3
+
+========================================
+
+Basic Requirements
+====================================
+[ ] - Handin only crashes on edge cases
+[ ] - Player can pause and unpause the game
+[ ] - While paused, application uses a different screen
+[ ] - Pause screen has text
+
+Full Requirements
+========================================
+[ ] - UI toolkit for menus
+    [ ] - Text
+    [ ] - Buttons
+    [ ] - Images
+[ ] - At least three screens
+[ ] - Text, buttons, and images appear somewhere in the screens
+[ ] - HUD appears on game screen
+[ ] - HUD contains information that updates during gameplay
+[ ] - Engine provides support for loading OBJs
+[ ] - At least one OBJ appears in-game
+
+
+Extra Credit
+======================================
+[ ] - Engine provides support for orthographic UI elements
+[ ] - Orthographic UI elements appear in-game

@@ -1,0 +1,3 @@
+Compile with qtCreator. Runs in windowed mode and eats the mouse. Pressing
+escape quits the game. WASD to move, mouse to look around. Click to fire -
+enemies need 2 hits to die. P to pause.

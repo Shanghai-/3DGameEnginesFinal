@@ -1,0 +1,50 @@
+No hallways generation yet for the space partitioning :(
+Texture mapping also slightly weird
+BUT:
+ - Infinite generation
+ - 13 chunks loaded at a time in a radius around the player -> no thrashing
+ - Frustum culling
+ - The same seed always generates the same map
+ - Lovely custom textures representing some sort of Hell Office I think
+ - Random textures for each tile - but different textures for floors, walls,
+   and ceilings
+
+----------------------------------------------------------
+
+[ ] - Full Requirements
+[ ] - Extra Requirements
+Total: -/3
+
+Standard Retries: -
+Extra Retries: -
+
+========================================
+
+
+Full Requirements
+========================================
+    Engine
+    ====================================
+    [ ] - Map Generation
+        [ ] - Space partitioning OR drunken walk OR another algorithm of similar complexity
+        [ ] - Map is generated in chunks
+        [ ] - Each chunk is a GameObject
+        [ ] - Each chunk is drawn using a single Shape
+    [ ] - Optimizations
+        [ ] - Frustum culling (only chunks in the view frustum are drawn)
+        [ ] - Texture atlas is used when drawing chunks
+
+    Game
+    ====================================
+    [ ] - Game never crashes
+    [ ] - Game runs on department machines at 20+ FPS
+    [ ] - Player should be able to move
+    [ ] - A dungeon should be drawn (with hallways, rooms, floors, walls, etc.)
+
+
+Extra Credit
+======================================
+[ ] - Infinite dungeon
+    [ ] - Chunks are generated as needed
+    [ ] - No thrashing
+[ ] - Uses other texture atlas

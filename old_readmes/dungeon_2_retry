@@ -1,0 +1,92 @@
+Dungeon Crawler 2 Retry
+
+The environment has collision now! And halls!
+
+I reverted my Space Partition algorithm to return a grid of rooms instead of
+a tree of nodes. This decision was to make hall generation way, way easier.
+I also unfortunately had to hard-code chunk size at 26x26 because I couldn't
+get a vector of vectors working to make it variable-sized. That being said,
+here are some notes:
+  - Frustum culling works again
+  - Chunks are connected via halls through the middle in all directions, which
+    is simple but effective.
+  - Chunk geometry generation code is totally rewritten to use individual
+    triangles instead of triangle strips. We generate geometry tile by tile
+    as well instead of room by room, since the Space Partitioner no longer
+    returns a room graph.
+  - Currently, there is one bounding box per wall per cell. This isn't as
+    efficient as doing one per wall and going across cells, but my algorithm
+    for that was buggy enough that I decided the performance increase wasn't
+    worth it.
+  - Speaking of, performance is still pretty good - mostly 55 - 60 FPS except
+    when generating new chunks, when it drops to 30. I plan to fix that with the
+    "populate a queue and do one per tick" thing.
+  - Dungeon is still infinite, chunks still generate the same way from the same
+    coordinates every time (in other words, there's save/load), and there's
+    still no thrashing.
+  - Raycasts implemented for AABB's only because I was hoping I could go fast
+    enough to finish the AI this week too (unfortunately I could not)
+
+Locations of requirements:
+  Collisions - implemented in the various classes within
+               engine/components/volumes
+
+  Raycasting - engine/components/volumes/CollBox and
+               engine/systems/RaycastSystem
+
+  Frustum Culling - engine/components/CCamera (stores and generates planes)
+                    engine/systems/CameraSystem (calculates frustums)
+                    engine/graphics/AABB (stores a bound box around all shapes)
+                    engine/systems/RenderSystem (doesn't render unseen things)
+
+  Multiple chunk generation - dungeon_crawler/ChunkLoader and ChunkFactory
+  (Streaming - also dungeon_crawler/ChunkLoader and ChunkFactory)
+
+  Saving and loading - ChunkLoader seeds ChunkFactory with a hash based on the
+                       chunk's coordinates, so the same coordinates always
+                       generate the same chunk.
+
+  No thrashing - ChunkLoader loads 13 chunks around the player and only deletes
+                 out of range ones when the player moves more than 1 chunk away
+                 from the center, meaning there is no boundary that rapidly
+                 loads and unloads
+
+==============================================================================
+
+﻿[ ] - Full Requirements
+[ ] - Extra Requirements
+Total: -/3
+
+Standard Retries: -
+Extra Retries: -
+
+========================================
+
+Basic Requirements
+====================================
+[ ] - Player should be able to move and collide with environment in some way
+[ ] - Game runs on department machines at 20+ FPS
+
+
+Full Requirements
+========================================
+    Engine
+    ====================================
+    [ ] - Collisions
+        [ ] - AAB-AAB
+        [ ] - AAB-Cylinder
+        [ ] - AAB-Sphere
+    [ ] - Raycasting AABs
+    [ ] - Frustum Culling
+    [ ] - Multiple chunk-generation
+        [ ] - Chunk streaming
+
+
+
+Extra Credit
+======================================
+[ ] - Raycasting with shapes other than AABs
+[ ] - Procedural item and enemy spawning
+[ ] - Chunk saving and loading (in memory is fine)
+[ ] - Dungeon is infinite (generated as needed)
+[ ] - No thrashing when loading chunks
