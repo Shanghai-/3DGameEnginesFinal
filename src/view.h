@@ -60,8 +60,8 @@ private:
     Graphics* m_graphics;
     InputManager *m_inManager;
 
-    //std::unique_ptr<WarmupApp> m_app;
-    std::unique_ptr<DungeonCrawlerApp> m_app;
+    std::unique_ptr<WarmupApp> m_app;
+    //std::unique_ptr<DungeonCrawlerApp> m_app;
 
 private slots:
     void tick();

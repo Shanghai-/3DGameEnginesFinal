@@ -8,6 +8,8 @@ CONFIG += c++14
 
 unix:!macx {
     LIBS += -lGLU
+    INCLUDEPATH += libs/fmod/
+    LIBS += -L"$$PWD/libs/fmod/" -lfmodL
 }
 macx {
     QMAKE_CFLAGS_X86_64 += -mmacosx-version-min=10.7
@@ -113,7 +115,9 @@ SOURCES += \
     src/engine/ui/UIClickSystem.cpp \
     src/dungeon_crawler/StartButtonResp.cpp \
     src/dungeon_crawler/PauseScreen.cpp \
-    src/engine/ui/FullScreenQuadScript.cpp
+    src/engine/ui/FullScreenQuadScript.cpp \
+    src/engine/components/CAudioSource.cpp \
+    src/engine/systems/AudioSystem.cpp
 
 HEADERS += \
     libs/glew-1.10.0/include/GL/glew.h \
@@ -230,7 +234,9 @@ HEADERS += \
     src/engine/ui/UIClickSystem.h \
     src/dungeon_crawler/StartButtonResp.h \
     src/dungeon_crawler/PauseScreen.h \
-    src/engine/ui/FullScreenQuadScript.h
+    src/engine/ui/FullScreenQuadScript.h \
+    src/engine/components/CAudioSource.h \
+    src/engine/systems/AudioSystem.h
 
 FORMS += src/mainwindow.ui
 
