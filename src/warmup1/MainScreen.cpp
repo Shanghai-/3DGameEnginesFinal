@@ -21,6 +21,7 @@
 #include "CustomComponents/CPhysics.h"
 #include "engine/gen/SpacePartMap.h"
 #include "engine/systems/AudioSystem.h"
+#include "engine/components/CAudioSource.h"
 
 #include "engine/frame/Application.h"
 #include "view.h"
@@ -57,7 +58,6 @@ MainScreen::MainScreen(Application *parent) :
     m_gw->registerForTick(std::make_shared<PhysicsSystem>(400));
     m_gw->registerForTick(std::make_shared<CollisionSystem>(500));
     m_gw->registerForTick(std::make_shared<FPSCameraSystem>(600));
-    m_gw->registerForTick(std::make_shared<AudioSystem>(800));
 
     // TODO: encapsulate this in a player_factory class
     std::shared_ptr<GameObject> player = std::make_shared<GameObject>("Player", m_gw->getNewObjID());
@@ -71,6 +71,9 @@ MainScreen::MainScreen(Application *parent) :
     player->addComponent(std::make_shared<CCollider>(player, coll, false));
     player->addComponent(std::make_shared<CInputReceiver>(player));
     m_gw->addGameObject(player);
+
+    // ADD AUDIO SYSTEM WHOOOOOO
+    m_gw->registerForTick(std::make_shared<AudioSystem>(800, player));
 
     // Floor - an immobile thing
     std::shared_ptr<GameObject> floor = std::make_shared<GameObject>("Floor", m_gw->getNewObjID());
@@ -108,6 +111,7 @@ MainScreen::MainScreen(Application *parent) :
     std::shared_ptr<GameObject> test = std::make_shared<GameObject>("heart", m_gw->getNewObjID());
     test->addComponent(std::make_shared<CTransform>(test, true, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(0.005f)));
     test->addComponent(std::make_shared<CRenderable>(test, ":/models/Love.obj", "not_hit"));
+    test->addComponent(std::make_shared<CAudioSource>(test, ":/sounds/noise.ogg"));
     m_gw->addGameObject(test);
 }
 

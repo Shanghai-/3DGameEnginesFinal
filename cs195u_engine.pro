@@ -244,7 +244,8 @@ RESOURCES += \
     res/shaders/shaders.qrc \
     res/fonts/fonts.qrc \
     res/images/images.qrc \
-    res/models/models.qrc
+    res/models/models.qrc \
+    res/sounds/sounds.qrc
 
 OTHER_FILES += \
     res/images/grass.png

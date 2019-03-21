@@ -144,6 +144,7 @@ SOURCES       = libs/glew-1.10.0/src/glew.c \
 		qrc_fonts.cpp \
 		qrc_images.cpp \
 		qrc_models.cpp \
+		qrc_sounds.cpp \
 		moc_mainwindow.cpp \
 		moc_view.cpp
 OBJECTS       = glew.o \
@@ -246,6 +247,7 @@ OBJECTS       = glew.o \
 		qrc_fonts.o \
 		qrc_images.o \
 		qrc_models.o \
+		qrc_sounds.o \
 		moc_mainwindow.o \
 		moc_view.o
 DIST          = res/shaders/shader.vert \
@@ -359,6 +361,7 @@ DIST          = res/shaders/shader.vert \
 		res/fonts/fonts.qrc \
 		res/images/images.qrc \
 		res/models/models.qrc \
+		res/sounds/sounds.qrc \
 		cs195u_engine.pro
 QMAKE_TARGET  = cs195u_engine
 DESTDIR       = #avoid trailing-slash linebreak
@@ -502,6 +505,7 @@ Makefile: cs195u_engine.pro ../../../../../sys/shared/psfu/contrib/projects/qt5.
 		res/fonts/fonts.qrc \
 		res/images/images.qrc \
 		res/models/models.qrc \
+		res/sounds/sounds.qrc \
 		/contrib/projects/qt5.2.0/5.2.0/gcc_64/lib/libQt5OpenGL.prl \
 		/contrib/projects/qt5.2.0/5.2.0/gcc_64/lib/libQt5Widgets.prl \
 		/contrib/projects/qt5.2.0/5.2.0/gcc_64/lib/libQt5Gui.prl \
@@ -616,6 +620,7 @@ res/shaders/shaders.qrc:
 res/fonts/fonts.qrc:
 res/images/images.qrc:
 res/models/models.qrc:
+res/sounds/sounds.qrc:
 /contrib/projects/qt5.2.0/5.2.0/gcc_64/lib/libQt5OpenGL.prl:
 /contrib/projects/qt5.2.0/5.2.0/gcc_64/lib/libQt5Widgets.prl:
 /contrib/projects/qt5.2.0/5.2.0/gcc_64/lib/libQt5Gui.prl:
@@ -627,7 +632,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/cs195u_engine1.0.0 || mkdir -p .tmp/cs195u_engine1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents res/shaders/shaders.qrc res/fonts/fonts.qrc res/images/images.qrc res/models/models.qrc .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents libs/glew-1.10.0/include/GL/glew.h libs/stb/stb_rect_pack.h libs/stb/stb_truetype.h src/mainwindow.h src/view.h src/viewformat.h src/engine/util/CommonIncludes.h src/engine/graphics/ResourceLoader.h src/engine/graphics/CylinderData.h src/engine/graphics/SphereData.h src/engine/graphics/FBO.h src/engine/graphics/IBO.h src/engine/graphics/Texture.h src/engine/graphics/Texture1D.h src/engine/graphics/Texture2D.h src/engine/graphics/Texture3D.h src/engine/graphics/VAO.h src/engine/graphics/VBO.h src/engine/graphics/VBOAttribMarker.h src/engine/graphics/CubeData.h src/engine/graphics/Font.h src/engine/graphics/DepthBuffer.h src/engine/graphics/RenderBuffer.h src/engine/graphics/GraphicsDebug.h src/engine/graphics/Shader.h src/engine/graphics/ShaderAttribLocations.h src/engine/graphics/Camera.h src/engine/graphics/Graphics.h src/engine/graphics/Shape.h src/engine/graphics/Material.h src/engine/graphics/Light.h src/engine/graphics/Constants.h src/engine/frame/Application.h src/engine/frame/Screen.h src/warmup1/WarmupApp.h src/warmup1/MainScreen.h src/engine/input/InputManager.h src/engine/objectManagement/GameWorld.h src/engine/objectManagement/GameObject.h src/engine/components/Component.h src/engine/components/CCollider.h src/engine/systems/System.h src/engine/systems/CollisionSystem.h src/engine/components/CTransform.h src/warmup1/CustomComponents/CPhysics.h src/engine/systems/RenderSystem.h src/warmup1/CustomSystems/PhysicsSystem.h src/engine/gen/SpacePartMap.h src/dungeon_crawler/DungeonCrawlerApp.h src/dungeon_crawler/GameplayScreen.h src/dungeon_crawler/ChunkFactory.h src/dungeon_crawler/ChunkLoader.h src/engine/graphics/AABB.h src/engine/components/volumes/CollisionVolume.h src/engine/components/volumes/CollBox.h src/engine/components/volumes/CollSphere.h src/engine/components/volumes/CollCylinder.h src/engine/components/responders/CollisionResponse.h src/engine/components/CRenderable.h src/engine/systems/CameraSystem.h src/engine/components/CCamera.h src/engine/systems/FPSCameraSystem.h src/warmup1/CustomSystems/InputSystem.h src/dungeon_crawler/MovementSys.h src/engine/components/CInputReceiver.h src/engine/components/volumes/CollComposite.h src/engine/systems/RaycastSystem.h src/engine/systems/AISystem.h src/engine/components/AIComponent.h src/engine/ai/BTNode.h src/engine/ai/CompositeNode.h src/engine/ai/Condition.h src/engine/ai/Action.h src/engine/ai/Sequence.h src/engine/ai/Selector.h src/engine/ai/AStarSearch.h src/engine/ai/AStarNode.h src/engine/components/CNavMesh.h src/dungeon_crawler/NavmeshDrawer.h src/dungeon_crawler/ai/RadiusCondition.h src/engine/ai/Blackboard.h src/dungeon_crawler/ai/MoveToPlayer.h src/dungeon_crawler/ai/EnemyAISystem.h src/dungeon_crawler/CChunkInfo.h src/dungeon_crawler/ai/BackAway.h src/dungeon_crawler/ai/Strafe.h src/dungeon_crawler/ai/FaceAndShoot.h src/dungeon_crawler/CHealth.h src/dungeon_crawler/CooldownSys.h src/dungeon_crawler/CCooldown.h src/dungeon_crawler/ShootSystem.h src/dungeon_crawler/CBullet.h src/dungeon_crawler/PlayerCollision.h src/engine/ai/RandomSelector.h src/engine/ai/Inverter.h src/engine/ai/RepeatUntilDone.h src/engine/ui/UIObject.h src/engine/ui/UIComponent.h src/engine/ui/UIDrawer.h src/engine/ui/UIRenderable.h src/engine/ui/UITransform.h src/engine/ui/UIText.h src/engine/ui/UISystem.h src/engine/ui/TextDrawer.h src/engine/ui/UIScriptComp.h src/engine/ui/Script.h src/dungeon_crawler/HealthScript.h src/engine/ui/UIScriptSys.h src/dungeon_crawler/LandingScreen.h src/engine/ui/UIHitbox.h src/engine/ui/ClickResponse.h src/engine/ui/UIClickSystem.h src/dungeon_crawler/StartButtonResp.h src/dungeon_crawler/PauseScreen.h src/engine/ui/FullScreenQuadScript.h src/engine/components/CAudioSource.h src/engine/systems/AudioSystem.h .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents libs/glew-1.10.0/src/glew.c src/main.cpp src/mainwindow.cpp src/view.cpp src/viewformat.cpp src/engine/graphics/ResourceLoader.cpp src/engine/graphics/FBO.cpp src/engine/graphics/IBO.cpp src/engine/graphics/Texture.cpp src/engine/graphics/Texture1D.cpp src/engine/graphics/Texture2D.cpp src/engine/graphics/Texture3D.cpp src/engine/graphics/VAO.cpp src/engine/graphics/VBO.cpp src/engine/graphics/VBOAttribMarker.cpp src/engine/graphics/Font.cpp src/engine/graphics/DepthBuffer.cpp src/engine/graphics/RenderBuffer.cpp src/engine/graphics/GraphicsDebug.cpp src/engine/graphics/Shader.cpp src/engine/graphics/Camera.cpp src/engine/graphics/Shape.cpp src/engine/graphics/Graphics.cpp src/engine/graphics/Material.cpp src/engine/graphics/Light.cpp src/engine/frame/Application.cpp src/engine/frame/Screen.cpp src/warmup1/WarmupApp.cpp src/warmup1/MainScreen.cpp src/engine/input/InputManager.cpp src/engine/objectManagement/GameWorld.cpp src/engine/objectManagement/GameObject.cpp src/engine/components/Component.cpp src/engine/components/CCollider.cpp src/engine/systems/CollisionSystem.cpp src/engine/components/CTransform.cpp src/warmup1/CustomComponents/CPhysics.cpp src/engine/systems/RenderSystem.cpp src/warmup1/CustomSystems/PhysicsSystem.cpp src/engine/gen/SpacePartMap.cpp src/dungeon_crawler/DungeonCrawlerApp.cpp src/dungeon_crawler/GameplayScreen.cpp src/dungeon_crawler/ChunkFactory.cpp src/dungeon_crawler/ChunkLoader.cpp src/engine/graphics/AABB.cpp src/engine/components/volumes/CollBox.cpp src/engine/components/volumes/CollSphere.cpp src/engine/components/volumes/CollCylinder.cpp src/engine/components/CRenderable.cpp src/engine/systems/CameraSystem.cpp src/engine/components/CCamera.cpp src/engine/systems/FPSCameraSystem.cpp src/warmup1/CustomSystems/InputSystem.cpp src/dungeon_crawler/MovementSys.cpp src/engine/components/CInputReceiver.cpp src/engine/components/volumes/CollComposite.cpp src/engine/systems/RaycastSystem.cpp src/engine/systems/AISystem.cpp src/engine/components/AIComponent.cpp src/engine/ai/Sequence.cpp src/engine/ai/Selector.cpp src/engine/ai/AStarNode.cpp src/dungeon_crawler/NavmeshDrawer.cpp src/engine/components/CNavMesh.cpp src/dungeon_crawler/ai/RadiusCondition.cpp src/engine/ai/Blackboard.cpp src/dungeon_crawler/ai/MoveToPlayer.cpp src/dungeon_crawler/ai/EnemyAISystem.cpp src/dungeon_crawler/CChunkInfo.cpp src/dungeon_crawler/ai/BackAway.cpp src/dungeon_crawler/ai/Strafe.cpp src/dungeon_crawler/ai/FaceAndShoot.cpp src/dungeon_crawler/CHealth.cpp src/dungeon_crawler/CooldownSys.cpp src/dungeon_crawler/CCooldown.cpp src/dungeon_crawler/ShootSystem.cpp src/dungeon_crawler/CBullet.cpp src/dungeon_crawler/PlayerCollision.cpp src/engine/ai/RandomSelector.cpp src/engine/ai/Inverter.cpp src/engine/ai/RepeatUntilDone.cpp src/engine/ui/UIObject.cpp src/engine/ui/UIDrawer.cpp src/engine/ui/UIRenderable.cpp src/engine/ui/UITransform.cpp src/engine/ui/UIText.cpp src/engine/ui/TextDrawer.cpp src/dungeon_crawler/HealthScript.cpp src/engine/ui/UIScriptSys.cpp src/dungeon_crawler/LandingScreen.cpp src/engine/ui/UIClickSystem.cpp src/dungeon_crawler/StartButtonResp.cpp src/dungeon_crawler/PauseScreen.cpp src/engine/ui/FullScreenQuadScript.cpp src/engine/components/CAudioSource.cpp src/engine/systems/AudioSystem.cpp .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents src/mainwindow.ui .tmp/cs195u_engine1.0.0/ && (cd `dirname .tmp/cs195u_engine1.0.0` && $(TAR) cs195u_engine1.0.0.tar cs195u_engine1.0.0 && $(COMPRESS) cs195u_engine1.0.0.tar) && $(MOVE) `dirname .tmp/cs195u_engine1.0.0`/cs195u_engine1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/cs195u_engine1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents res/shaders/shaders.qrc res/fonts/fonts.qrc res/images/images.qrc res/models/models.qrc res/sounds/sounds.qrc .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents libs/glew-1.10.0/include/GL/glew.h libs/stb/stb_rect_pack.h libs/stb/stb_truetype.h src/mainwindow.h src/view.h src/viewformat.h src/engine/util/CommonIncludes.h src/engine/graphics/ResourceLoader.h src/engine/graphics/CylinderData.h src/engine/graphics/SphereData.h src/engine/graphics/FBO.h src/engine/graphics/IBO.h src/engine/graphics/Texture.h src/engine/graphics/Texture1D.h src/engine/graphics/Texture2D.h src/engine/graphics/Texture3D.h src/engine/graphics/VAO.h src/engine/graphics/VBO.h src/engine/graphics/VBOAttribMarker.h src/engine/graphics/CubeData.h src/engine/graphics/Font.h src/engine/graphics/DepthBuffer.h src/engine/graphics/RenderBuffer.h src/engine/graphics/GraphicsDebug.h src/engine/graphics/Shader.h src/engine/graphics/ShaderAttribLocations.h src/engine/graphics/Camera.h src/engine/graphics/Graphics.h src/engine/graphics/Shape.h src/engine/graphics/Material.h src/engine/graphics/Light.h src/engine/graphics/Constants.h src/engine/frame/Application.h src/engine/frame/Screen.h src/warmup1/WarmupApp.h src/warmup1/MainScreen.h src/engine/input/InputManager.h src/engine/objectManagement/GameWorld.h src/engine/objectManagement/GameObject.h src/engine/components/Component.h src/engine/components/CCollider.h src/engine/systems/System.h src/engine/systems/CollisionSystem.h src/engine/components/CTransform.h src/warmup1/CustomComponents/CPhysics.h src/engine/systems/RenderSystem.h src/warmup1/CustomSystems/PhysicsSystem.h src/engine/gen/SpacePartMap.h src/dungeon_crawler/DungeonCrawlerApp.h src/dungeon_crawler/GameplayScreen.h src/dungeon_crawler/ChunkFactory.h src/dungeon_crawler/ChunkLoader.h src/engine/graphics/AABB.h src/engine/components/volumes/CollisionVolume.h src/engine/components/volumes/CollBox.h src/engine/components/volumes/CollSphere.h src/engine/components/volumes/CollCylinder.h src/engine/components/responders/CollisionResponse.h src/engine/components/CRenderable.h src/engine/systems/CameraSystem.h src/engine/components/CCamera.h src/engine/systems/FPSCameraSystem.h src/warmup1/CustomSystems/InputSystem.h src/dungeon_crawler/MovementSys.h src/engine/components/CInputReceiver.h src/engine/components/volumes/CollComposite.h src/engine/systems/RaycastSystem.h src/engine/systems/AISystem.h src/engine/components/AIComponent.h src/engine/ai/BTNode.h src/engine/ai/CompositeNode.h src/engine/ai/Condition.h src/engine/ai/Action.h src/engine/ai/Sequence.h src/engine/ai/Selector.h src/engine/ai/AStarSearch.h src/engine/ai/AStarNode.h src/engine/components/CNavMesh.h src/dungeon_crawler/NavmeshDrawer.h src/dungeon_crawler/ai/RadiusCondition.h src/engine/ai/Blackboard.h src/dungeon_crawler/ai/MoveToPlayer.h src/dungeon_crawler/ai/EnemyAISystem.h src/dungeon_crawler/CChunkInfo.h src/dungeon_crawler/ai/BackAway.h src/dungeon_crawler/ai/Strafe.h src/dungeon_crawler/ai/FaceAndShoot.h src/dungeon_crawler/CHealth.h src/dungeon_crawler/CooldownSys.h src/dungeon_crawler/CCooldown.h src/dungeon_crawler/ShootSystem.h src/dungeon_crawler/CBullet.h src/dungeon_crawler/PlayerCollision.h src/engine/ai/RandomSelector.h src/engine/ai/Inverter.h src/engine/ai/RepeatUntilDone.h src/engine/ui/UIObject.h src/engine/ui/UIComponent.h src/engine/ui/UIDrawer.h src/engine/ui/UIRenderable.h src/engine/ui/UITransform.h src/engine/ui/UIText.h src/engine/ui/UISystem.h src/engine/ui/TextDrawer.h src/engine/ui/UIScriptComp.h src/engine/ui/Script.h src/dungeon_crawler/HealthScript.h src/engine/ui/UIScriptSys.h src/dungeon_crawler/LandingScreen.h src/engine/ui/UIHitbox.h src/engine/ui/ClickResponse.h src/engine/ui/UIClickSystem.h src/dungeon_crawler/StartButtonResp.h src/dungeon_crawler/PauseScreen.h src/engine/ui/FullScreenQuadScript.h src/engine/components/CAudioSource.h src/engine/systems/AudioSystem.h .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents libs/glew-1.10.0/src/glew.c src/main.cpp src/mainwindow.cpp src/view.cpp src/viewformat.cpp src/engine/graphics/ResourceLoader.cpp src/engine/graphics/FBO.cpp src/engine/graphics/IBO.cpp src/engine/graphics/Texture.cpp src/engine/graphics/Texture1D.cpp src/engine/graphics/Texture2D.cpp src/engine/graphics/Texture3D.cpp src/engine/graphics/VAO.cpp src/engine/graphics/VBO.cpp src/engine/graphics/VBOAttribMarker.cpp src/engine/graphics/Font.cpp src/engine/graphics/DepthBuffer.cpp src/engine/graphics/RenderBuffer.cpp src/engine/graphics/GraphicsDebug.cpp src/engine/graphics/Shader.cpp src/engine/graphics/Camera.cpp src/engine/graphics/Shape.cpp src/engine/graphics/Graphics.cpp src/engine/graphics/Material.cpp src/engine/graphics/Light.cpp src/engine/frame/Application.cpp src/engine/frame/Screen.cpp src/warmup1/WarmupApp.cpp src/warmup1/MainScreen.cpp src/engine/input/InputManager.cpp src/engine/objectManagement/GameWorld.cpp src/engine/objectManagement/GameObject.cpp src/engine/components/Component.cpp src/engine/components/CCollider.cpp src/engine/systems/CollisionSystem.cpp src/engine/components/CTransform.cpp src/warmup1/CustomComponents/CPhysics.cpp src/engine/systems/RenderSystem.cpp src/warmup1/CustomSystems/PhysicsSystem.cpp src/engine/gen/SpacePartMap.cpp src/dungeon_crawler/DungeonCrawlerApp.cpp src/dungeon_crawler/GameplayScreen.cpp src/dungeon_crawler/ChunkFactory.cpp src/dungeon_crawler/ChunkLoader.cpp src/engine/graphics/AABB.cpp src/engine/components/volumes/CollBox.cpp src/engine/components/volumes/CollSphere.cpp src/engine/components/volumes/CollCylinder.cpp src/engine/components/CRenderable.cpp src/engine/systems/CameraSystem.cpp src/engine/components/CCamera.cpp src/engine/systems/FPSCameraSystem.cpp src/warmup1/CustomSystems/InputSystem.cpp src/dungeon_crawler/MovementSys.cpp src/engine/components/CInputReceiver.cpp src/engine/components/volumes/CollComposite.cpp src/engine/systems/RaycastSystem.cpp src/engine/systems/AISystem.cpp src/engine/components/AIComponent.cpp src/engine/ai/Sequence.cpp src/engine/ai/Selector.cpp src/engine/ai/AStarNode.cpp src/dungeon_crawler/NavmeshDrawer.cpp src/engine/components/CNavMesh.cpp src/dungeon_crawler/ai/RadiusCondition.cpp src/engine/ai/Blackboard.cpp src/dungeon_crawler/ai/MoveToPlayer.cpp src/dungeon_crawler/ai/EnemyAISystem.cpp src/dungeon_crawler/CChunkInfo.cpp src/dungeon_crawler/ai/BackAway.cpp src/dungeon_crawler/ai/Strafe.cpp src/dungeon_crawler/ai/FaceAndShoot.cpp src/dungeon_crawler/CHealth.cpp src/dungeon_crawler/CooldownSys.cpp src/dungeon_crawler/CCooldown.cpp src/dungeon_crawler/ShootSystem.cpp src/dungeon_crawler/CBullet.cpp src/dungeon_crawler/PlayerCollision.cpp src/engine/ai/RandomSelector.cpp src/engine/ai/Inverter.cpp src/engine/ai/RepeatUntilDone.cpp src/engine/ui/UIObject.cpp src/engine/ui/UIDrawer.cpp src/engine/ui/UIRenderable.cpp src/engine/ui/UITransform.cpp src/engine/ui/UIText.cpp src/engine/ui/TextDrawer.cpp src/dungeon_crawler/HealthScript.cpp src/engine/ui/UIScriptSys.cpp src/dungeon_crawler/LandingScreen.cpp src/engine/ui/UIClickSystem.cpp src/dungeon_crawler/StartButtonResp.cpp src/dungeon_crawler/PauseScreen.cpp src/engine/ui/FullScreenQuadScript.cpp src/engine/components/CAudioSource.cpp src/engine/systems/AudioSystem.cpp .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents src/mainwindow.ui .tmp/cs195u_engine1.0.0/ && (cd `dirname .tmp/cs195u_engine1.0.0` && $(TAR) cs195u_engine1.0.0.tar cs195u_engine1.0.0 && $(COMPRESS) cs195u_engine1.0.0.tar) && $(MOVE) `dirname .tmp/cs195u_engine1.0.0`/cs195u_engine1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/cs195u_engine1.0.0
 
 
 clean:compiler_clean 
@@ -648,12 +653,12 @@ mocables: compiler_moc_header_make_all compiler_moc_source_make_all
 
 check: first
 
-compiler_rcc_make_all: qrc_shaders.cpp qrc_fonts.cpp qrc_images.cpp qrc_models.cpp
+compiler_rcc_make_all: qrc_shaders.cpp qrc_fonts.cpp qrc_images.cpp qrc_models.cpp qrc_sounds.cpp
 compiler_rcc_clean:
-	-$(DEL_FILE) qrc_shaders.cpp qrc_fonts.cpp qrc_images.cpp qrc_models.cpp
+	-$(DEL_FILE) qrc_shaders.cpp qrc_fonts.cpp qrc_images.cpp qrc_models.cpp qrc_sounds.cpp
 qrc_shaders.cpp: res/shaders/shaders.qrc \
-		res/shaders/shader.vert \
-		res/shaders/shader.frag
+		res/shaders/shader.frag \
+		res/shaders/shader.vert
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name shaders res/shaders/shaders.qrc -o qrc_shaders.cpp
 
 qrc_fonts.cpp: res/fonts/fonts.qrc \
@@ -661,17 +666,22 @@ qrc_fonts.cpp: res/fonts/fonts.qrc \
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name fonts res/fonts/fonts.qrc -o qrc_fonts.cpp
 
 qrc_images.cpp: res/images/images.qrc \
-		res/images/grass.png \
-		res/images/gold.png \
-		res/images/heart_empty.png \
 		res/images/title.png \
-		res/images/dungeontex.png \
-		res/images/heart.png
+		res/images/heart_empty.png \
+		res/images/heart.png \
+		res/images/gold.png \
+		res/images/grass.png \
+		res/images/dungeontex.png
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name images res/images/images.qrc -o qrc_images.cpp
 
 qrc_models.cpp: res/models/models.qrc \
 		res/models/Love.obj
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name models res/models/models.qrc -o qrc_models.cpp
+
+qrc_sounds.cpp: res/sounds/sounds.qrc \
+		res/sounds/wind.wav \
+		res/sounds/noise.ogg
+	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name sounds res/sounds/sounds.qrc -o qrc_sounds.cpp
 
 compiler_moc_header_make_all: moc_mainwindow.cpp moc_view.cpp
 compiler_moc_header_clean:
@@ -4474,6 +4484,7 @@ MainScreen.o: src/warmup1/MainScreen.cpp src/warmup1/MainScreen.h \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QVector \
 		src/engine/gen/SpacePartMap.h \
 		src/engine/systems/AudioSystem.h \
+		src/engine/components/CAudioSource.h \
 		libs/fmod/fmod.hpp \
 		libs/fmod/fmod_common.h \
 		libs/fmod/fmod_codec.h \
@@ -13934,7 +13945,14 @@ CAudioSource.o: src/engine/components/CAudioSource.cpp src/engine/components/CAu
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qalgorithms.h \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qpair.h \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QSetIterator \
-		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qset.h
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qset.h \
+		libs/fmod/fmod.hpp \
+		libs/fmod/fmod_common.h \
+		libs/fmod/fmod_codec.h \
+		libs/fmod/fmod_dsp.h \
+		libs/fmod/fmod_dsp_effects.h \
+		libs/fmod/fmod_output.h \
+		libs/fmod/fmod.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CAudioSource.o src/engine/components/CAudioSource.cpp
 
 AudioSystem.o: src/engine/systems/AudioSystem.cpp src/engine/systems/AudioSystem.h \
@@ -13983,13 +14001,6 @@ AudioSystem.o: src/engine/systems/AudioSystem.cpp src/engine/systems/AudioSystem
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qnamespace.h \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qarraydata.h \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstringbuilder.h \
-		libs/fmod/fmod.hpp \
-		libs/fmod/fmod_common.h \
-		libs/fmod/fmod_codec.h \
-		libs/fmod/fmod_dsp.h \
-		libs/fmod/fmod_dsp_effects.h \
-		libs/fmod/fmod_output.h \
-		libs/fmod/fmod.h \
 		src/engine/components/CAudioSource.h \
 		src/engine/components/Component.h \
 		src/engine/objectManagement/GameObject.h \
@@ -14001,7 +14012,127 @@ AudioSystem.o: src/engine/systems/AudioSystem.cpp src/engine/systems/AudioSystem
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qpair.h \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QSetIterator \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qset.h \
-		libs/fmod/fmod_errors.h
+		libs/fmod/fmod.hpp \
+		libs/fmod/fmod_common.h \
+		libs/fmod/fmod_codec.h \
+		libs/fmod/fmod_dsp.h \
+		libs/fmod/fmod_dsp_effects.h \
+		libs/fmod/fmod_output.h \
+		libs/fmod/fmod.h \
+		src/engine/components/CCamera.h \
+		src/engine/graphics/Camera.h \
+		src/engine/util/CommonIncludes.h \
+		libs/glew-1.10.0/include/GL/glew.h \
+		libs/glm/glm.hpp \
+		libs/glm/detail/_fixes.hpp \
+		libs/glm/fwd.hpp \
+		libs/glm/detail/type_int.hpp \
+		libs/glm/detail/setup.hpp \
+		libs/glm/detail/type_float.hpp \
+		libs/glm/detail/type_vec.hpp \
+		libs/glm/detail/precision.hpp \
+		libs/glm/detail/type_mat.hpp \
+		libs/glm/vec2.hpp \
+		libs/glm/detail/type_vec2.hpp \
+		libs/glm/detail/_swizzle.hpp \
+		libs/glm/detail/_swizzle_func.hpp \
+		libs/glm/detail/type_vec2.inl \
+		libs/glm/vec3.hpp \
+		libs/glm/detail/type_vec3.hpp \
+		libs/glm/detail/type_vec3.inl \
+		libs/glm/vec4.hpp \
+		libs/glm/detail/type_vec4.hpp \
+		libs/glm/detail/type_vec4.inl \
+		libs/glm/mat2x2.hpp \
+		libs/glm/detail/type_mat2x2.hpp \
+		libs/glm/detail/type_mat2x2.inl \
+		libs/glm/mat2x3.hpp \
+		libs/glm/detail/type_mat2x3.hpp \
+		libs/glm/detail/type_mat2x3.inl \
+		libs/glm/mat2x4.hpp \
+		libs/glm/detail/type_mat2x4.hpp \
+		libs/glm/detail/type_mat2x4.inl \
+		libs/glm/mat3x2.hpp \
+		libs/glm/detail/type_mat3x2.hpp \
+		libs/glm/detail/type_mat3x2.inl \
+		libs/glm/mat3x3.hpp \
+		libs/glm/detail/type_mat3x3.hpp \
+		libs/glm/detail/type_mat3x3.inl \
+		libs/glm/mat3x4.hpp \
+		libs/glm/detail/type_mat3x4.hpp \
+		libs/glm/detail/type_mat3x4.inl \
+		libs/glm/mat4x2.hpp \
+		libs/glm/detail/type_mat4x2.hpp \
+		libs/glm/detail/type_mat4x2.inl \
+		libs/glm/mat4x3.hpp \
+		libs/glm/detail/type_mat4x3.hpp \
+		libs/glm/detail/type_mat4x3.inl \
+		libs/glm/mat4x4.hpp \
+		libs/glm/detail/type_mat4x4.hpp \
+		libs/glm/detail/type_mat4x4.inl \
+		libs/glm/trigonometric.hpp \
+		libs/glm/detail/func_trigonometric.hpp \
+		libs/glm/detail/func_trigonometric.inl \
+		libs/glm/detail/_vectorize.hpp \
+		libs/glm/detail/type_vec1.hpp \
+		libs/glm/detail/type_vec1.inl \
+		libs/glm/exponential.hpp \
+		libs/glm/detail/func_exponential.hpp \
+		libs/glm/detail/func_exponential.inl \
+		libs/glm/detail/func_vector_relational.hpp \
+		libs/glm/detail/func_vector_relational.inl \
+		libs/glm/common.hpp \
+		libs/glm/detail/func_common.hpp \
+		libs/glm/detail/func_common.inl \
+		libs/glm/packing.hpp \
+		libs/glm/detail/func_packing.hpp \
+		libs/glm/detail/func_packing.inl \
+		libs/glm/detail/type_half.hpp \
+		libs/glm/detail/type_half.inl \
+		libs/glm/geometric.hpp \
+		libs/glm/detail/func_geometric.hpp \
+		libs/glm/detail/func_geometric.inl \
+		libs/glm/matrix.hpp \
+		libs/glm/detail/func_matrix.hpp \
+		libs/glm/detail/func_matrix.inl \
+		libs/glm/vector_relational.hpp \
+		libs/glm/integer.hpp \
+		libs/glm/detail/func_integer.hpp \
+		libs/glm/detail/func_integer.inl \
+		libs/glm/gtx/string_cast.hpp \
+		libs/glm/gtx/integer.hpp \
+		libs/glm/gtx/integer.inl \
+		libs/glm/gtx/quaternion.hpp \
+		libs/glm/gtc/constants.hpp \
+		libs/glm/gtc/constants.inl \
+		libs/glm/gtc/quaternion.hpp \
+		libs/glm/gtx/quaternion.inl \
+		libs/glm/gtx/norm.hpp \
+		libs/glm/gtx/norm.inl \
+		libs/glm/gtx/string_cast.inl \
+		libs/glm/gtx/transform.hpp \
+		libs/glm/gtc/matrix_transform.hpp \
+		libs/glm/gtc/matrix_transform.inl \
+		libs/glm/gtx/transform.inl \
+		libs/glm/gtc/type_ptr.hpp \
+		libs/glm/gtc/type_ptr.inl \
+		libs/fmod/fmod_errors.h \
+		src/engine/components/CTransform.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QTemporaryFile \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qtemporaryfile.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qiodevice.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qobject.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qcoreevent.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qmetatype.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qisenum.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qobject_impl.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qfile.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qfiledevice.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o AudioSystem.o src/engine/systems/AudioSystem.cpp
 
 qrc_shaders.o: qrc_shaders.cpp 
@@ -14015,6 +14146,9 @@ qrc_images.o: qrc_images.cpp
 
 qrc_models.o: qrc_models.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_models.o qrc_models.cpp
+
+qrc_sounds.o: qrc_sounds.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_sounds.o qrc_sounds.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp

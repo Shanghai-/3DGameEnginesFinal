@@ -74,6 +74,13 @@ glm::vec3 Camera::getLook()
     return glm::cos(m_pitch) * horizontal + glm::sin(m_pitch) * m_up;
 }
 
+glm::vec3 Camera::getLookPerp()
+{
+    glm::vec3 left = glm::normalize(glm::cross(m_up, m_forward));
+    glm::vec3 horizontal = glm::cos(m_yaw) * left + glm::sin(m_yaw) * (-m_forward);
+    return glm::cos(m_pitch) * horizontal + glm::sin(m_pitch) * m_up;
+}
+
 void Camera::setLook(glm::vec3 look) {
     look = glm::normalize(look);
     glm::vec3 left = glm::normalize(glm::cross(m_up, m_forward));

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/sounds">
+        <file>wind.wav</file>
+        <file alias="noise.ogg">noise.ogg</file>
+    </qresource>
+</RCC>

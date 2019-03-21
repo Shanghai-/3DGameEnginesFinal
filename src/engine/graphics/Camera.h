@@ -45,6 +45,7 @@ public:
     void setFov(float fov);
 
     glm::vec3 getLook();
+    glm::vec3 getLookPerp();
     void setLook(glm::vec3 look);
 
     glm::vec3 getUp();

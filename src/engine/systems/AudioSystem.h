@@ -2,13 +2,19 @@
 #define AUDIOSYSTEM_H
 
 #include "System.h"
+#include "engine/components/CAudioSource.h"
+#include "engine/components/CCamera.h"
 
 #include "fmod/fmod.hpp"
+
+#define NUM_CHANNELS 128
+
+class QTemporaryFile;
 
 class AudioSystem : public System
 {
 public:
-    AudioSystem(int priority);
+    AudioSystem(int priority, std::shared_ptr<GameObject> listener);
     ~AudioSystem();
 
     QString getComponentType() const;
@@ -17,7 +23,15 @@ public:
     void tick(float seconds);
 
 private:
+    void errChk(FMOD_RESULT res);
+
+    float m_oldX, m_oldY, m_oldZ;
+
     FMOD::System *m_sys;
+    std::shared_ptr<CCamera> m_listener;
+
+    QSet<std::shared_ptr<CAudioSource>> m_sources;
+    QHash<QString, QTemporaryFile *> m_files;
 };
 
 #endif // AUDIOSYSTEM_H
