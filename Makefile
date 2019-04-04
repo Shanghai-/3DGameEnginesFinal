@@ -666,12 +666,12 @@ qrc_fonts.cpp: res/fonts/fonts.qrc \
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name fonts res/fonts/fonts.qrc -o qrc_fonts.cpp
 
 qrc_images.cpp: res/images/images.qrc \
+		res/images/gold.png \
 		res/images/title.png \
 		res/images/heart_empty.png \
 		res/images/heart.png \
-		res/images/gold.png \
-		res/images/grass.png \
-		res/images/dungeontex.png
+		res/images/dungeontex.png \
+		res/images/grass.png
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name images res/images/images.qrc -o qrc_images.cpp
 
 qrc_models.cpp: res/models/models.qrc \
@@ -680,7 +680,7 @@ qrc_models.cpp: res/models/models.qrc \
 
 qrc_sounds.cpp: res/sounds/sounds.qrc \
 		res/sounds/wind.wav \
-		res/sounds/noise.ogg
+		res/sounds/piano_01.ogg
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name sounds res/sounds/sounds.qrc -o qrc_sounds.cpp
 
 compiler_moc_header_make_all: moc_mainwindow.cpp moc_view.cpp

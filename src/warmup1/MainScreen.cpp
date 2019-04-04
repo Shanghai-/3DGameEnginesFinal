@@ -111,7 +111,11 @@ MainScreen::MainScreen(Application *parent) :
     std::shared_ptr<GameObject> test = std::make_shared<GameObject>("heart", m_gw->getNewObjID());
     test->addComponent(std::make_shared<CTransform>(test, true, glm::vec3(0.f), glm::vec3(0.f), glm::vec3(0.005f)));
     test->addComponent(std::make_shared<CRenderable>(test, ":/models/Love.obj", "not_hit"));
-    test->addComponent(std::make_shared<CAudioSource>(test, ":/sounds/noise.ogg"));
+    auto aud = std::make_shared<CAudioSource>(test, ":/sounds/piano_01.ogg", false);
+    //auto aud = std::make_shared<CAudioSource>(test, ":/sounds/wind.wav", true);
+    aud->playLooping();
+    aud->setStereoSpread(90.0f);
+    test->addComponent(aud);
     m_gw->addGameObject(test);
 }
 

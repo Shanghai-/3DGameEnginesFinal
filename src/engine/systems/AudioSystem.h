@@ -24,6 +24,7 @@ public:
 
 private:
     void errChk(FMOD_RESULT res);
+    void loadSound(std::shared_ptr<CAudioSource> s);
 
     float m_oldX, m_oldY, m_oldZ;
 
