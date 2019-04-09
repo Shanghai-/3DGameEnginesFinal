@@ -36,5 +36,38 @@
         <file>guitar_07.ogg</file>
         <file>guitar_08.ogg</file>
         <file>guitar_09.ogg</file>
+        <file>bell_01.ogg</file>
+        <file>bell_02.ogg</file>
+        <file>bell_03.ogg</file>
+        <file>bell_04.ogg</file>
+        <file>bell_05.ogg</file>
+        <file>bell_06.ogg</file>
+        <file>bell_07.ogg</file>
+        <file>bell_08.ogg</file>
+        <file>bell_09.ogg</file>
+        <file>woodwind_01.ogg</file>
+        <file>woodwind_02.ogg</file>
+        <file>woodwind_03.ogg</file>
+        <file>woodwind_04.ogg</file>
+        <file>woodwind_05.ogg</file>
+        <file>woodwind_06.ogg</file>
+        <file>mallet_01.ogg</file>
+        <file>mallet_02.ogg</file>
+        <file>mallet_03.ogg</file>
+        <file>mallet_04.ogg</file>
+        <file>mallet_05.ogg</file>
+        <file>mallet_06.ogg</file>
+        <file>mallet_07.ogg</file>
+        <file>mallet_08.ogg</file>
+        <file>mallet_09.ogg</file>
+        <file>mallet_10.ogg</file>
+        <file>mallet_11.ogg</file>
+        <file>violin_01.ogg</file>
+        <file>violin_02.ogg</file>
+        <file>violin_03.ogg</file>
+        <file>violin_04.ogg</file>
+        <file>violin_05.ogg</file>
+        <file>violin_06.ogg</file>
+        <file>violin_07.ogg</file>
     </qresource>
 </RCC>

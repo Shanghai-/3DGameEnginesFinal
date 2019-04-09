@@ -3,6 +3,7 @@
 
 #include "engine/frame/Screen.h"
 #include "engine/objectManagement/GameWorld.h"
+#include "engine/components/volumes/CollisionVolume.h"
 
 class Application;
 
@@ -33,7 +34,9 @@ private:
     void loadMap();
     void initializeAudio(std::shared_ptr<GameObject> player);
 
-    //void createStar(QString name, QStringList files, )
+    void createAudioZone(std::shared_ptr<GameObject> zoneObj, QStringList files,
+                         std::shared_ptr<CollisionVolume> vol);
+    void createStar(std::shared_ptr<GameObject> starObj, QString file, std::shared_ptr<GameObject> zone);
 
     Application *m_parent;
 

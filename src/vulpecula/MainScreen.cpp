@@ -10,8 +10,10 @@
 #include "engine/components/CRenderable.h"
 #include "engine/components/CAudioSource.h"
 #include "engine/components/CCollider.h"
-#include "engine/components/volumes/CollCylinder.h"
 #include "engine/components/CInputReceiver.h"
+
+#include "engine/components/volumes/CollCylinder.h"
+#include "engine/components/volumes/CollBox.h"
 
 #include "vulpecula/components/RandomAudioSource.h"
 
@@ -19,6 +21,9 @@
 #include "vulpecula/systems/PlayerMovementSys.h"
 
 #include "vulpecula/responders/GuitarZoneResp.h"
+#include "vulpecula/responders/GuitarStarResp.h"
+
+#include <assert.h>
 
 MainScreen::MainScreen(Application *parent) :
     m_parent(parent)
@@ -58,7 +63,7 @@ void MainScreen::initializeGame()
     player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.01f, 0.0f, 0.01f), glm::vec3(0.0f), glm::vec3(0.6f, 0.6f, 1.8f)));
     player->addComponent(std::make_shared<CCamera>(player, glm::vec3(0.0f, 0.4f, 0.0f)));
     player->addComponent(std::make_shared<CRenderable>(player, "cube", "PureWhite"));
-    auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f), 1.0f, 1.5f);
+    auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -0.375f, 0.f), 0.75f, 0.8f);
     auto comp = std::make_shared<CCollider>(player, coll, false);
     player->addComponent(comp);
     player->addComponent(std::make_shared<CInputReceiver>(player));
@@ -105,6 +110,7 @@ void MainScreen::loadGraphics()
     directional.dir = glm::normalize(glm::vec3(0.2f, -0.7f, 0.1f));
     directional.color = glm::vec3(0.7f, 0.77f, 0.9f) * 0.4f;
     g->addLight(directional);
+
 }
 
 void MainScreen::loadMap()
@@ -115,43 +121,47 @@ void MainScreen::loadMap()
     groundPlane->addComponent(std::make_shared<CRenderable>(groundPlane, "quad", "Ground"));
     m_gw->addGameObject(groundPlane);
 
-
+    // Guitar stuff
     std::shared_ptr<GameObject> guitarZone = std::make_shared<GameObject>("GuitarZone", m_gw->getNewObjID());
-    guitarZone->addComponent(std::make_shared<CTransform>(guitarZone, true, glm::vec3(10.0f, 1.0f, 15.0f)));
-    auto randomAudio = std::make_shared<RandomAudioSource>(guitarZone, ":/sounds/guitar_01.ogg", "Music");
-    randomAudio->setAmbient(false);
-    randomAudio->setWaitInterval(3.0f, 7.0f);
-    randomAudio->addFile(":/sounds/guitar_02.ogg");
-    randomAudio->addFile(":/sounds/guitar_03.ogg");
-    randomAudio->addFile(":/sounds/guitar_04.ogg");
-    randomAudio->addFile(":/sounds/guitar_05.ogg");
-    randomAudio->addFile(":/sounds/guitar_06.ogg");
-    randomAudio->addFile(":/sounds/guitar_07.ogg");
-    randomAudio->addFile(":/sounds/guitar_08.ogg");
-    randomAudio->addFile(":/sounds/guitar_09.ogg");
-    randomAudio->setStereoSpread(90);
-    randomAudio->setVolume(0.7f);
-    randomAudio->pause();
-    guitarZone->addComponent(randomAudio);
-    auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -2.0f, 0.f), 5.0f, 10.0f);
-    auto resp = std::make_shared<GuitarZoneResp>(randomAudio);
-    auto comp = std::make_shared<CCollider>(guitarZone, coll, true, resp, CCollider::WORLD);
-    // This isn't really necessary since all the static colliders ignore each other, but it's still good practice
-    comp->ignoreLayer(CCollider::WORLD);
-    guitarZone->addComponent(comp);
-    m_gw->addGameObject(guitarZone);
+    guitarZone->addComponent(std::make_shared<CTransform>(guitarZone, true, glm::vec3(-10.0f, 0.0f, -10.0f)));
+    auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f), 5.0f, 10.0f);
+    QStringList guitarSounds = {":/sounds/guitar_01.ogg", ":/sounds/guitar_02.ogg", ":/sounds/guitar_03.ogg",
+                                ":/sounds/guitar_04.ogg", ":/sounds/guitar_05.ogg", ":/sounds/guitar_06.ogg",
+                                ":/sounds/guitar_07.ogg", ":/sounds/guitar_08.ogg", ":/sounds/guitar_09.ogg"};
+    createAudioZone(guitarZone, guitarSounds, coll);
 
     std::shared_ptr<GameObject> guitarStar = std::make_shared<GameObject>("GuitarStar", m_gw->getNewObjID());
-    guitarStar->addComponent(std::make_shared<CTransform>(guitarStar, true, glm::vec3(10.0f, 1.0f, 20.0f)));
-    guitarStar->addComponent(std::make_shared<CRenderable>(guitarStar, ":/models/star.obj", "Star"));
-    auto guitarMusic = std::make_shared<CAudioSource>(guitarStar, ":/sounds/mus_guitar.ogg", "Music");
-    guitarMusic->setAmbient(true);
-    guitarMusic->setMuted(true);
-    guitarMusic->setStereoSpread(90);
-    guitarMusic->playLooping();
-    guitarStar->addComponent(guitarMusic);
+    guitarStar->addComponent(std::make_shared<CTransform>(guitarStar, true, glm::vec3(-10.0f, 1.0f, -15.0f),
+                                                          glm::vec3(0.f), glm::vec3(0.5f)));
+    createStar(guitarStar, ":/sounds/mus_guitar.ogg", guitarZone);
 
-    m_gw->addGameObject(guitarStar);
+    // Piano stuff
+    std::shared_ptr<GameObject> pianoZone = std::make_shared<GameObject>("PianoZone", m_gw->getNewObjID());
+    pianoZone->addComponent(std::make_shared<CTransform>(pianoZone, true, glm::vec3(10.0f, 0.0f, 6.0f)));
+    coll = std::make_shared<CollCylinder>(glm::vec3(0.f), 3.0f, 3.0f);
+    QStringList pianoSounds = {":/sounds/piano_01.ogg", ":/sounds/piano_02.ogg", ":/sounds/piano_03.ogg",
+                               ":/sounds/piano_04.ogg", ":/sounds/piano_05.ogg", ":/sounds/piano_06.ogg",
+                               ":/sounds/piano_07.ogg"};
+    createAudioZone(pianoZone, pianoSounds, coll);
+
+    std::shared_ptr<GameObject> pianoStar = std::make_shared<GameObject>("PianoStar", m_gw->getNewObjID());
+    pianoStar->addComponent(std::make_shared<CTransform>(pianoStar, true, glm::vec3(12.0f, 1.0f, 8.f),
+                                                         glm::vec3(0.f, 6.0f, 0.f), glm::vec3(0.5f)));
+    createStar(pianoStar, ":/sounds/mus_piano.ogg", pianoZone);
+
+    // Woodwind stuff
+    std::shared_ptr<GameObject> woodZone = std::make_shared<GameObject>("WoodZone", m_gw->getNewObjID());
+    woodZone->addComponent(std::make_shared<CTransform>(woodZone, true, glm::vec3(3.0f, 0.0f, 9.0f)));
+    coll = std::make_shared<CollCylinder>(glm::vec3(0.f), 3.0f, 3.0f);
+    QStringList woodSounds = {":/sounds/woodwind_01.ogg", ":/sounds/woodwind_02.ogg",
+                              ":/sounds/woodwind_03.ogg", ":/sounds/woodwind_04.ogg",
+                              ":/sounds/woodwind_05.ogg", ":/sounds/woodwind_06.ogg"};
+    createAudioZone(woodZone, woodSounds, coll);
+
+    std::shared_ptr<GameObject> woodStar = std::make_shared<GameObject>("WoodStar", m_gw->getNewObjID());
+    woodStar->addComponent(std::make_shared<CTransform>(woodStar, true, glm::vec3(0.5f, 1.0f, 10.0f),
+                                                        glm::vec3(0.0f), glm::vec3(0.5f)));
+    createStar(woodStar, ":/sounds/mus_woodwind.ogg", woodZone);
 }
 
 void MainScreen::initializeAudio(std::shared_ptr<GameObject> player)
@@ -197,6 +207,57 @@ void MainScreen::initializeAudio(std::shared_ptr<GameObject> player)
     m_gw->addGameObject(chimeEmitter);
 
     audioSys->setChannelVolume("Ambient", 0.5f);
+    audioSys->setChannelVolume("Music", 0.3f); // Music starts very quiet and gets louder with more tracks
+    audioSys->setChannelVolume("SFX", 0.8f);
+}
+
+void MainScreen::createAudioZone(std::shared_ptr<GameObject> zoneObj, QStringList files, std::shared_ptr<CollisionVolume> vol)
+{
+    assert(!files.empty());
+    assert(zoneObj != nullptr);
+    assert(vol != nullptr);
+
+    auto randomAudio = std::make_shared<RandomAudioSource>(zoneObj, files.first(), "SFX");
+    randomAudio->setAmbient(true);
+    randomAudio->setWaitInterval(3.0f, 7.0f);
+    randomAudio->setStereoSpread(180);
+    randomAudio->setVolume(0.7f);
+    randomAudio->pause();
+
+    for (int i = 1; i < files.size(); i++) {
+        randomAudio->addFile(files.at(i));
+    }
+
+    zoneObj->addComponent(randomAudio);
+
+    auto resp = std::make_shared<GuitarZoneResp>(randomAudio);
+    auto comp = std::make_shared<CCollider>(zoneObj, vol, true, resp, CCollider::WORLD);
+    // This isn't really necessary since all the static colliders ignore each other, but it's still good practice
+    comp->ignoreLayer(CCollider::WORLD);
+    zoneObj->addComponent(comp);
+    m_gw->addGameObject(zoneObj);
+}
+
+void MainScreen::createStar(std::shared_ptr<GameObject> starObj, QString file, std::shared_ptr<GameObject> zone)
+{
+    assert(starObj != nullptr);
+    //assert(!vol == nullptr);
+
+    starObj->addComponent(std::make_shared<CRenderable>(starObj, ":/models/star.obj", "Star"));
+
+    auto music = std::make_shared<CAudioSource>(starObj, file, false, "Music");
+    music->setAmbient(true);
+    music->setMuted(true);
+    music->setStereoSpread(90);
+    music->playLooping();
+    starObj->addComponent(music);
+
+    auto collider = std::make_shared<CollCylinder>(glm::vec3(0.f, -1.0f, 0.f), 2.0f, 1.0f);
+    auto response = std::make_shared<GuitarStarResp>(starObj, zone, m_gw.get());
+    auto component = std::make_shared<CCollider>(starObj, collider, true, response, CCollider::WORLD);
+    component->ignoreLayer(CCollider::WORLD);
+    starObj->addComponent(component);
+    m_gw->addGameObject(starObj);
 }
 
 void MainScreen::tick(float seconds)
