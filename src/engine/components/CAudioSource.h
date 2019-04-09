@@ -9,7 +9,7 @@ class CAudioSource : public Component
 {
 public:
     CAudioSource(std::shared_ptr<GameObject> parent, QString path, bool playOnAwake);
-    CAudioSource(std::shared_ptr<GameObject> parent, QString path, bool playOnAwake, int channel);
+    CAudioSource(std::shared_ptr<GameObject> parent, QString path, bool playOnAwake, QString channel);
     ~CAudioSource();
 
     void setFile(QString path);
@@ -19,16 +19,18 @@ public:
     void setMuted(bool val) { m_muted = val; }
     void setAmbient(bool val) { m_ambient = val; }
     void setStereoSpread(float val) { m_stereo_spread = val; }
+    void setVolume(float val) { m_volume = val; }
 
     void play();
     void playOnce();
-    void playLooping();
+    virtual void playLooping();
     void pause();
     void stop();
 
     QString getPath() { return m_path; }
     float getStereoSpread() { return m_stereo_spread; }
-    int getChannelGroup() { return m_channel_grp; }
+    float getVolume() { return m_volume; }
+    QString getChannelGroup() { return m_channel_grp; }
 
     bool isAmbient() { return m_ambient; }
     bool isPlaying() { return m_playing && !m_stopped; }
@@ -51,8 +53,9 @@ private:
     bool m_muted;
 
     float m_stereo_spread;
+    float m_volume;
 
-    int m_channel_grp;
+    QString m_channel_grp;
 };
 
 #endif // CAUDIOSOURCE_H

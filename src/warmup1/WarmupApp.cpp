@@ -5,7 +5,7 @@ WarmupApp::WarmupApp(View *v) :
     Application(v)
 {
     v->captureMouse(true);
-    pushScreen(std::make_shared<MainScreen>(this));
+    pushScreen(std::make_shared<WarmupScreen>(this));
 }
 
 WarmupApp::~WarmupApp()

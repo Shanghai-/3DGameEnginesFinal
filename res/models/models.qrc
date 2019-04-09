@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/models">
         <file>Love.obj</file>
+        <file>fox.obj</file>
+        <file>star.obj</file>
     </qresource>
 </RCC>

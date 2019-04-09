@@ -45,9 +45,10 @@ public:
      *        component map.
      * @param c - a shared pointer to the component to remove
      */
-    void removeComponent(const std::shared_ptr<T> c)
+    void removeComponent()
     {
-        m_components.remove(typeid(T).name());
+        std::shared_ptr<Component> removed = m_components.take(typeid(T).name());
+        finishRemoval(removed.get());
     }
 
     template <class T>
@@ -88,6 +89,8 @@ public:
     }
 
 private:
+    void finishRemoval(Component *c);
+
     /* This name field is for GameObject identifiers like
      * "player" or "levelEndTrigger". By checking if the
      * name of the 'other' object in a collision is equal

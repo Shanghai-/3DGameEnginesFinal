@@ -5,6 +5,8 @@
 
 #include "engine/objectManagement/GameObject.h"
 
+class System;
+
 /**
  * @brief The Component class represents a collection of related
  * data which, alongside a System, adds new functionality to a
@@ -13,7 +15,7 @@
  * Components simply encapsulate data and provide getters/
  * setters where appropriate.
  */
-class Component
+class Component : public std::enable_shared_from_this<Component>
 {
 public:
     /**
@@ -55,9 +57,32 @@ public:
      */
     uint getId() const;
 
+    /**
+     * @brief addSystem adds the given system to this Component's
+     *        list of systems it is registered to. This is only
+     *        called by GameWorld when a Component is added to
+     *        a system to make the relation symmetrical.
+     */
+    void addSystem(System *s);
+
+    /**
+     * @brief removeSystem removes the given system from this
+     *        Component's list of systems it is registered to.
+     *        This is only called by GameWorld when a System
+     *        is deleted.
+     */
+    void removeSystem(System *s);
+
+    /**
+     * @brief deleteSelf removes this Component from every System
+     *        currently tracking it.
+     */
+    void deleteSelf();
+
 private:
     uint m_id;
     std::shared_ptr<GameObject> m_parent;
+    QSet<System *> m_systems;
 };
 
 #endif // COMPONENT_H

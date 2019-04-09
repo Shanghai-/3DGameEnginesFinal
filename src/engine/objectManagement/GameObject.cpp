@@ -1,5 +1,7 @@
 #include "GameObject.h"
 
+#include "engine/components/Component.h"
+
 #include <iostream>
 
 GameObject::GameObject(QString name, const uint id) :
@@ -26,4 +28,9 @@ QString GameObject::getName() const
 uint GameObject::getID() const
 {
     return m_id;
+}
+
+void GameObject::finishRemoval(Component *c)
+{
+    c->deleteSelf();
 }

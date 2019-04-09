@@ -53,6 +53,13 @@ void CCollider::onCollide(std::shared_ptr<GameObject> other)
     }
 }
 
+void CCollider::onCollisionEnd(std::shared_ptr<GameObject> other)
+{
+    if (m_collResp != nullptr) {
+        m_collResp->onCollisionEnd(other);
+    }
+}
+
 float CCollider::intersect(glm::vec3 origin, glm::vec3 direction)
 {
     return m_collVol->intersect(origin, direction);

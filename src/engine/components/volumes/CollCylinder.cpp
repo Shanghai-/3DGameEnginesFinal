@@ -164,6 +164,6 @@ void CollCylinder::drawWireframe()
 
     g->clearTransform();
     g->translate(thisTrans->toWorld(m_localPos));
-    g->scale(glm::vec3(m_radius, m_height, m_radius));
+    g->scale(glm::vec3(m_radius * 2, m_height, m_radius * 2));
     g->drawShape("wire_cylinder");
 }

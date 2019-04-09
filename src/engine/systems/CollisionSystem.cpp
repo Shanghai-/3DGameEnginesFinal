@@ -3,11 +3,19 @@
 #include "engine/graphics/Graphics.h"
 
 #include <iostream>
+#include <utility>
 
 CollisionSystem::CollisionSystem(int priority) :
     System(priority)
 {
     m_type = QString::fromStdString(typeid(CCollider).name());
+
+    Material debug;
+    debug.useLighting = false;
+    debug.color = glm::vec3(1.0f, 0.666f, 0.08f);
+
+    m_graphics = Graphics::getGlobalInstance();
+    m_graphics->addMaterial("Debug_Collision", debug);
 }
 
 CollisionSystem::~CollisionSystem()
@@ -27,14 +35,11 @@ void CollisionSystem::addComponent(const std::shared_ptr<Component> &c)
 {
     std::shared_ptr<CCollider> coll = std::dynamic_pointer_cast<CCollider>(c);
     m_colliders.insert(coll);
-    //m_colliders.append(coll);
 }
 
 void CollisionSystem::removeComponent(const std::shared_ptr<Component> &c)
 {
     std::shared_ptr<CCollider> coll = std::dynamic_pointer_cast<CCollider>(c);
-    //std::cout << "removed " << m_colliders.removeAll(coll) << " colliders." << std::endl;
-    //m_colliders.remove(m_colliders.indexOf(coll));
     m_colliders.remove(coll);
 }
 
@@ -67,10 +72,36 @@ void CollisionSystem::tick(float seconds)
                 continue;
             }
 
+            //auto paired = std::make_pair(thisColl, other);
+            bool isATrigger = thisColl->isTrigger() || other->isTrigger();
+            bool alreadyColliding = isATrigger &&
+                    (m_currently_colliding.contains(thisColl, other)
+                    || m_currently_colliding.contains(other, thisColl));
+
             if (thisColl->getCollisionVolume()->collide(other->getCollisionVolume()))
             {
-                thisColl->onCollide(other->getParent());
-                other->onCollide(thisColl->getParent());
+                if (isATrigger) {
+                    if (alreadyColliding) {
+                        // TODO: OnCollisionContinued?
+                    } else {
+                        m_currently_colliding.insert(thisColl, other);
+                        thisColl->onCollide(other->getParent());
+                        other->onCollide(thisColl->getParent());
+                    }
+
+                } else {
+                    thisColl->onCollide(other->getParent());
+                    other->onCollide(thisColl->getParent());
+                }
+
+
+            } else if (alreadyColliding) {
+
+                m_currently_colliding.remove(thisColl, other);
+                m_currently_colliding.remove(other, thisColl);
+
+                thisColl->onCollisionEnd(other->getParent());
+                other->onCollisionEnd(thisColl->getParent());
             }
         }
 
@@ -80,12 +111,15 @@ void CollisionSystem::tick(float seconds)
 
 void CollisionSystem::draw()
 {
+
     QSetIterator<std::shared_ptr<CCollider>> it(m_colliders);
+    m_graphics->setMaterial("Debug_Collision");
     while (it.hasNext())
     {
         std::shared_ptr<CCollider> coll = it.next();
-        if (coll->getLayer() == CCollider::DEFAULT) {
+        /* if (coll->getLayer() == CCollider::DEFAULT) {
             coll->getCollisionVolume()->drawWireframe();
-        }
+        } */
+        coll->getCollisionVolume()->drawWireframe();
     }
 }

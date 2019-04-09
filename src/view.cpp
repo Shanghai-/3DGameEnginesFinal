@@ -101,8 +101,9 @@ void View::initializeGL()
     /** SUPPORT CODE END **/
     m_inManager = InputManager::getGlobalInstance();
 
-    m_app = std::make_unique<WarmupApp>(this);
+    //m_app = std::make_unique<WarmupApp>(this);
     //m_app = std::make_unique<DungeonCrawlerApp>(this);
+    m_app = std::make_unique<VulpeculaApp>(this);
 }
 
 void View::paintGL()

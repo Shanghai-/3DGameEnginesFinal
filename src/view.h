@@ -12,6 +12,7 @@
 
 #include "warmup1/WarmupApp.h"
 #include "dungeon_crawler/DungeonCrawlerApp.h"
+#include "vulpecula/VulpeculaApp.h"
 
 class Graphics;
 
@@ -60,8 +61,9 @@ private:
     Graphics* m_graphics;
     InputManager *m_inManager;
 
-    std::unique_ptr<WarmupApp> m_app;
+    //std::unique_ptr<WarmupApp> m_app;
     //std::unique_ptr<DungeonCrawlerApp> m_app;
+    std::unique_ptr<VulpeculaApp> m_app;
 
 private slots:
     void tick();

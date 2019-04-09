@@ -1,6 +1,9 @@
 #include "InputManager.h"
 
-InputManager::InputManager()
+InputManager::InputManager() :
+    m_mousePos(glm::vec2(0.0f)),
+    m_mouseDelta(glm::vec2(0.0f)),
+    m_scrollAngle(0.0f)
 {
 }
 

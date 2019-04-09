@@ -93,6 +93,15 @@ public:
     void onCollide(std::shared_ptr<GameObject> other);
 
     /**
+     * @brief onCollisionEnd is called when this Collider exits
+     *        another (trigger) collider. This is where the callback
+     *        to the CollisionResponse is generated.
+     * @param other - the owner of the Collider that this Collider
+     *        stopped touching.
+     */
+    void onCollisionEnd(std::shared_ptr<GameObject> other);
+
+    /**
      * @brief intersect takes in a ray for raycasting and returns
      *        the t at which the ray intersects with the collider,
      *        or -1 if it does not hit. This is implemented per

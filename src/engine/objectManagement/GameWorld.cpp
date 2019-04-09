@@ -183,6 +183,7 @@ void GameWorld::addGameObject(std::shared_ptr<GameObject> g)
         while (in.hasNext()) {
             std::shared_ptr<System> thisSys = in.next();
             thisSys->addComponent(toAdd);
+            toAdd->addSystem(thisSys.get());
         }
 
         // Repeat the same process, but with draw systems instead
@@ -193,6 +194,7 @@ void GameWorld::addGameObject(std::shared_ptr<GameObject> g)
         while (iz.hasNext()) {
             std::shared_ptr<System> thisSys = iz.next();
             thisSys->addComponent(toAdd);
+            toAdd->addSystem(thisSys.get());
         }
     }
 }
@@ -243,6 +245,9 @@ void GameWorld::deleteGameObjects()
         while (it.hasNext())
         {
             std::shared_ptr<Component> toRemove = it.next();
+            toRemove->deleteSelf();
+
+            /* std::shared_ptr<Component> toRemove = it.next();
             QString requiredSystem = typeid(*toRemove).name();
 
             QList<std::shared_ptr<System>> systems = m_tickSysMap.values(requiredSystem);
@@ -259,7 +264,7 @@ void GameWorld::deleteGameObjects()
             while (iz.hasNext()) {
                 std::shared_ptr<System> thisSys = iz.next();
                 thisSys->removeComponent(toRemove);
-            }
+            } */
         }
 
         m_ids.enqueue(g->getID());

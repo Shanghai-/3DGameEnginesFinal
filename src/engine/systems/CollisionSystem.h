@@ -7,6 +7,8 @@
 
 #include <utility>
 
+class Graphics;
+
 class CollisionSystem : public System
 {
 public:
@@ -22,7 +24,9 @@ public:
 private:
     QString m_type;
     QSet<std::shared_ptr<CCollider>> m_colliders;
-    //QVector<std::shared_ptr<CCollider>> m_colliders;
+    QMultiHash<std::shared_ptr<CCollider>, std::shared_ptr<CCollider>> m_currently_colliding;
+
+    Graphics *m_graphics;
 };
 
 #endif // COLLISIONSYSTEM_H

@@ -1,6 +1,40 @@
 <RCC>
     <qresource prefix="/sounds">
-        <file>wind.wav</file>
+        <file>chm_hi_01.ogg</file>
+        <file>chm_hi_02.ogg</file>
+        <file>chm_hi_03.ogg</file>
+        <file>chm_hi_04.ogg</file>
+        <file>chm_hi_05.ogg</file>
+        <file>chm_hi_06.ogg</file>
+        <file>chm_md_01.ogg</file>
+        <file>chm_md_02.ogg</file>
+        <file>chm_md_03.ogg</file>
+        <file>chm_md_04.ogg</file>
+        <file>chm_md_05.ogg</file>
+        <file>chm_md_06.ogg</file>
+        <file>wind.ogg</file>
+        <file>mus_bell.ogg</file>
+        <file>mus_guitar.ogg</file>
+        <file>mus_mallet.ogg</file>
+        <file>mus_piano.ogg</file>
+        <file>mus_violin.ogg</file>
+        <file>mus_woodwind.ogg</file>
         <file>piano_01.ogg</file>
+        <file>piano_02.ogg</file>
+        <file>piano_03.ogg</file>
+        <file>piano_04.ogg</file>
+        <file>piano_05.ogg</file>
+        <file>piano_06.ogg</file>
+        <file>piano_07.ogg</file>
+        <file>star_swell.ogg</file>
+        <file>guitar_01.ogg</file>
+        <file>guitar_02.ogg</file>
+        <file>guitar_03.ogg</file>
+        <file>guitar_05.ogg</file>
+        <file>guitar_04.ogg</file>
+        <file>guitar_06.ogg</file>
+        <file>guitar_07.ogg</file>
+        <file>guitar_08.ogg</file>
+        <file>guitar_09.ogg</file>
     </qresource>
 </RCC>

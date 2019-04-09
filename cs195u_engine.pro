@@ -50,7 +50,6 @@ SOURCES += \
     src/engine/frame/Application.cpp \
     src/engine/frame/Screen.cpp \
     src/warmup1/WarmupApp.cpp \
-    src/warmup1/MainScreen.cpp \
     src/engine/input/InputManager.cpp \
     src/engine/objectManagement/GameWorld.cpp \
     src/engine/objectManagement/GameObject.cpp \
@@ -117,7 +116,15 @@ SOURCES += \
     src/dungeon_crawler/PauseScreen.cpp \
     src/engine/ui/FullScreenQuadScript.cpp \
     src/engine/components/CAudioSource.cpp \
-    src/engine/systems/AudioSystem.cpp
+    src/engine/systems/AudioSystem.cpp \
+    src/vulpecula/MainScreen.cpp \
+    src/engine/systems/ThirdPersonCamSys.cpp \
+    src/vulpecula/VulpeculaApp.cpp \
+    src/warmup1/WarmupScreen.cpp \
+    src/vulpecula/components/RandomAudioSource.cpp \
+    src/vulpecula/systems/RandomAudioManager.cpp \
+    src/vulpecula/systems/PlayerMovementSys.cpp \
+    src/vulpecula/responders/GuitarZoneResp.cpp
 
 HEADERS += \
     libs/glew-1.10.0/include/GL/glew.h \
@@ -155,7 +162,6 @@ HEADERS += \
     src/engine/frame/Application.h \
     src/engine/frame/Screen.h \
     src/warmup1/WarmupApp.h \
-    src/warmup1/MainScreen.h \
     src/engine/input/InputManager.h \
     src/engine/objectManagement/GameWorld.h \
     src/engine/objectManagement/GameObject.h \
@@ -236,7 +242,15 @@ HEADERS += \
     src/dungeon_crawler/PauseScreen.h \
     src/engine/ui/FullScreenQuadScript.h \
     src/engine/components/CAudioSource.h \
-    src/engine/systems/AudioSystem.h
+    src/engine/systems/AudioSystem.h \
+    src/vulpecula/MainScreen.h \
+    src/engine/systems/ThirdPersonCamSys.h \
+    src/vulpecula/VulpeculaApp.h \
+    src/warmup1/WarmupScreen.h \
+    src/vulpecula/components/RandomAudioSource.h \
+    src/vulpecula/systems/RandomAudioManager.h \
+    src/vulpecula/systems/PlayerMovementSys.h \
+    src/vulpecula/responders/GuitarZoneResp.h
 
 FORMS += src/mainwindow.ui
 

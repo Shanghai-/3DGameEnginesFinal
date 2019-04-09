@@ -32,16 +32,22 @@ AudioSystem::AudioSystem(int priority, std::shared_ptr<GameObject> listener) :
     errChk(m_sys->init(NUM_CHANNELS, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, nullptr));
 
     // TODO:
-    // 1) Allow user to specify channel groups in CAudioComponent
-    // 2) Allow user to easily set channel volume (individual and group)
-    // 3) Allow user to add/remove DSP units from channel groups (e.g. echo, lowpass)
+    // TESTING Allow user to add/remove DSP units from channel groups (e.g. echo, lowpass)
     //      => User should be able to name DSP units and refer to them by name
-    // 4) Add endpoint for getting/setting master volume (for things like settings menus)
-    // DONE: Specify "I want this sound to loop"
-    // DONE: Allow sounds to play upon trigger rather than always upon load
     // 7) Look into loading and retaining sounds in memory rather than re-loading (do I even re-load?)
     // 8) Building off of that: delete tempfiles for sounds that are no longer in use
-    // DONE: Allow user to specify stereo spread (especially/only for ambient sources)
+
+    // DONE:
+    // Add endpoint for getting/setting master volume (for things like settings menus)
+    // Use CAudioComponent's channel group no. to put it into the given channelgroup
+    // Looping
+    // Allow user to easily set channel volume (individual and group)
+    // Allow sounds to play upon trigger rather than always upon load
+    // Allow user to specify stereo spread (especially/only for ambient sources)
+
+    FMOD::ChannelGroup *master;
+    errChk(m_sys->getMasterChannelGroup(&master));
+    m_channels.insert("Master", master);
 
     m_listener = listener->getComponent<CCamera>();
 }
@@ -151,29 +157,42 @@ void AudioSystem::tick(float seconds)
                 // Apply the requested stereo spread
                 s->channel->set3DSpread(s->getStereoSpread());
 
-            } else {
+                QString channelGroupName = s->getChannelGroup();
+                FMOD::ChannelGroup *cg = m_channels.value(channelGroupName);
 
-                // If the sound is muted, mute the channel
-                if (s->isMuted()) {
-                    s->channel->setMute(true);
-                } else {
-                    s->channel->setMute(false);
+                if (cg == nullptr) {
+                    m_sys->createChannelGroup(qPrintable(channelGroupName), &cg);
+                    m_channels.insert(channelGroupName, cg);
                 }
 
-                // Since the sound is playing, not paused, the channel shouldn't be paused
-                s->channel->setPaused(false);
-
-                // If the sound says it's playing but the channel says it's not, then that means
-                // the sound has finished and is no longer actually playing. So we tell the sound
-                // that it is stopped and reset its channel to null.
-                bool playing;
-                s->channel->isPlaying(&playing);
-
-                if (!playing) {
-                    s->stop();
-                    s->channel = nullptr;
-                }
+                // Add the sound to the group
+                s->channel->setChannelGroup(cg);
             }
+
+            // Set volume
+            s->channel->setVolume(s->getVolume());
+
+            // If the sound is muted, mute the channel
+            if (s->isMuted()) {
+                s->channel->setMute(true);
+            } else {
+                s->channel->setMute(false);
+            }
+
+            // Since the sound is playing, not paused, the channel shouldn't be paused
+            s->channel->setPaused(false);
+
+            // If the sound says it's playing but the channel says it's not, then that means
+            // the sound has finished and is no longer actually playing. So we tell the sound
+            // that it is stopped and reset its channel to null.
+            bool playing;
+            s->channel->isPlaying(&playing);
+
+            if (!playing) {
+                s->stop();
+                s->channel = nullptr;
+            }
+
         } else {
             // If the sound is stopped, we tell FMOD to stop playing and clear the channel
             if (s->isStopped() && s->channel != nullptr) {
@@ -183,6 +202,7 @@ void AudioSystem::tick(float seconds)
                 if (playing) {
                     errChk(s->channel->stop());
                 }
+
                 s->channel = nullptr;
             }
 
@@ -196,6 +216,133 @@ void AudioSystem::tick(float seconds)
     m_sys->update();
 }
 
+/**********************************
+ * CHANNEL MANIPULATION FUNCTIONS *
+ **********************************/
+
+
+void AudioSystem::createChannel(const QString &name)
+{
+    if (m_channels.contains(name)) return; // Already exists
+
+    FMOD::ChannelGroup *cg;
+    errChk(m_sys->createChannelGroup(qPrintable(name), &cg));
+    m_channels.insert(name, cg);
+}
+
+void AudioSystem::deleteChannel(const QString &name)
+{
+    if (name == "Master") return; // Cannot delete master, it's reserved
+
+    FMOD::ChannelGroup *cg = m_channels.take(name);
+    cg->stop();
+    cg->release();
+}
+
+FMOD::ChannelGroup *AudioSystem::getChannel(const QString &name)
+{
+    return m_channels.value(name);
+}
+
+void AudioSystem::setChannelChild(const QString &parent, const QString &child)
+{
+    FMOD::ChannelGroup *p = m_channels.value(parent);
+    FMOD::ChannelGroup *c = m_channels.value(child);
+
+    if (p == nullptr || c == nullptr) {
+        return; // TODO: Throw an exception
+    }
+
+    errChk(p->addGroup(c));
+}
+
+void AudioSystem::setChannelVolume(const QString &name, const float &volume)
+{
+    FMOD::ChannelGroup *cg = m_channels.value(name);
+    if (cg != nullptr) cg->setVolume(volume);
+}
+
+void AudioSystem::setChannelMuted(const QString &name, const bool &isMuted)
+{
+    FMOD::ChannelGroup *cg = m_channels.value(name);
+    if (cg != nullptr) cg->setMute(isMuted);
+}
+
+
+/*******************************
+ * EFFECT MANAGEMENT FUNCTIONS *
+ *******************************/
+
+FMOD::DSP *AudioSystem::createEffect(FMOD_DSP_TYPE type)
+{
+    FMOD::DSP *dsp;
+    errChk(m_sys->createDSPByType(type, &dsp));
+
+    return dsp;
+}
+
+void AudioSystem::addEffectAtStart(FMOD::DSP *effect, QString effectName, QString channelName, bool pre_fader)
+{
+    FMOD::ChannelGroup *cg = m_channels.value(channelName);
+    if (cg == nullptr) return;
+
+    if (pre_fader) {
+        errChk(cg->addDSP(FMOD_CHANNELCONTROL_DSP_HEAD, effect));
+    } else {
+        errChk(cg->addDSP(FMOD_CHANNELCONTROL_DSP_FADER + 1, effect));
+    }
+
+    m_effects.insert(channelName.append(effectName), effect);
+}
+
+void AudioSystem::addEffectAtEnd(FMOD::DSP *effect, QString effectName, QString channelName, bool pre_fader)
+{
+    FMOD::ChannelGroup *cg = m_channels.value(channelName);
+    if (cg == nullptr) return;
+
+    if (pre_fader) {
+        errChk(cg->addDSP(FMOD_CHANNELCONTROL_DSP_FADER - 1, effect));
+    } else {
+        errChk(cg->addDSP(FMOD_CHANNELCONTROL_DSP_TAIL, effect));
+    }
+
+    m_effects.insert(channelName.append(effectName), effect);
+}
+
+void AudioSystem::addEffectAtIndex(FMOD::DSP *effect, QString effectName, QString channelName, bool pre_fader, int index)
+{
+    FMOD::ChannelGroup *cg = m_channels.value(channelName);
+    if (cg == nullptr) return;
+
+    if (pre_fader) {
+        errChk(cg->addDSP(index, effect));
+    } else {
+        errChk(cg->addDSP(FMOD_CHANNELCONTROL_DSP_FADER + index, effect));
+    }
+
+    m_effects.insert(channelName.append(effectName), effect);
+}
+
+FMOD::DSP *AudioSystem::getEffect(QString effectName, QString channelName)
+{
+    return m_effects.value(channelName.append(effectName));
+}
+
+void AudioSystem::removeEffect(QString effectName, QString channelName)
+{
+    FMOD::ChannelGroup *cg = m_channels.value(channelName);
+    if (cg == nullptr) return;
+
+    FMOD::DSP *effect = m_effects.take(channelName.append(effectName));
+
+    errChk(cg->removeDSP(effect));
+    effect->release();
+}
+
+/*****************
+ * SOUND LOADING *
+ *****************/
+
 void AudioSystem::loadSound(std::shared_ptr<CAudioSource> s)
 {
     // If the desired sound has not already been loaded, we load it into a tempfile
@@ -205,10 +352,11 @@ void AudioSystem::loadSound(std::shared_ptr<CAudioSource> s)
         m_files.insert(s->getPath(), f);
     }
 
+    QString fname = m_files[s->getPath()]->fileName();
     if (s->isAmbient()) {
-        errChk(m_sys->createSound(m_files[s->getPath()]->fileName().toStdString().data(), FMOD_3D_HEADRELATIVE, 0, &s->clip));
+        errChk(m_sys->createSound(qPrintable(fname), FMOD_3D_HEADRELATIVE, 0, &s->clip));
     } else {
-        errChk(m_sys->createSound(m_files[s->getPath()]->fileName().toStdString().data(), FMOD_3D_WORLDRELATIVE, 0, &s->clip));
+        errChk(m_sys->createSound(qPrintable(fname), FMOD_3D_WORLDRELATIVE, 0, &s->clip));
     }
 
     // Set loop points at the start and end of the clip

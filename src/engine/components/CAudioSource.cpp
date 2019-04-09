@@ -1,11 +1,11 @@
 #include "CAudioSource.h"
 
 CAudioSource::CAudioSource(std::shared_ptr<GameObject> parent, QString path, bool playOnAwake) :
-    CAudioSource(parent, path, playOnAwake, 0)
+    CAudioSource(parent, path, playOnAwake, "Master")
 {
 }
 
-CAudioSource::CAudioSource(std::shared_ptr<GameObject> parent, QString path, bool playOnAwake, int channel) :
+CAudioSource::CAudioSource(std::shared_ptr<GameObject> parent, QString path, bool playOnAwake, QString channel) :
     Component(parent),
     m_path(path),
     m_path_changed(false),
@@ -15,6 +15,7 @@ CAudioSource::CAudioSource(std::shared_ptr<GameObject> parent, QString path, boo
     m_stopped(false),
     m_muted(false),
     m_stereo_spread(0.0f),
+    m_volume(1.0f),
     m_channel_grp(channel)
 {
 }
