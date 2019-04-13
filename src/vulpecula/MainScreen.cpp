@@ -87,8 +87,14 @@ void MainScreen::loadGraphics()
 
     Material noSnow;
     noSnow.useLighting = true;
-    noSnow.color = glm::vec3(0.05f);
+    noSnow.color = glm::vec3(0.1f);
+    noSnow.shininess = 3.0f;
     g->addMaterial("Ground", noSnow);
+
+    Material cave;
+    cave.useLighting = true;
+    cave.color = glm::vec3(0.1f, 0.8f, 0.9f) * 0.8f;
+    g->addMaterial("Cave", cave);
 
     Material star;
     star.useLighting = true;
@@ -108,18 +114,25 @@ void MainScreen::loadGraphics()
     Light directional;
     directional.type = Light::LIGHT_TYPE::DIRECTIONAL;
     directional.dir = glm::normalize(glm::vec3(0.2f, -0.7f, 0.1f));
-    directional.color = glm::vec3(0.7f, 0.77f, 0.9f) * 0.4f;
+    //directional.color = glm::vec3(0.7f, 0.77f, 0.9f) * 0.4f;
+    directional.color = glm::vec3(0.7f, 0.77f, 0.9f);
     g->addLight(directional);
 
 }
 
 void MainScreen::loadMap()
 {
-    std::shared_ptr<GameObject> groundPlane = std::make_shared<GameObject>("Ground", m_gw->getNewObjID());
-    groundPlane->addComponent(std::make_shared<CTransform>(groundPlane, true, glm::vec3(0.0f, -0.3f, 0.0f),
-                                                           glm::vec3(0.0f), glm::vec3(40.0f, 1.0f, 40.0f)));
-    groundPlane->addComponent(std::make_shared<CRenderable>(groundPlane, "quad", "Ground"));
-    m_gw->addGameObject(groundPlane);
+    std::shared_ptr<GameObject> terrain = std::make_shared<GameObject>("Ground", m_gw->getNewObjID());
+    terrain->addComponent(std::make_shared<CTransform>(terrain, true, glm::vec3(0.0f, -0.3f, 0.0f),
+                                                       glm::vec3(0.f), glm::vec3(2.0f)));
+    terrain->addComponent(std::make_shared<CRenderable>(terrain, ":/models/terrain.obj", "Ground"));
+    m_gw->addGameObject(terrain);
+
+    std::shared_ptr<GameObject> cave = std::make_shared<GameObject>("Cave", m_gw->getNewObjID());
+    cave->addComponent(std::make_shared<CTransform>(cave, true, glm::vec3(0.0f, -0.3f, 0.0f),
+                                                    glm::vec3(0.f), glm::vec3(2.0f)));
+    cave->addComponent(std::make_shared<CRenderable>(cave, ":/models/cave.obj", "Cave"));
+    m_gw->addGameObject(cave);
 
     // Guitar stuff
     std::shared_ptr<GameObject> guitarZone = std::make_shared<GameObject>("GuitarZone", m_gw->getNewObjID());
