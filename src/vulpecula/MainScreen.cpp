@@ -11,6 +11,8 @@
 #include "engine/components/CAudioSource.h"
 #include "engine/components/CCollider.h"
 #include "engine/components/CInputReceiver.h"
+#include "engine/components/cmeshcol.h"
+#include "engine/components/ColEllipsoid.h"
 
 #include "engine/components/volumes/CollCylinder.h"
 #include "engine/components/volumes/CollBox.h"
@@ -53,7 +55,10 @@ void MainScreen::initializeGame()
     m_gw->registerForTick(collSys);
 
     // Player input handling
-    m_gw->registerForTick(std::make_shared<PlayerMovementSys>(100));
+    auto playSys = std::make_shared<PlayerMovementSys>(100);
+    m_gw->registerForTick(playSys);
+    m_gw->registerForDraw(playSys);
+
 
     // Set up materials, lights, etc.
     loadGraphics();
@@ -67,13 +72,14 @@ void MainScreen::initializeGame()
     auto comp = std::make_shared<CCollider>(player, coll, false);
     player->addComponent(comp);
     player->addComponent(std::make_shared<CInputReceiver>(player));
+    player->addComponent(std::make_shared<ColEllipsoid>(player, glm::vec3(1.5f, 1.f, 2.5f)));
     m_gw->addGameObject(player);
 
     // Load the ambient audio, set up channels, etc.
     initializeAudio(player);
 
     // Load in the map
-    loadMap();
+    loadMap(playSys);
 }
 
 void MainScreen::loadGraphics()
@@ -120,18 +126,24 @@ void MainScreen::loadGraphics()
 
 }
 
-void MainScreen::loadMap()
+void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
 {
     std::shared_ptr<GameObject> terrain = std::make_shared<GameObject>("Ground", m_gw->getNewObjID());
     terrain->addComponent(std::make_shared<CTransform>(terrain, true, glm::vec3(0.0f, -0.3f, 0.0f),
                                                        glm::vec3(0.f), glm::vec3(2.0f)));
     terrain->addComponent(std::make_shared<CRenderable>(terrain, ":/models/terrain.obj", "Ground"));
+    std::shared_ptr<CMeshCol> terrainMesh = std::make_shared<CMeshCol>(terrain, ":/models/terrain.obj");
+    terrain->addComponent(terrainMesh);
+    playSys->addMesh(terrainMesh);
     m_gw->addGameObject(terrain);
 
     std::shared_ptr<GameObject> cave = std::make_shared<GameObject>("Cave", m_gw->getNewObjID());
     cave->addComponent(std::make_shared<CTransform>(cave, true, glm::vec3(0.0f, -0.3f, 0.0f),
                                                     glm::vec3(0.f), glm::vec3(2.0f)));
     cave->addComponent(std::make_shared<CRenderable>(cave, ":/models/cave.obj", "Cave"));
+    std::shared_ptr<CMeshCol> caveMesh = std::make_shared<CMeshCol>(cave, ":/models/cave.obj");
+    cave->addComponent(caveMesh);
+    playSys->addMesh(caveMesh);
     m_gw->addGameObject(cave);
 
     // Guitar stuff

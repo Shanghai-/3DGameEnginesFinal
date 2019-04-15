@@ -125,7 +125,9 @@ SOURCES += \
     src/vulpecula/systems/RandomAudioManager.cpp \
     src/vulpecula/systems/PlayerMovementSys.cpp \
     src/vulpecula/responders/GuitarZoneResp.cpp \
-    src/vulpecula/responders/GuitarStarResp.cpp
+    src/vulpecula/responders/GuitarStarResp.cpp \
+    src/engine/components/cmeshcol.cpp \
+    src/engine/components/ColEllipsoid.cpp
 
 HEADERS += \
     libs/glew-1.10.0/include/GL/glew.h \
@@ -252,7 +254,9 @@ HEADERS += \
     src/vulpecula/systems/RandomAudioManager.h \
     src/vulpecula/systems/PlayerMovementSys.h \
     src/vulpecula/responders/GuitarZoneResp.h \
-    src/vulpecula/responders/GuitarStarResp.h
+    src/vulpecula/responders/GuitarStarResp.h \
+    src/engine/components/cmeshcol.h \
+    src/engine/components/ColEllipsoid.h
 
 FORMS += src/mainwindow.ui
 

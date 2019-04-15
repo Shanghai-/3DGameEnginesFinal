@@ -4,6 +4,7 @@
 #include "engine/frame/Screen.h"
 #include "engine/objectManagement/GameWorld.h"
 #include "engine/components/volumes/CollisionVolume.h"
+#include "systems/PlayerMovementSys.h"
 
 class Application;
 
@@ -31,7 +32,7 @@ public:
 private:
     void initializeGame();
     void loadGraphics();
-    void loadMap();
+    void loadMap(std::shared_ptr<PlayerMovementSys> playSys);
     void initializeAudio(std::shared_ptr<GameObject> player);
 
     void createAudioZone(std::shared_ptr<GameObject> zoneObj, QStringList files,

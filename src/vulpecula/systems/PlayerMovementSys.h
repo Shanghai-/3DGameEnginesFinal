@@ -5,6 +5,7 @@
 #include "engine/input/InputManager.h"
 #include "engine/components/CTransform.h"
 #include "engine/graphics/Graphics.h"
+#include "engine/components/cmeshcol.h"
 
 class PlayerMovementSys : public System
 {
@@ -16,12 +17,26 @@ public:
     void addComponent(const std::shared_ptr<Component> &c);
     void removeComponent(const std::shared_ptr<Component> &c);
     void tick(float seconds);
+    void draw();
+    void addMesh(std::shared_ptr<CMeshCol> mesh);
 
 private:
     InputManager *m_input;
     Graphics *m_graphics;
 
     QSet<std::shared_ptr<CTransform>> m_transforms;
+
+    struct returnType{
+        float time;
+        glm::vec3 normal;
+        glm::vec3 contactPoint;
+    };
+
+    std::vector<std::shared_ptr<CMeshCol>> m_meshes;
+    returnType checkCollision(glm::vec3 start, glm::vec3 end, glm::vec3 rad);
+    glm::vec3 scaleVector(glm::vec3 vector, glm::mat4x4 scale);
+
+    // System interface
 };
 
 #endif // PLAYERMOVEMENTSYS_H
