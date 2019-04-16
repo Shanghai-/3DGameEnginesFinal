@@ -11,6 +11,7 @@ class CPhysics : public Component
 {
 public:
     CPhysics(std::shared_ptr<GameObject> parent);
+    CPhysics(std::shared_ptr<GameObject> parent, glm::vec3 grav);
     ~CPhysics();
 
     glm::vec3 vel, acc;

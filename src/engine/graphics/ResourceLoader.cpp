@@ -360,12 +360,13 @@ bool ResourceLoader::readObj(const QString &path, std::vector<glm::vec3> &vertic
 
     // Return shape
     verticesV = positions;
-    facesV.resize(faces.size());
-    int ind = 0;
     for(IndexTuple i : faces) {
         glm::vec3 verts = glm::vec3(i.at(0), i.at(1), i.at(2));
-        facesV[ind] = verts;
-        ind++;
+        glm::vec3 v0 = positions[verts[0]];
+        if(glm::distance(glm::vec3(0.f), v0) < 10.f) {
+            facesV.push_back(verts);
+        }
     }
+    std::cout << "faces" << " " << facesV.size() << std::endl;
     return true;
 }

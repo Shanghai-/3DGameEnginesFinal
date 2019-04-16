@@ -3,6 +3,8 @@
 #include <iostream>
 #include "engine/graphics/Shape.h"
 #include "engine/graphics/ResourceLoader.h"
+#include "engine/graphics/Shape.h"
+#include "engine/components/CTransform.h"
 
 CMeshCol::CMeshCol(std::shared_ptr<GameObject> parent, QString primitiveName) :
     Component(parent),

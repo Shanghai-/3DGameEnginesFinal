@@ -13,6 +13,7 @@
 #include "engine/components/CInputReceiver.h"
 #include "engine/components/cmeshcol.h"
 #include "engine/components/ColEllipsoid.h"
+#include "warmup1/CustomComponents/CPhysics.h"
 
 #include "engine/components/volumes/CollCylinder.h"
 #include "engine/components/volumes/CollBox.h"
@@ -65,7 +66,7 @@ void MainScreen::initializeGame()
 
     // Player setup
     std::shared_ptr<GameObject> player = std::make_shared<GameObject>("Player", m_gw->getNewObjID());
-    player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.01f, 0.0f, 0.01f), glm::vec3(0.0f), glm::vec3(0.6f, 0.6f, 1.8f)));
+    player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.01f, 3.f, 0.01f), glm::vec3(0.0f), glm::vec3(0.6f, 0.6f, 1.8f)));
     player->addComponent(std::make_shared<CCamera>(player, glm::vec3(0.0f, 0.4f, 0.0f)));
     player->addComponent(std::make_shared<CRenderable>(player, "cube", "PureWhite"));
     auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -0.375f, 0.f), 0.75f, 0.8f);
@@ -73,6 +74,7 @@ void MainScreen::initializeGame()
     player->addComponent(comp);
     player->addComponent(std::make_shared<CInputReceiver>(player));
     player->addComponent(std::make_shared<ColEllipsoid>(player, glm::vec3(1.5f, 1.f, 2.5f)));
+    player->addComponent(std::make_shared<CPhysics>(player, glm::vec3(0.f, -.3f, 0.f)));
     m_gw->addGameObject(player);
 
     // Load the ambient audio, set up channels, etc.
@@ -93,7 +95,7 @@ void MainScreen::loadGraphics()
 
     Material noSnow;
     noSnow.useLighting = true;
-    noSnow.color = glm::vec3(0.1f);
+    noSnow.color = glm::vec3(1.f);//glm::vec3(0.1f);
     noSnow.shininess = 3.0f;
     g->addMaterial("Ground", noSnow);
 
