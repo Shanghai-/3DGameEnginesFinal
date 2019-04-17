@@ -21,7 +21,7 @@ void ColEllipsoid::drawWireframe()
     g->clearTransform();
     g->translate(thisTrans->toWorld(glm::vec3(0)));
     glm::vec3 test = thisTrans->toWorld(glm::vec3(0));
-    g->scale(m_radii);
+    g->scale(m_radii * 2.f);
     g->drawShape("wire_sphere");
 }
 

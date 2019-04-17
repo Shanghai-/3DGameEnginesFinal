@@ -5,6 +5,7 @@
 #include "engine/graphics/Camera.h"
 #include "engine/components/ColEllipsoid.h"
 #include "warmup1/CustomComponents/CPhysics.h"
+#include "engine/graphics/Shape.h"
 
 PlayerMovementSys::PlayerMovementSys(int priority) :
     System(priority)
@@ -17,6 +18,17 @@ PlayerMovementSys::~PlayerMovementSys()
 {
 }
 
+void PlayerMovementSys::addToVector(std::vector<float> &vector, int index, std::vector<float> values) {
+    for(size_t i = 0; i < values.size(); i++) {
+        vector[index + i] = values[i];
+    }
+}
+
+void PlayerMovementSys::addToVector(std::vector<int> &vector, int index, std::vector<int> values) {
+    for(size_t i = 0; i < values.size(); i++) {
+        vector[index + i] = values[i];
+    }
+}
 
 QString PlayerMovementSys::getComponentType() const
 {
@@ -31,6 +43,19 @@ void PlayerMovementSys::addComponent(const std::shared_ptr<Component> &c)
 {
     std::shared_ptr<CTransform> t = c->getSibling<CTransform>();
     m_transforms.insert(t);
+
+    if(m_transforms.size() == 1) {
+        addMesh(std::make_unique<CMeshCol>(c->getParent()));
+        std::vector<float> vertices(8 * 4);
+        std::vector<int> faces(3 * 2);
+        addToVector(vertices, 0, {-10, 10, -10, 0, 1, 0, 0, 0});
+        addToVector(vertices, 8, {-10, 10, 10, 0, 1, 0, 0, 0});
+        addToVector(vertices, 16, {10, 15, -10, 0, 1, 0, 0, 0});
+        addToVector(vertices, 24, {10, 15, 10, 0, 1, 0, 0, 0});
+        addToVector(faces, 0, {0, 1, 2});
+        addToVector(faces, 3, {3, 2, 1});
+        m_shape = std::make_shared<Shape>(vertices, faces);
+    }
 }
 
 void PlayerMovementSys::removeComponent(const std::shared_ptr<Component> &c)
@@ -77,16 +102,16 @@ void PlayerMovementSys::tick(float seconds)
             dir -= left * seconds;
         }
 
-//        returnType values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
-//        glm::vec3 hit = transform->pos + (dir * values.time);
-//        transform->pos = hit;
+        returnType values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
+        glm::vec3 hit = transform->pos + (dir * values.time);
+        transform->pos = hit + (0.01f * values.normal);
 
         std::shared_ptr<CPhysics> phys = transform->getSibling<CPhysics>();
         dir = phys->vel;
-        returnType values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
-        glm::vec3 hit = transform->pos + (dir * values.time);
-        transform->pos = hit;
-        std::cout << values.time << std::endl;
+        values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
+        hit = transform->pos + (dir * values.time);
+        transform->pos = hit + (0.001f * values.normal);
+
         if(values.time < 1.f) {
             phys->vel = glm::vec3(0.f, 0.f, 0.f);
         }
@@ -120,23 +145,26 @@ PlayerMovementSys::returnType PlayerMovementSys::checkCollision(glm::vec3 start,
     end = scaleVector(end, model);
 
     for(int meshNum = 0; meshNum < m_meshes.size(); meshNum++) {
-        std::vector<glm::vec3> faces = m_meshes.at(meshNum)->getFaces();
-        std::vector<glm::vec3> vertexList = m_meshes.at(meshNum)->getVertices();
+        std::shared_ptr<CMeshCol> mesh = m_meshes.at(meshNum);
+        std::vector<glm::vec3> faces = mesh->getFaces();
+        std::vector<glm::vec3> vertexList = mesh->getVertices();
+        std::vector<glm::vec3> normals = mesh->getNormals();
         for(int i = 0; i < faces.size(); i++) {
             glm::vec3 face = faces[i];
             glm::vec3 v0 = scaleVector(vertexList[face[0]], model);
             glm::vec3 v1 = scaleVector(vertexList[face[1]], model);
             glm::vec3 v2 = scaleVector(vertexList[face[2]], model);
 
-            glm::vec3 normal = glm::normalize(glm::cross(v1 - v0, v2 - v0));
-            glm::vec4 norm = glm::normalize(model * glm::vec4(normal, 0.f));
+            glm::vec4 norm = glm::normalize(model * glm::vec4(normals[i], 0.f));
             glm::vec3 N = glm::vec3(norm);
 
             //Check ellipsoid/interior
             float t = glm::dot(-N, start - N - v0) / glm::dot(N, end - start);
             glm::vec3 P = (start - N) + ((end - start) * t);
             if(glm::dot(glm::cross(v1 - v0, P - v0), N) > 0.f && glm::dot(glm::cross(v2 - v1, P - v1), N) > 0.f && glm::dot(glm::cross(v0 - v2, P - v2), N) > 0.f) {
+                //std::cout << t << std::endl;
                 if(t > 0.f && t < values.time) {
+                    //std::cout << "interior" << std::endl;
                     values.time = t;
                     values.contactPoint = P;
                     values.normal = N;
@@ -164,6 +192,7 @@ PlayerMovementSys::returnType PlayerMovementSys::checkCollision(glm::vec3 start,
                     float checkVal = glm::dot(P - C, D - C);
                     if(0.f < checkVal && checkVal < glm::pow(glm::length(D - C), 2.f)) {
                         if(t > 0.f && t < values.time) {
+                            //std::cout << "edge" << std::endl;
                             values.time = t;
                             values.contactPoint = P;
                             values.normal = N;
@@ -193,6 +222,7 @@ PlayerMovementSys::returnType PlayerMovementSys::checkCollision(glm::vec3 start,
                     P = V - ((end - start) * t);
                     if(glm::abs(glm::pow(glm::length(P - start), 2.f) - 1.f) < 0.00001f) {
                         if(t > 0.f && t < values.time) {
+                            //std::cout << "vertex" << std::endl;
                             values.time = t;
                             values.contactPoint = P;
                             values.normal = N;
@@ -217,4 +247,11 @@ void PlayerMovementSys::draw()
         std::shared_ptr<CTransform> transform = it.next();
         transform->getSibling<ColEllipsoid>()->drawWireframe();
     }
+
+    Graphics *g = Graphics::getGlobalInstance();
+
+    g->clearTransform();
+    g->translate(glm::vec3(0.f));
+    g->scale(glm::vec3(1.f));
+    g->drawShape(m_shape);
 }

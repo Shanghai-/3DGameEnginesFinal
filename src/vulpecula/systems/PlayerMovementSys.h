@@ -36,6 +36,10 @@ private:
     returnType checkCollision(glm::vec3 start, glm::vec3 end, glm::vec3 rad);
     glm::vec3 scaleVector(glm::vec3 vector, glm::mat4x4 scale);
 
+    std::shared_ptr<Shape> m_shape;
+    void addToVector(std::vector<float> &vector, int index, std::vector<float> values);
+    void addToVector(std::vector<int> &vector, int index, std::vector<int> values);
+
     // System interface
 };
 

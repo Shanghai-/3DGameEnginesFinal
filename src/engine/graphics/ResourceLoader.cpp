@@ -253,7 +253,7 @@ bool ResourceLoader::readObj(const QString &path, std::shared_ptr<Shape> &shape)
     return true;
 }
 
-bool ResourceLoader::readObj(const QString &path, std::vector<glm::vec3> &verticesV, std::vector<glm::vec3> &facesV) {
+bool ResourceLoader::readObj(const QString &path, std::vector<glm::vec3> &verticesV, std::vector<glm::vec3> &facesV, std::vector<glm::vec3> &normalsV) {
     // Open the file
     QFile file(path);
 
@@ -288,7 +288,7 @@ bool ResourceLoader::readObj(const QString &path, std::vector<glm::vec3> &vertic
         if (parts[0] == "v" && parts.count() >= 4)
         {
             const glm::vec3 pos = glm::vec3(parts[1].toFloat(), parts[2].toFloat(), parts[3].toFloat());
-            positions.push_back(pos);
+            verticesV.push_back(pos);
         }
         // vertex texture coordinate
         else if (parts[0] == "vt")
@@ -300,7 +300,7 @@ bool ResourceLoader::readObj(const QString &path, std::vector<glm::vec3> &vertic
         else if(parts[0] == "vn")
         {
             const glm::vec3 normal = glm::vec3(parts[1].toFloat(), parts[2].toFloat(), parts[3].toFloat());
-            normals.push_back(normal);
+            normalsV.push_back(normal);
         }
         // triangle face
         else if(parts[0] == "f")
@@ -317,56 +317,13 @@ bool ResourceLoader::readObj(const QString &path, std::vector<glm::vec3> &vertic
             if(!success) {
                 return false;
             }
+
+            const IndexTuple i = faces.at(numFaces);
+            const IndexTuple i1 = faces.at(numFaces + 1);
+            const IndexTuple i2 = faces.at(numFaces + 2);
+            glm::vec3 pos = glm::vec3(i[0] - 1, i1[0] - 1, i2[0] - 1);
+            facesV.push_back(pos);
         }
     }
-
-    // Accumulate vertex data from arrays
-    std::vector<float> vertices = std::vector<float>(faces.size() * 8);
-    auto verticesIt = vertices.begin();
-
-    for(auto facesIt = faces.begin(); facesIt != faces.end(); ++facesIt)
-    {
-        // Get data corresponding to current face
-        const IndexTuple i = *facesIt;
-        glm::vec3 pos;
-        glm::vec2 texc;
-        glm::vec3 norm;
-
-        // pos
-        pos = positions.at(i[0]-1);
-
-        // texcoord
-        if(!texCoords.empty())
-        {
-            texc = texCoords.at(i[1]-1);
-        }
-
-        // normal
-        if(!normals.empty())
-        {
-            norm = normals.at(i[2]-1);
-        }
-
-        float vert[8] =
-        {
-            pos.x, pos.y, pos.z,
-            norm.x, norm.y, norm.z,
-            texc.x, texc.y
-        };
-
-        std::copy(std::begin(vert), std::end(vert), verticesIt);
-        std::advance(verticesIt, 8);
-    }
-
-    // Return shape
-    verticesV = positions;
-    for(IndexTuple i : faces) {
-        glm::vec3 verts = glm::vec3(i.at(0), i.at(1), i.at(2));
-        glm::vec3 v0 = positions[verts[0]];
-        if(glm::distance(glm::vec3(0.f), v0) < 10.f) {
-            facesV.push_back(verts);
-        }
-    }
-    std::cout << "faces" << " " << facesV.size() << std::endl;
     return true;
 }

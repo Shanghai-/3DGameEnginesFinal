@@ -38,7 +38,7 @@ public:
 
     static bool parseFaceVertex(const QString &vertString, IndexTuple &vertex);
     static bool readObj(const QString &path, std::shared_ptr<Shape> &shape);
-    static bool readObj(const QString &path, std::vector<glm::vec3> &verticesV, std::vector<glm::vec3> &facesV);
+    static bool readObj(const QString &path, std::vector<glm::vec3> &verticesV, std::vector<glm::vec3> &facesV, std::vector<glm::vec3> &normalsV);
 };
 
 #endif // RESOURCELOADER_H

@@ -66,14 +66,14 @@ void MainScreen::initializeGame()
 
     // Player setup
     std::shared_ptr<GameObject> player = std::make_shared<GameObject>("Player", m_gw->getNewObjID());
-    player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.01f, 3.f, 0.01f), glm::vec3(0.0f), glm::vec3(0.6f, 0.6f, 1.8f)));
+    player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.f, 15.f, 0.f), glm::vec3(0.0f), glm::vec3(0.6f, 0.6f, 1.8f)));
     player->addComponent(std::make_shared<CCamera>(player, glm::vec3(0.0f, 0.4f, 0.0f)));
     player->addComponent(std::make_shared<CRenderable>(player, "cube", "PureWhite"));
     auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -0.375f, 0.f), 0.75f, 0.8f);
     auto comp = std::make_shared<CCollider>(player, coll, false);
     player->addComponent(comp);
     player->addComponent(std::make_shared<CInputReceiver>(player));
-    player->addComponent(std::make_shared<ColEllipsoid>(player, glm::vec3(1.5f, 1.f, 2.5f)));
+    player->addComponent(std::make_shared<ColEllipsoid>(player, glm::vec3(.75f, .5f, 1.25f)));
     player->addComponent(std::make_shared<CPhysics>(player, glm::vec3(0.f, -.3f, 0.f)));
     m_gw->addGameObject(player);
 
@@ -136,7 +136,8 @@ void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
     terrain->addComponent(std::make_shared<CRenderable>(terrain, ":/models/terrain.obj", "Ground"));
     std::shared_ptr<CMeshCol> terrainMesh = std::make_shared<CMeshCol>(terrain, ":/models/terrain.obj");
     terrain->addComponent(terrainMesh);
-    playSys->addMesh(terrainMesh);
+    //playSys->addMesh(terrainMesh);
+    m_testMesh = terrainMesh;
     m_gw->addGameObject(terrain);
 
     std::shared_ptr<GameObject> cave = std::make_shared<GameObject>("Cave", m_gw->getNewObjID());
@@ -145,7 +146,7 @@ void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
     cave->addComponent(std::make_shared<CRenderable>(cave, ":/models/cave.obj", "Cave"));
     std::shared_ptr<CMeshCol> caveMesh = std::make_shared<CMeshCol>(cave, ":/models/cave.obj");
     cave->addComponent(caveMesh);
-    playSys->addMesh(caveMesh);
+    //playSys->addMesh(caveMesh);
     m_gw->addGameObject(cave);
 
     // Guitar stuff
@@ -295,6 +296,7 @@ void MainScreen::tick(float seconds)
 void MainScreen::draw()
 {
     m_gw->draw();
+    //m_testMesh->drawWireframe();
 }
 
 void MainScreen::resize(int w, int h)

@@ -14,7 +14,7 @@ CPhysics::CPhysics(std::shared_ptr<GameObject> parent, glm::vec3 grav) :
     acc(grav),
     canJump(true)
 {
-
+    vel = grav;
 }
 
 CPhysics::~CPhysics()
