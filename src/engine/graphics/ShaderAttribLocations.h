@@ -26,7 +26,8 @@ namespace ShaderAttrib {
 
     // Starting at this index,
     const GLuint SPECIAL0 = 9;
-
+    const GLuint BONES = 10;
+    const GLuint WEIGHTS = 11;
 }
 
 #endif // SHADERATTRIBLOCATIONS_H

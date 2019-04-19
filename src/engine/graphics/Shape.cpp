@@ -202,9 +202,6 @@ void Shape::addVertex(float x, float y, float z, float n1, float n2, float n3, f
 }
 
 void Shape::addVertices(const std::vector<float> &vertices) {
-    /* float min_x, min_y, min_z, max_x, max_y, max_z;
-    min_x = min_y = min_z = std::numeric_limits<float>::infinity();
-    max_x = max_y = max_z = -std::numeric_limits<float>::infinity(); */
 
     for(size_t i = 0; i < vertices.size(); i += 8) {
         float x = vertices[i];
@@ -216,19 +213,10 @@ void Shape::addVertices(const std::vector<float> &vertices) {
         float s = vertices[i+6];
         float t = vertices[i+7];
 
-        /* if (x < min_x) min_x = x;
-        if (y < min_y) min_y = y;
-        if (z < min_z) min_z = z;
-        if (x > max_x) max_x = x;
-        if (y > max_y) max_y = y;
-        if (z > max_z) max_z = z; */
-
         addPosition(x, y, z);
         addNormal(n1, n2, n3);
         addTextureCoordinate(s, t);
     }
-
-    //m_bounds = AABB(glm::vec3(min_x, min_y, min_z), glm::vec3(max_x, max_y, max_z));
 }
 
 void Shape::addFace(int v1, int v2, int v3) {

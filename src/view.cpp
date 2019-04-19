@@ -110,7 +110,7 @@ void View::paintGL()
 {
     /** SUPPORT CODE START **/
 
-    m_graphics->setClearColor(glm::vec3(0, 0, 0.5));
+    //m_graphics->setClearColor(m_graphics->m_c;
     m_graphics->clearScreen(Graphics::CLEAR_FLAG::ALL);
     m_graphics->clearShader();
     m_graphics->setDefaultMaterial();

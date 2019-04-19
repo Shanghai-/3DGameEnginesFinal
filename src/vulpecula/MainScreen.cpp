@@ -1,25 +1,34 @@
 #include "MainScreen.h"
 
+// ENGINE SYSTEMS
 #include "engine/systems/RenderSystem.h"
 #include "engine/systems/ThirdPersonCamSys.h"
 #include "engine/systems/AudioSystem.h"
 #include "engine/systems/CollisionSystem.h"
+#include "engine/systems/AnimationSystem.h"
 
+// ENGINE COMPONENTS
 #include "engine/components/CCamera.h"
 #include "engine/components/CTransform.h"
 #include "engine/components/CRenderable.h"
 #include "engine/components/CAudioSource.h"
 #include "engine/components/CCollider.h"
 #include "engine/components/CInputReceiver.h"
+#include "engine/components/CAnimatedMesh.h"
 
+// ENGINE MISC.
 #include "engine/components/volumes/CollCylinder.h"
 #include "engine/components/volumes/CollBox.h"
+#include "engine/graphics/TextureCube.h"
 
-#include "vulpecula/components/RandomAudioSource.h"
-
+// CUSTOM SYSTEMS
 #include "vulpecula/systems/RandomAudioManager.h"
 #include "vulpecula/systems/PlayerMovementSys.h"
 
+// CUSTOM COMPONENTS
+#include "vulpecula/components/RandomAudioSource.h"
+
+// CUSTOM MISC.
 #include "vulpecula/responders/GuitarZoneResp.h"
 #include "vulpecula/responders/GuitarStarResp.h"
 
@@ -39,9 +48,15 @@ MainScreen::~MainScreen()
 void MainScreen::initializeGame()
 {
     auto collSys = std::make_shared<CollisionSystem>(300);
+    auto animSys = std::make_shared<AnimationSystem>(500);
+    auto renderSys = std::make_shared<RenderSystem>(200);
+
+    TextureCube::Cubemap skyMap = {"front.png", "back.png", "left.png", "right.png", "up.png", "down.png"};
+    renderSys->setSkybox(std::make_shared<TextureCube>("/course/cs1950u/.archive/2019/student/vulpecula/skybox/", skyMap));
 
     // Renderer
-    m_gw->registerForDraw(std::make_shared<RenderSystem>(200));
+    m_gw->registerForDraw(renderSys);
+    m_gw->registerForDraw(animSys);
 
     // This displays wireframes around all colliders
     m_gw->registerForDraw(collSys);
@@ -52,6 +67,9 @@ void MainScreen::initializeGame()
     // Non-environment collisions
     m_gw->registerForTick(collSys);
 
+    // Animation bone updater
+    m_gw->registerForTick(animSys);
+
     // Player input handling
     m_gw->registerForTick(std::make_shared<PlayerMovementSys>(100));
 
@@ -60,9 +78,11 @@ void MainScreen::initializeGame()
 
     // Player setup
     std::shared_ptr<GameObject> player = std::make_shared<GameObject>("Player", m_gw->getNewObjID());
-    player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.01f, 0.0f, 0.01f), glm::vec3(0.0f), glm::vec3(0.6f, 0.6f, 1.8f)));
+    //player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.01f, 0.0f, 0.01f), glm::vec3(0.0f), glm::vec3(0.6f, 0.6f, 1.8f)));
+    player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.01f, 0.0f, 0.01f), glm::vec3(0.0f), glm::vec3(0.2f)));
     player->addComponent(std::make_shared<CCamera>(player, glm::vec3(0.0f, 0.4f, 0.0f)));
-    player->addComponent(std::make_shared<CRenderable>(player, "cube", "PureWhite"));
+    //player->addComponent(std::make_shared<CRenderable>(player, "cube", "PureWhite"));
+    player->addComponent(std::make_shared<CAnimatedMesh>(player, "/course/cs1950u/.archive/2019/student/vulpecula/fox.fbx", "PureWhite"));
     auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -0.375f, 0.f), 0.75f, 0.8f);
     auto comp = std::make_shared<CCollider>(player, coll, false);
     player->addComponent(comp);
@@ -80,10 +100,11 @@ void MainScreen::loadGraphics()
 {
     Graphics *g = Graphics::getGlobalInstance();
 
-    Material m;
-    m.useLighting = false;
-    m.color = glm::vec3(0.95f, 0.95f, 0.95f);
-    g->addMaterial("PureWhite", m);
+    Material fox;
+    fox.useLighting = false;
+    fox.color = glm::vec3(0.95f, 0.95f, 0.95f);
+    fox.shaderName = "Animated";
+    g->addMaterial("PureWhite", fox);
 
     Material noSnow;
     noSnow.useLighting = true;

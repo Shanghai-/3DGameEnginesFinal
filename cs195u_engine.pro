@@ -10,6 +10,7 @@ unix:!macx {
     LIBS += -lGLU
     INCLUDEPATH += libs/fmod/
     LIBS += -L"$$PWD/libs/fmod/" -lfmodL
+    LIBS += -lassimp
 }
 macx {
     QMAKE_CFLAGS_X86_64 += -mmacosx-version-min=10.7
@@ -125,7 +126,13 @@ SOURCES += \
     src/vulpecula/systems/RandomAudioManager.cpp \
     src/vulpecula/systems/PlayerMovementSys.cpp \
     src/vulpecula/responders/GuitarZoneResp.cpp \
-    src/vulpecula/responders/GuitarStarResp.cpp
+    src/vulpecula/responders/GuitarStarResp.cpp \
+    src/engine/graphics/RiggedMesh.cpp \
+    src/engine/systems/AnimationSystem.cpp \
+    src/engine/components/CAnimatedMesh.cpp \
+    src/engine/graphics/Animation.cpp \
+    src/engine/graphics/Armature.cpp \
+    src/engine/graphics/TextureCube.cpp
 
 HEADERS += \
     libs/glew-1.10.0/include/GL/glew.h \
@@ -252,7 +259,13 @@ HEADERS += \
     src/vulpecula/systems/RandomAudioManager.h \
     src/vulpecula/systems/PlayerMovementSys.h \
     src/vulpecula/responders/GuitarZoneResp.h \
-    src/vulpecula/responders/GuitarStarResp.h
+    src/vulpecula/responders/GuitarStarResp.h \
+    src/engine/graphics/RiggedMesh.h \
+    src/engine/systems/AnimationSystem.h \
+    src/engine/components/CAnimatedMesh.h \
+    src/engine/graphics/Animation.h \
+    src/engine/graphics/Armature.h \
+    src/engine/graphics/TextureCube.h
 
 FORMS += src/mainwindow.ui
 

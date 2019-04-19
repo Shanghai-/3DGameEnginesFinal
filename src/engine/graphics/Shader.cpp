@@ -8,6 +8,7 @@
 
 #include "engine/graphics/GraphicsDebug.h"
 #include "engine/graphics/Texture2D.h"
+#include "engine/graphics/TextureCube.h"
 
 Shader::Shader(const std::string &vertexSource, const std::string &fragmentSource)
 {
@@ -188,7 +189,8 @@ void Shader::setUniformArrayByIndex(const std::string &name, const glm::mat3 &ma
 }
 
 void Shader::setUniformArrayByIndex(const std::string &name, const glm::mat4 &mat4, size_t index) {
-    glUniformMatrix4fv(m_uniformArrays[std::make_tuple(name, index)], 1, GL_FALSE, glm::value_ptr(mat4));
+    std::string affixed = name + "[" + std::to_string(index) + "]";
+    glUniformMatrix4fv(getUniformLocation(affixed), 1, GL_FALSE, glm::value_ptr(mat4));
 }
 
 void Shader::setTexture(const std::string &name, const Texture1D &t) {}
@@ -203,7 +205,13 @@ void Shader::setTexture(const std::string &name, const Texture2D &t) {
 
 void Shader::setTexture(const std::string &name, const Texture3D &t) {}
 
-void Shader::setTexture(const std::string &name, const TextureCube &t) {}
+void Shader::setTexture(const std::string &name, const TextureCube &t) {
+    GLint location = m_textureLocations[name];
+    GLint slot = m_textureSlots[location];
+    glActiveTexture(GL_TEXTURE0 + slot);
+    glUniform1i(location, slot);
+    t.bind();
+}
 
 void Shader::attachShaders(const std::vector<GLuint> &shaders) {
     std::for_each(shaders.begin(), shaders.end(), [this](int s){ glAttachShader(m_programID, s); });

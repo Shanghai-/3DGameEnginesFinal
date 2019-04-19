@@ -50,6 +50,9 @@ Graphics::Graphics() :
     // Default shader
     addShader("default", ":/shaders/shader.vert", ":/shaders/shader.frag");
 
+    // Skybox shader
+    addShader("skybox", ":/shaders/skybox.vert", ":/shaders/skybox.frag");
+
     // Default material
     addMaterial("default", m_activeMaterial);
 
@@ -288,6 +291,11 @@ void Graphics::setShader(const std::shared_ptr<Shader> &shader) {
 
     // Set transform
     Graphics::setTransform(m_transform);
+
+    // Set lights
+    for(size_t i = 0; i < m_lights.size(); i++) {
+        setLightUniforms(m_lights[i], i);
+    }
 }
 
 void Graphics::clearShader() {

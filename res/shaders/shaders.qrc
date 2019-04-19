@@ -2,5 +2,8 @@
     <qresource prefix="/shaders">
         <file>shader.frag</file>
         <file>shader.vert</file>
+        <file>animated.vert</file>
+        <file>skybox.frag</file>
+        <file>skybox.vert</file>
     </qresource>
 </RCC>

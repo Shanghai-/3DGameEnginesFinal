@@ -55,8 +55,10 @@ public:
     void addTextureCoordinate(float s, float t);
     void addTextureCoordinates(const std::vector<float> &texCoords);
 
-    void addVertex(float x, float y, float z, float n1, float n2, float n3, float s, float t);
-    void addVertices(const std::vector<float> &vertices);
+    void addVertex(float x, float y, float z,
+                   float n1, float n2, float n3,
+                   float s, float t);
+    virtual void addVertices(const std::vector<float> &vertices);
 
     void addFace(int v1, int v2, int v3);
     void addFaces(const std::vector<int> &faces);
@@ -85,13 +87,13 @@ public:
     glm::mat4 getModelMatrix();
     AABB getBounds();
 
-    void draw(const std::shared_ptr<Graphics> &g);
-    void draw(Graphics *g);
+    virtual void draw(const std::shared_ptr<Graphics> &g);
+    virtual void draw(Graphics *g);
 
     bool printDebug();
 
-private:
-    void build();
+protected:
+    virtual void build();
 
 private:
     std::vector<float> m_positions;

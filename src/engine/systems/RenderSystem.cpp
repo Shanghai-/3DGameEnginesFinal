@@ -4,11 +4,11 @@
 #include "engine/graphics/Shape.h"
 #include "engine/components/CCamera.h"
 
-#include <iostream>
-#include "glm/gtx/string_cast.hpp"
+#include <QImage>
 
 RenderSystem::RenderSystem(int priority) :
-    System(priority)
+    System(priority),
+    m_skyboxTex(nullptr)
 {
     m_graphics = Graphics::getGlobalInstance();
 }
@@ -19,6 +19,7 @@ RenderSystem::~RenderSystem()
 
 void RenderSystem::draw()
 {
+    m_graphics->setShader("default");
     std::shared_ptr<CCamera> cam = m_graphics->getActiveCamera();
 
     QSetIterator<std::shared_ptr<CRenderable>> it(m_renderComponents);
@@ -55,6 +56,30 @@ void RenderSystem::draw()
 
         m_graphics->setMaterial(r->getMaterialName().toStdString());
         m_graphics->drawShape(r->getShapeName().toStdString());
+    }
+
+    if (m_skyboxTex) {
+        GLint oldCullingMode, oldDepthMode;
+        glGetIntegerv(GL_CULL_FACE_MODE, &oldCullingMode);
+        glGetIntegerv(GL_DEPTH_FUNC, &oldDepthMode);
+
+        m_graphics->setShader("skybox");
+
+        glCullFace(GL_FRONT);
+        glDepthFunc(GL_LEQUAL);
+
+        m_graphics->getActiveShader()->setTexture("skyboxTexture", *(m_skyboxTex.get()));
+        m_graphics->clearTransform();
+        m_graphics->translate(cam->getCameraObject()->getEye());
+        //m_graphics->translate(glm::vec3(0.0f));
+        m_graphics->scale(glm::vec3(10.0f));
+        m_graphics->setView(cam->getCameraObject()->getView());
+        m_graphics->setProjection(cam->getCameraObject()->getProjection());
+        m_graphics->drawShape("sphere");
+        m_graphics->clearShader();
+
+        glCullFace(oldCullingMode);
+        glDepthFunc(oldDepthMode);
     }
 }
 
@@ -93,4 +118,10 @@ void RenderSystem::removeComponent(const std::shared_ptr<Component> &c)
 {
     std::shared_ptr<CRenderable> r = std::dynamic_pointer_cast<CRenderable>(c);
     m_renderComponents.remove(r);
+}
+
+void RenderSystem::setSkybox(std::shared_ptr<TextureCube> c)
+{
+    m_skyboxTex = c;
+    m_skyboxTex->setTextureParams(Texture::FILTER_METHOD::LINEAR, Texture::WRAP_METHOD::CLAMP_TO_EDGE);
 }
