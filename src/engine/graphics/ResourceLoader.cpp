@@ -252,3 +252,78 @@ bool ResourceLoader::readObj(const QString &path, std::shared_ptr<Shape> &shape)
     shape = std::make_shared<Shape>(vertices);
     return true;
 }
+
+bool ResourceLoader::readObj(const QString &path, std::vector<glm::vec3> &verticesV, std::vector<glm::vec3> &facesV, std::vector<glm::vec3> &normalsV) {
+    // Open the file
+    QFile file(path);
+
+    if (!file.open(QFile::ReadOnly | QFile::Text))
+    {
+        std::cout << "ERROR: Could not read OBJ file." << std::endl;
+        return false;
+    }
+
+    // Vertices normals and texture coordinates
+    std::vector<glm::vec3> positions;
+    std::vector<glm::vec3> normals;
+    std::vector<glm::vec2> texCoords;
+    std::vector<IndexTuple> faces;
+
+    // Used if positions, normals, and texture coordinates with different indices are mixed
+    IndexTuple defaultTuple;
+    defaultTuple.resize(3,0);
+
+    // Read file
+    QTextStream f(&file);
+    QString line("");
+    QRegExp spaces("\\s+");
+
+    while(!line.isNull())
+    {
+        line = f.readLine().trimmed();
+        QStringList parts = line.split(spaces);
+        if (parts.isEmpty()) continue;
+
+        // vertex position
+        if (parts[0] == "v" && parts.count() >= 4)
+        {
+            const glm::vec3 pos = glm::vec3(parts[1].toFloat(), parts[2].toFloat(), parts[3].toFloat());
+            verticesV.push_back(pos);
+        }
+        // vertex texture coordinate
+        else if (parts[0] == "vt")
+        {
+            const glm::vec2 coord = glm::vec2(parts[1].toFloat(), parts[2].toFloat());
+            texCoords.push_back(coord);
+        }
+        // vertex normal
+        else if(parts[0] == "vn")
+        {
+            const glm::vec3 normal = glm::vec3(parts[1].toFloat(), parts[2].toFloat(), parts[3].toFloat());
+            normalsV.push_back(normal);
+        }
+        // triangle face
+        else if(parts[0] == "f")
+        {
+            int numFaces = faces.size();
+            faces.resize(numFaces + 3, defaultTuple);
+
+            bool success = true;
+            success &= parseFaceVertex(parts[1], faces[numFaces]);
+            success &= parseFaceVertex(parts[2], faces[numFaces + 1]);
+            success &= parseFaceVertex(parts[3], faces[numFaces + 2]);
+            assert(success);
+
+            if(!success) {
+                return false;
+            }
+
+            const IndexTuple i = faces.at(numFaces);
+            const IndexTuple i1 = faces.at(numFaces + 1);
+            const IndexTuple i2 = faces.at(numFaces + 2);
+            glm::vec3 pos = glm::vec3(i[0] - 1, i1[0] - 1, i2[0] - 1);
+            facesV.push_back(pos);
+        }
+    }
+    return true;
+}

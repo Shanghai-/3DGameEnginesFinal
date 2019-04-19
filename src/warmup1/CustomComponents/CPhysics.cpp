@@ -8,6 +8,15 @@ CPhysics::CPhysics(std::shared_ptr<GameObject> parent) :
 {
 }
 
+CPhysics::CPhysics(std::shared_ptr<GameObject> parent, glm::vec3 grav) :
+    Component(parent),
+    vel(glm::vec3(0.f)),
+    acc(grav),
+    canJump(true)
+{
+    vel = grav;
+}
+
 CPhysics::~CPhysics()
 {
 }

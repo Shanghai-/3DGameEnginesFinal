@@ -132,7 +132,9 @@ SOURCES += \
     src/engine/components/CAnimatedMesh.cpp \
     src/engine/graphics/Animation.cpp \
     src/engine/graphics/Armature.cpp \
-    src/engine/graphics/TextureCube.cpp
+    src/engine/graphics/TextureCube.cpp \
+    src/engine/components/cmeshcol.cpp \
+    src/engine/components/ColEllipsoid.cpp
 
 HEADERS += \
     libs/glew-1.10.0/include/GL/glew.h \
@@ -265,7 +267,9 @@ HEADERS += \
     src/engine/components/CAnimatedMesh.h \
     src/engine/graphics/Animation.h \
     src/engine/graphics/Armature.h \
-    src/engine/graphics/TextureCube.h
+    src/engine/graphics/TextureCube.h \
+    src/engine/components/cmeshcol.h \
+    src/engine/components/ColEllipsoid.h
 
 FORMS += src/mainwindow.ui
 

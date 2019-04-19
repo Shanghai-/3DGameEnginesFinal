@@ -15,6 +15,8 @@
 #include "engine/components/CCollider.h"
 #include "engine/components/CInputReceiver.h"
 #include "engine/components/CAnimatedMesh.h"
+#include "engine/components/cmeshcol.h"
+#include "engine/components/ColEllipsoid.h"
 
 // ENGINE MISC.
 #include "engine/components/volumes/CollCylinder.h"
@@ -27,6 +29,7 @@
 
 // CUSTOM COMPONENTS
 #include "vulpecula/components/RandomAudioSource.h"
+#include "warmup1/CustomComponents/CPhysics.h"
 
 // CUSTOM MISC.
 #include "vulpecula/responders/GuitarZoneResp.h"
@@ -71,7 +74,10 @@ void MainScreen::initializeGame()
     m_gw->registerForTick(animSys);
 
     // Player input handling
-    m_gw->registerForTick(std::make_shared<PlayerMovementSys>(100));
+    auto playSys = std::make_shared<PlayerMovementSys>(100);
+    m_gw->registerForTick(playSys);
+    m_gw->registerForDraw(playSys);
+
 
     // Set up materials, lights, etc.
     loadGraphics();
@@ -79,7 +85,7 @@ void MainScreen::initializeGame()
     // Player setup
     std::shared_ptr<GameObject> player = std::make_shared<GameObject>("Player", m_gw->getNewObjID());
     //player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.01f, 0.0f, 0.01f), glm::vec3(0.0f), glm::vec3(0.6f, 0.6f, 1.8f)));
-    player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.01f, 0.0f, 0.01f), glm::vec3(0.0f), glm::vec3(0.2f)));
+    player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.f, 15.f, 0.f), glm::vec3(0.0f), glm::vec3(0.2f)));
     player->addComponent(std::make_shared<CCamera>(player, glm::vec3(0.0f, 0.4f, 0.0f)));
     //player->addComponent(std::make_shared<CRenderable>(player, "cube", "PureWhite"));
     player->addComponent(std::make_shared<CAnimatedMesh>(player, "/course/cs1950u/.archive/2019/student/vulpecula/fox.fbx", "PureWhite"));
@@ -87,13 +93,15 @@ void MainScreen::initializeGame()
     auto comp = std::make_shared<CCollider>(player, coll, false);
     player->addComponent(comp);
     player->addComponent(std::make_shared<CInputReceiver>(player));
+    player->addComponent(std::make_shared<ColEllipsoid>(player, glm::vec3(.75f, .5f, 1.25f)));
+    player->addComponent(std::make_shared<CPhysics>(player, glm::vec3(0.f, -.3f, 0.f)));
     m_gw->addGameObject(player);
 
     // Load the ambient audio, set up channels, etc.
     initializeAudio(player);
 
     // Load in the map
-    loadMap();
+    loadMap(playSys);
 }
 
 void MainScreen::loadGraphics()
@@ -108,7 +116,7 @@ void MainScreen::loadGraphics()
 
     Material noSnow;
     noSnow.useLighting = true;
-    noSnow.color = glm::vec3(0.1f);
+    noSnow.color = glm::vec3(1.f);//glm::vec3(0.1f);
     noSnow.shininess = 3.0f;
     g->addMaterial("Ground", noSnow);
 
@@ -141,18 +149,25 @@ void MainScreen::loadGraphics()
 
 }
 
-void MainScreen::loadMap()
+void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
 {
     std::shared_ptr<GameObject> terrain = std::make_shared<GameObject>("Ground", m_gw->getNewObjID());
     terrain->addComponent(std::make_shared<CTransform>(terrain, true, glm::vec3(0.0f, -0.3f, 0.0f),
                                                        glm::vec3(0.f), glm::vec3(2.0f)));
     terrain->addComponent(std::make_shared<CRenderable>(terrain, ":/models/terrain.obj", "Ground"));
+    std::shared_ptr<CMeshCol> terrainMesh = std::make_shared<CMeshCol>(terrain, ":/models/terrain.obj");
+    terrain->addComponent(terrainMesh);
+    //playSys->addMesh(terrainMesh);
+    m_testMesh = terrainMesh;
     m_gw->addGameObject(terrain);
 
     std::shared_ptr<GameObject> cave = std::make_shared<GameObject>("Cave", m_gw->getNewObjID());
     cave->addComponent(std::make_shared<CTransform>(cave, true, glm::vec3(0.0f, -0.3f, 0.0f),
                                                     glm::vec3(0.f), glm::vec3(2.0f)));
     cave->addComponent(std::make_shared<CRenderable>(cave, ":/models/cave.obj", "Cave"));
+    std::shared_ptr<CMeshCol> caveMesh = std::make_shared<CMeshCol>(cave, ":/models/cave.obj");
+    cave->addComponent(caveMesh);
+    //playSys->addMesh(caveMesh);
     m_gw->addGameObject(cave);
 
     // Guitar stuff
@@ -302,6 +317,7 @@ void MainScreen::tick(float seconds)
 void MainScreen::draw()
 {
     m_gw->draw();
+    //m_testMesh->drawWireframe();
 }
 
 void MainScreen::resize(int w, int h)
