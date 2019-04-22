@@ -152,18 +152,18 @@ void MainScreen::loadGraphics()
 void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
 {
     std::shared_ptr<GameObject> terrain = std::make_shared<GameObject>("Ground", m_gw->getNewObjID());
-    terrain->addComponent(std::make_shared<CTransform>(terrain, true, glm::vec3(0.0f, -0.3f, 0.0f),
-                                                       glm::vec3(0.f), glm::vec3(2.0f)));
+    terrain->addComponent(std::make_shared<CTransform>(terrain, true, glm::vec3(0.0f, 0.f, 0.0f),
+                                                       glm::vec3(0.f), glm::vec3(1.0f)));
     terrain->addComponent(std::make_shared<CRenderable>(terrain, ":/models/terrain.obj", "Ground"));
     std::shared_ptr<CMeshCol> terrainMesh = std::make_shared<CMeshCol>(terrain, ":/models/terrain.obj");
     terrain->addComponent(terrainMesh);
-    //playSys->addMesh(terrainMesh);
+    playSys->addMesh(terrainMesh);
     m_testMesh = terrainMesh;
     m_gw->addGameObject(terrain);
 
     std::shared_ptr<GameObject> cave = std::make_shared<GameObject>("Cave", m_gw->getNewObjID());
-    cave->addComponent(std::make_shared<CTransform>(cave, true, glm::vec3(0.0f, -0.3f, 0.0f),
-                                                    glm::vec3(0.f), glm::vec3(2.0f)));
+    cave->addComponent(std::make_shared<CTransform>(cave, true, glm::vec3(0.0f, 0.f, 0.0f),
+                                                    glm::vec3(0.f), glm::vec3(1.0f)));
     cave->addComponent(std::make_shared<CRenderable>(cave, ":/models/cave.obj", "Cave"));
     std::shared_ptr<CMeshCol> caveMesh = std::make_shared<CMeshCol>(cave, ":/models/cave.obj");
     cave->addComponent(caveMesh);
@@ -317,7 +317,7 @@ void MainScreen::tick(float seconds)
 void MainScreen::draw()
 {
     m_gw->draw();
-    //m_testMesh->drawWireframe();
+    m_testMesh->drawWireframe();
 }
 
 void MainScreen::resize(int w, int h)

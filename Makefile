@@ -892,11 +892,11 @@ compiler_rcc_make_all: qrc_shaders.cpp qrc_fonts.cpp qrc_images.cpp qrc_models.c
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_shaders.cpp qrc_fonts.cpp qrc_images.cpp qrc_models.cpp qrc_sounds.cpp
 qrc_shaders.cpp: res/shaders/shaders.qrc \
-		res/shaders/skybox.frag \
-		res/shaders/shader.vert \
-		res/shaders/animated.vert \
 		res/shaders/skybox.vert \
-		res/shaders/shader.frag
+		res/shaders/shader.frag \
+		res/shaders/animated.vert \
+		res/shaders/skybox.frag \
+		res/shaders/shader.vert
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name shaders res/shaders/shaders.qrc -o qrc_shaders.cpp
 
 qrc_fonts.cpp: res/fonts/fonts.qrc \
@@ -904,91 +904,91 @@ qrc_fonts.cpp: res/fonts/fonts.qrc \
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name fonts res/fonts/fonts.qrc -o qrc_fonts.cpp
 
 qrc_images.cpp: res/images/images.qrc \
-		res/images/title.png \
 		res/images/heart.png \
+		res/images/grass.png \
 		res/images/gold.png \
-		res/images/heart_empty.png \
 		res/images/dungeontex.png \
-		res/images/grass.png
+		res/images/heart_empty.png \
+		res/images/title.png
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name images res/images/images.qrc -o qrc_images.cpp
 
 qrc_models.cpp: res/models/models.qrc \
 		res/models/Love.obj \
-		res/models/terrain.obj \
 		res/models/cave.obj \
+		res/models/terrain.obj \
 		res/models/star.obj
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name models res/models/models.qrc -o qrc_models.cpp
 
 qrc_sounds.cpp: res/sounds/sounds.qrc \
-		res/sounds/piano_07.ogg \
-		res/sounds/bell_09.ogg \
-		res/sounds/chm_hi_03.ogg \
 		res/sounds/guitar_08.ogg \
 		res/sounds/chm_md_01.ogg \
+		res/sounds/mus_woodwind.ogg \
+		res/sounds/bell_01.ogg \
 		res/sounds/mallet_02.ogg \
 		res/sounds/violin_01.ogg \
-		res/sounds/woodwind_05.ogg \
-		res/sounds/piano_02.ogg \
-		res/sounds/mus_violin.ogg \
-		res/sounds/bell_04.ogg \
-		res/sounds/mus_guitar.ogg \
+		res/sounds/piano_01.ogg \
 		res/sounds/guitar_03.ogg \
 		res/sounds/chm_md_05.ogg \
+		res/sounds/woodwind_04.ogg \
+		res/sounds/bell_05.ogg \
 		res/sounds/mallet_06.ogg \
 		res/sounds/violin_05.ogg \
-		res/sounds/piano_06.ogg \
-		res/sounds/bell_08.ogg \
 		res/sounds/chm_hi_02.ogg \
+		res/sounds/piano_05.ogg \
 		res/sounds/guitar_07.ogg \
+		res/sounds/mus_violin.ogg \
 		res/sounds/mallet_01.ogg \
-		res/sounds/woodwind_04.ogg \
-		res/sounds/piano_01.ogg \
-		res/sounds/bell_03.ogg \
+		res/sounds/bell_09.ogg \
+		res/sounds/mus_guitar.ogg \
+		res/sounds/wind.ogg \
 		res/sounds/chm_hi_06.ogg \
 		res/sounds/guitar_02.ogg \
 		res/sounds/chm_md_04.ogg \
+		res/sounds/woodwind_03.ogg \
+		res/sounds/bell_04.ogg \
 		res/sounds/mallet_05.ogg \
 		res/sounds/violin_04.ogg \
 		res/sounds/mallet_11.ogg \
-		res/sounds/piano_05.ogg \
 		res/sounds/mus_piano.ogg \
-		res/sounds/bell_07.ogg \
-		res/sounds/star_swell.ogg \
 		res/sounds/chm_hi_01.ogg \
+		res/sounds/piano_04.ogg \
 		res/sounds/guitar_06.ogg \
+		res/sounds/bell_08.ogg \
 		res/sounds/mallet_09.ogg \
-		res/sounds/woodwind_03.ogg \
-		res/sounds/bell_02.ogg \
 		res/sounds/mus_bell.ogg \
 		res/sounds/chm_hi_05.ogg \
 		res/sounds/guitar_01.ogg \
 		res/sounds/chm_md_03.ogg \
+		res/sounds/woodwind_02.ogg \
+		res/sounds/bell_03.ogg \
 		res/sounds/mallet_04.ogg \
 		res/sounds/violin_03.ogg \
 		res/sounds/mallet_10.ogg \
-		res/sounds/piano_04.ogg \
-		res/sounds/wind.ogg \
-		res/sounds/bell_06.ogg \
+		res/sounds/star_swell.ogg \
+		res/sounds/piano_03.ogg \
 		res/sounds/guitar_05.ogg \
+		res/sounds/woodwind_06.ogg \
+		res/sounds/bell_07.ogg \
 		res/sounds/mallet_08.ogg \
 		res/sounds/violin_07.ogg \
-		res/sounds/woodwind_02.ogg \
-		res/sounds/mus_mallet.ogg \
-		res/sounds/bell_01.ogg \
 		res/sounds/chm_hi_04.ogg \
+		res/sounds/piano_07.ogg \
+		res/sounds/woodwind_01.ogg \
 		res/sounds/guitar_09.ogg \
 		res/sounds/chm_md_02.ogg \
-		res/sounds/mus_woodwind.ogg \
+		res/sounds/bell_02.ogg \
 		res/sounds/mallet_03.ogg \
 		res/sounds/violin_02.ogg \
-		res/sounds/piano_03.ogg \
-		res/sounds/woodwind_06.ogg \
-		res/sounds/bell_05.ogg \
+		res/sounds/piano_02.ogg \
 		res/sounds/guitar_04.ogg \
 		res/sounds/chm_md_06.ogg \
+		res/sounds/woodwind_05.ogg \
+		res/sounds/bell_06.ogg \
 		res/sounds/mallet_07.ogg \
 		res/sounds/violin_06.ogg \
-		res/sounds/woodwind_01.ogg
+		res/sounds/mus_mallet.ogg \
+		res/sounds/chm_hi_03.ogg \
+		res/sounds/piano_06.ogg
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name sounds res/sounds/sounds.qrc -o qrc_sounds.cpp
 
 compiler_moc_header_make_all: moc_mainwindow.cpp moc_view.cpp
@@ -4998,30 +4998,6 @@ Component.o: src/engine/components/Component.cpp src/engine/components/Component
 		../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qpair.h \
 		../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QSetIterator \
 		../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qset.h \
-		libs/raknet/RakPeerInterface.h \
-		libs/raknet/PacketPriority.h \
-		libs/raknet/RakNetTypes.h \
-		libs/raknet/RakNetDefines.h \
-		libs/raknet/RakNetDefinesOverrides.h \
-		libs/raknet/NativeTypes.h \
-		libs/raknet/RakNetTime.h \
-		libs/raknet/Export.h \
-		libs/raknet/WindowsIncludes.h \
-		libs/raknet/XBox360Includes.h \
-		libs/raknet/SocketIncludes.h \
-		libs/raknet/RakMemoryOverride.h \
-		libs/raknet/RakAlloca.h \
-		libs/raknet/DS_List.h \
-		libs/raknet/RakAssert.h \
-		libs/raknet/RakNetSmartPtr.h \
-		libs/raknet/RakNetSocket2.h \
-		libs/raknet/MTUSize.h \
-		libs/raknet/LocklessTypes.h \
-		libs/raknet/SimpleMutex.h \
-		libs/raknet/RakThread.h \
-		libs/raknet/DS_ThreadsafeAllocatingQueue.h \
-		libs/raknet/DS_Queue.h \
-		libs/raknet/DS_MemoryPool.h \
 		src/engine/systems/System.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Component.o src/engine/components/Component.cpp
 
