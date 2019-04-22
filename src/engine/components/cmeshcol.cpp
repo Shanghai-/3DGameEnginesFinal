@@ -35,7 +35,7 @@ CMeshCol::CMeshCol(std::shared_ptr<GameObject> parent, QString primitiveName) :
             shapeVertices[ind + 6] = 0.f;
             shapeVertices[ind + 7] = 1.f;
 
-            ind = 8 * verts[0];
+            ind = 8 * verts[1];
             pos = m_vertices[verts[1]];
             shapeVertices[ind] = pos[0];
             shapeVertices[ind + 1] = pos[1];
@@ -46,7 +46,7 @@ CMeshCol::CMeshCol(std::shared_ptr<GameObject> parent, QString primitiveName) :
             shapeVertices[ind + 6] = 0.f;
             shapeVertices[ind + 7] = 1.f;
 
-            ind = 8 * verts[0];
+            ind = 8 * verts[2];
             pos = m_vertices[verts[2]];
             shapeVertices[ind] = pos[0];
             shapeVertices[ind + 1] = pos[1];
