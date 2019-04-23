@@ -244,7 +244,9 @@ SOURCES += \
     libs/raknet/CCRakNetSlidingWindow.cpp \
     libs/raknet/BitStream.cpp \
     libs/raknet/Base64Encoder.cpp \
-    libs/raknet/_FindFirst.cpp
+    libs/raknet/_FindFirst.cpp \
+    src/engine/systems/networksystem.cpp \
+    src/vulpecula/menuscreen.cpp
 
 HEADERS += \
     libs/glew-1.10.0/include/GL/glew.h \
@@ -533,7 +535,9 @@ HEADERS += \
     libs/raknet/Base64Encoder.h \
     libs/raknet/AutopatcherRepositoryInterface.h \
     libs/raknet/AutopatcherPatchContext.h \
-    libs/raknet/_FindFirst.h
+    libs/raknet/_FindFirst.h \
+    src/engine/systems/networksystem.h \
+    src/vulpecula/menuscreen.h
 
 FORMS += src/mainwindow.ui
 
