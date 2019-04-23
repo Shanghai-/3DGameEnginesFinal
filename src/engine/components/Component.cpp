@@ -1,5 +1,4 @@
 #include "Component.h"
-
 #include "engine/systems/System.h"
 
 Component::Component(std::shared_ptr<GameObject> parent) :
