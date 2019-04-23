@@ -28,11 +28,6 @@ uint Component::getId() const
     return m_id;
 }
 
-/* inline uint qHash(const System *&key)
-{
-    return qHa
-} */
-
 void Component::addSystem(System *s)
 {
     m_systems.insert(s);

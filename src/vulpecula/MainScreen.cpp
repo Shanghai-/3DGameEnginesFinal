@@ -62,7 +62,7 @@ void MainScreen::initializeGame()
     m_gw->registerForDraw(animSys);
 
     // This displays wireframes around all colliders
-    m_gw->registerForDraw(collSys);
+    //m_gw->registerForDraw(collSys);
 
     // 3rd person camera system
     m_gw->registerForTick(std::make_shared<ThirdPersonCamSys>(400, 3.0f, 100.0f, 4.0f));
@@ -76,7 +76,7 @@ void MainScreen::initializeGame()
     // Player input handling
     auto playSys = std::make_shared<PlayerMovementSys>(100);
     m_gw->registerForTick(playSys);
-    m_gw->registerForDraw(playSys);
+    //m_gw->registerForDraw(playSys);
 
 
     // Set up materials, lights, etc.
@@ -87,7 +87,6 @@ void MainScreen::initializeGame()
     //player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.01f, 0.0f, 0.01f), glm::vec3(0.0f), glm::vec3(0.6f, 0.6f, 1.8f)));
     player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.f, 15.f, 0.f), glm::vec3(0.0f), glm::vec3(0.2f)));
     player->addComponent(std::make_shared<CCamera>(player, glm::vec3(0.0f, 0.4f, 0.0f)));
-    //player->addComponent(std::make_shared<CRenderable>(player, "cube", "PureWhite"));
     player->addComponent(std::make_shared<CAnimatedMesh>(player, "/course/cs1950u/.archive/2019/student/vulpecula/fox.fbx", "PureWhite"));
     auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -0.375f, 0.f), 0.75f, 0.8f);
     auto comp = std::make_shared<CCollider>(player, coll, false);
@@ -116,7 +115,7 @@ void MainScreen::loadGraphics()
 
     Material noSnow;
     noSnow.useLighting = true;
-    noSnow.color = glm::vec3(1.f);//glm::vec3(0.1f);
+    noSnow.color = glm::vec3(0.25f);//glm::vec3(0.1f);
     noSnow.shininess = 3.0f;
     g->addMaterial("Ground", noSnow);
 
