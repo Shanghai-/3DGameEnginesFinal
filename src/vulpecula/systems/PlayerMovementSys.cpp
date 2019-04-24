@@ -154,11 +154,49 @@ void PlayerMovementSys::tick(float seconds)
             phys->vel += (phys->acc * seconds);
         }
 
-        //find if new position crosses over to a new mesh section.
-        //if so, remove and add the appropriate sections from m_meshMap
-        glm::vec2 pos2D = glm::vec2(transform->pos[0], transform->pos[2]);
+        //UNCOMMENT THIS ONCE WE ACTUALLY HAVE THE MESH CHUNKS IN
+        //updateMeshMap(glm::vec2(transform->pos[0], transform->pos[2]));
+    }
+}
 
+void PlayerMovementSys::updateMeshMap(glm::vec2 pos2D)
+{
+    glm::ivec2 posCoords;
+    posCoords[0] = glm::clamp((int)glm::floor(pos2D[0] / 16.f), 0, 9);
+    posCoords[1] = glm::clamp((int)glm::floor(pos2D[1] / 16.f), 0, 9);
+    if(m_curPos != posCoords) {
+        glm::ivec2 dir = posCoords - m_curPos;
+        if(dir[0] != 0) {
+            int backX = m_curPos[0] - dir[0];
+            if(backX >= 0 && backX <= 9) {
+                for(int y = glm::max(m_curPos[1] - 1, 0); y <= glm::min(m_curPos[1] + 1, 9); y++) {
+                    removeMesh(glm::ivec2(backX, y));
+                }
+            }
+            int frontX = posCoords[0] + dir[0];
+            if(frontX >= 0 && frontX <= 9) {
+                for(int y = glm::max(m_curPos[1] - 1, 0); y <= glm::min(m_curPos[1] + 1, 9); y++) {
+                    addMesh(glm::ivec2(frontX, y));
+                }
+            }
+        }
 
+        if(dir[1] != 0) {
+            int backY = m_curPos[1] - dir[1];
+            if(backY >= 0 && backY <= 9) {
+                for(int x = glm::max(m_curPos[0] - 1, 0); x <= glm::min(m_curPos[0] + 1, 9); x++) {
+                    removeMesh(glm::ivec2(x, backY));
+                }
+            }
+            int frontY = posCoords[1] + dir[1];
+            if(frontY >= 0 && frontY <= 9) {
+                for(int x = glm::max(m_curPos[0] - 1, 0); x <= glm::min(m_curPos[0] + 1, 9); x++) {
+                    addMesh(glm::ivec2(x, frontY));
+                }
+            }
+        }
+
+        m_curPos = posCoords;
     }
 }
 

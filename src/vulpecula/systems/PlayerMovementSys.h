@@ -49,6 +49,9 @@ private:
     glm::ivec2 stdToGlm(std::vector<int> vec);
 
     void removeMesh(glm::ivec2 coord);
+
+    glm::ivec2 m_curPos;
+    void updateMeshMap(glm::vec2 pos2D);
     // System interface
 };
 
