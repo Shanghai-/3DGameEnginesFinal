@@ -7,6 +7,8 @@
 #include "warmup1/CustomComponents/CPhysics.h"
 #include "engine/graphics/Shape.h"
 
+#include <iostream>
+
 PlayerMovementSys::PlayerMovementSys(int priority) :
     System(priority)
 {
@@ -44,7 +46,7 @@ void PlayerMovementSys::addComponent(const std::shared_ptr<Component> &c)
     std::shared_ptr<CTransform> t = c->getSibling<CTransform>();
     m_transforms.insert(t);
 
-    if(m_transforms.size() == 1) {
+    /* if(m_transforms.size() == 1) {
         addMesh(std::make_unique<CMeshCol>(c->getParent()));
         std::vector<float> vertices(8 * 4);
         std::vector<int> faces(3 * 2);
@@ -55,7 +57,7 @@ void PlayerMovementSys::addComponent(const std::shared_ptr<Component> &c)
         addToVector(faces, 0, {0, 1, 2});
         addToVector(faces, 3, {3, 2, 1});
         m_shape = std::make_shared<Shape>(vertices, faces);
-    }
+    } */
 }
 
 void PlayerMovementSys::removeComponent(const std::shared_ptr<Component> &c)
@@ -100,6 +102,15 @@ void PlayerMovementSys::tick(float seconds)
         }
         if (m_input->isPressed(Qt::Key_D)) {
             dir -= left * seconds;
+        }
+
+        // This makes the fox point in the direction that it is moving
+        if (dir.x != 0.0f || dir.z != 0.0f) {
+            // We take the dot product between straight forward and the target direction to get the
+            // cosine of the angle between the two, then use arccos to resolve that to an angle
+            float angle = glm::dot(glm::vec3(0.0f, 0.0f, 1.0f), glm::normalize(dir));
+            angle = (dir.x > 0.0f) ? glm::acos(angle) : -glm::acos(angle);
+            transform->rot.y = angle;
         }
 
         returnType values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
