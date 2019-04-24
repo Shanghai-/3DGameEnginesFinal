@@ -18,7 +18,10 @@ public:
     void removeComponent(const std::shared_ptr<Component> &c);
     void tick(float seconds);
     void draw();
-    void addMesh(std::shared_ptr<CMeshCol> mesh);
+
+    void addGlobalMesh(std::shared_ptr<CMeshCol> mesh, glm::ivec2 coord);
+    void addMesh(glm::ivec2 coord);
+
 
 private:
     InputManager *m_input;
@@ -32,7 +35,6 @@ private:
         glm::vec3 contactPoint;
     };
 
-    std::vector<std::shared_ptr<CMeshCol>> m_meshes;
     returnType checkCollision(glm::vec3 start, glm::vec3 end, glm::vec3 rad);
     glm::vec3 scaleVector(glm::vec3 vector, glm::mat4x4 scale);
 
@@ -40,6 +42,13 @@ private:
     void addToVector(std::vector<float> &vector, int index, std::vector<float> values);
     void addToVector(std::vector<int> &vector, int index, std::vector<int> values);
 
+    std::map<std::vector<int>, std::shared_ptr<CMeshCol>> m_globalMeshMap;
+    std::map<std::vector<int>, std::shared_ptr<CMeshCol>> m_meshMap;
+
+    std::vector<int> glmToStd(glm::ivec2 vec);
+    glm::ivec2 stdToGlm(std::vector<int> vec);
+
+    void removeMesh(glm::ivec2 coord);
     // System interface
 };
 

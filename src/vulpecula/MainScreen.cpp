@@ -156,7 +156,8 @@ void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
     terrain->addComponent(std::make_shared<CRenderable>(terrain, ":/models/terrain.obj", "Ground"));
     std::shared_ptr<CMeshCol> terrainMesh = std::make_shared<CMeshCol>(terrain, ":/models/terrain.obj");
     terrain->addComponent(terrainMesh);
-    playSys->addMesh(terrainMesh);
+    playSys->addGlobalMesh(terrainMesh, glm::ivec2(0, 0));
+    playSys->addMesh(glm::ivec2(0, 0));
     m_testMesh = terrainMesh;
     m_gw->addGameObject(terrain);
 

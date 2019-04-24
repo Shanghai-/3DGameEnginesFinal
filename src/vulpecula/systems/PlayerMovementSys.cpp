@@ -66,9 +66,33 @@ void PlayerMovementSys::removeComponent(const std::shared_ptr<Component> &c)
     m_transforms.remove(t);
 }
 
-void PlayerMovementSys::addMesh(std::shared_ptr<CMeshCol> mesh)
+void PlayerMovementSys::addGlobalMesh(std::shared_ptr<CMeshCol> mesh, glm::ivec2 coord)
 {
-    m_meshes.push_back(mesh);
+    m_globalMeshMap[glmToStd(coord)] = mesh;
+}
+
+void PlayerMovementSys::addMesh(glm::ivec2 coord)
+{
+    std::vector<int> vec = glmToStd(coord);
+    m_meshMap[vec] = m_globalMeshMap[vec];
+}
+
+void PlayerMovementSys::removeMesh(glm::ivec2 coord)
+{
+    m_meshMap.erase(m_meshMap.find(glmToStd(coord)));
+}
+
+std::vector<int> PlayerMovementSys::glmToStd(glm::ivec2 vec)
+{
+    std::vector<int> retVec;
+    retVec.push_back(vec[0]);
+    retVec.push_back(vec[1]);
+    return retVec;
+}
+
+glm::ivec2 PlayerMovementSys::stdToGlm(std::vector<int> vec)
+{
+    return glm::ivec2(vec[0], vec[1]);
 }
 
 void PlayerMovementSys::tick(float seconds)
@@ -130,10 +154,10 @@ void PlayerMovementSys::tick(float seconds)
             phys->vel += (phys->acc * seconds);
         }
 
-        //std::cout << transform->pos.x << " " << transform->pos.y << " " << transform->pos.z << std::endl;
-//        transform->pos = transform->pos + dir;
+        //find if new position crosses over to a new mesh section.
+        //if so, remove and add the appropriate sections from m_meshMap
+        glm::vec2 pos2D = glm::vec2(transform->pos[0], transform->pos[2]);
 
-        //transform->pos.y = 0.0f;
 
     }
 }
@@ -155,8 +179,8 @@ PlayerMovementSys::returnType PlayerMovementSys::checkCollision(glm::vec3 start,
     start = scaleVector(start, model);
     end = scaleVector(end, model);
 
-    for(int meshNum = 0; meshNum < m_meshes.size(); meshNum++) {
-        std::shared_ptr<CMeshCol> mesh = m_meshes.at(meshNum);
+    for(std::map<std::vector<int>, std::shared_ptr<CMeshCol>>::iterator it = m_meshMap.begin(); it != m_meshMap.end(); ++it) {
+        std::shared_ptr<CMeshCol> mesh = it->second;
         std::vector<glm::vec3> faces = mesh->getFaces();
         std::vector<glm::vec3> vertexList = mesh->getVertices();
         std::vector<glm::vec3> normals = mesh->getNormals();
