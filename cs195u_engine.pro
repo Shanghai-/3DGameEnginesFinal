@@ -248,7 +248,8 @@ SOURCES += \
     src/engine/systems/networksystem.cpp \
     src/vulpecula/menuscreen.cpp \
     src/vulpecula/responders/clientresponse.cpp \
-    src/vulpecula/responders/serverresponse.cpp
+    src/vulpecula/responders/serverresponse.cpp \
+    src/engine/components/networkcomponent.cpp
 
 HEADERS += \
     libs/glew-1.10.0/include/GL/glew.h \
@@ -541,7 +542,8 @@ HEADERS += \
     src/engine/systems/networksystem.h \
     src/vulpecula/menuscreen.h \
     src/vulpecula/responders/clientresponse.h \
-    src/vulpecula/responders/serverresponse.h
+    src/vulpecula/responders/serverresponse.h \
+    src/engine/components/networkcomponent.h
 
 FORMS += src/mainwindow.ui
 

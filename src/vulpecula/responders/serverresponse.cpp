@@ -27,5 +27,5 @@ void ServerResponse::onHold() {
 void ServerResponse::onRelease() {
     m_app->getViewPtr()->captureMouse(true);
     m_app->popScreen();
-    m_app->pushScreen(std::make_shared<MainScreen>(m_app));
+    m_app->pushScreen(std::make_shared<MainScreen>(m_app, true));
 }

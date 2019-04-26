@@ -6,6 +6,7 @@
 #include "engine/systems/AudioSystem.h"
 #include "engine/systems/CollisionSystem.h"
 #include "engine/systems/AnimationSystem.h"
+#include "engine/systems/networksystem.h"
 
 // ENGINE COMPONENTS
 #include "engine/components/CCamera.h"
@@ -37,8 +38,9 @@
 
 #include <assert.h>
 
-MainScreen::MainScreen(Application *parent) :
-    m_parent(parent)
+MainScreen::MainScreen(Application *parent, bool isServer) :
+    m_parent(parent),
+    m_isServer(isServer)
 {
     m_gw = std::make_unique<GameWorld>();
     initializeGame();
@@ -50,6 +52,7 @@ MainScreen::~MainScreen()
 
 void MainScreen::initializeGame()
 {
+    auto netSys = std::make_shared<NetworkSystem>(400, m_isServer);
     auto collSys = std::make_shared<CollisionSystem>(300);
     auto animSys = std::make_shared<AnimationSystem>(500);
     auto renderSys = std::make_shared<RenderSystem>(200);
@@ -77,6 +80,9 @@ void MainScreen::initializeGame()
     auto playSys = std::make_shared<PlayerMovementSys>(100);
     m_gw->registerForTick(playSys);
     //m_gw->registerForDraw(playSys);
+
+    // Networking
+    m_gw->registerForTick(netSys);
 
 
     // Set up materials, lights, etc.
