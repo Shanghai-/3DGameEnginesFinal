@@ -3,10 +3,13 @@
 
 #include "System.h"
 #include "raknet/RakPeerInterface.h"
-
+#include "raknet/NetworkIDObject.h"
+#include "raknet/NetworkIDManager.h"
 #include "engine/components/networkcomponent.h"
 
 using namespace RakNet;
+
+class PlayerObject : public NetworkIDObject {};
 
 class NetworkSystem : public System
 {
@@ -22,7 +25,7 @@ public:
 private:
     RakPeerInterface *m_peer;
     bool m_isServer;
-
+    NetworkIDManager m_networkIDManager;
     QSet<std::shared_ptr<NetworkComponent>> m_network;
 };
 

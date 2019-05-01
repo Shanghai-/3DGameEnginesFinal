@@ -9,7 +9,8 @@
 
 enum GameMessages
 {
-    ID_GAME_MESSAGE_1 = ID_USER_PACKET_ENUM+1
+    ID_GAME_MESSAGE_1 = ID_USER_PACKET_ENUM+1,
+    ID_CREATE_PLAYER = ID_USER_PACKET_ENUM+2
 };
 
 NetworkSystem::NetworkSystem(int priority, bool isServer) : System(priority),
@@ -26,7 +27,7 @@ NetworkSystem::NetworkSystem(int priority, bool isServer) : System(priority),
         SocketDescriptor sd;
         m_peer->Startup(1, &sd, 1);
 
-        m_peer->Connect("10.116.72.87", SERVER_PORT, 0, 0);
+        m_peer->Connect("10.116.72.95", SERVER_PORT, 0, 0);
     }
 }
 
@@ -47,6 +48,16 @@ inline uint qHash(const std::shared_ptr<NetworkComponent> &key) {
 void NetworkSystem::addComponent(const std::shared_ptr<Component> &c)
 {
     std::shared_ptr<NetworkComponent> netComp = std::dynamic_pointer_cast<NetworkComponent>(c);
+
+    if (m_isServer) {
+        PlayerObject *player = new PlayerObject;
+        player->SetNetworkIDManager(&m_networkIDManager);
+        BitStream bsOut;
+        bsOut.Write((MessageID)ID_CREATE_PLAYER);
+        bsOut.Write(player->GetNetworkID());
+        m_peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, UNASSIGNED_SYSTEM_ADDRESS, true);
+    }
+
     m_network.insert(netComp);
 }
 
@@ -107,6 +118,17 @@ void NetworkSystem::tick(float seconds)
                     bsIn.IgnoreBytes(sizeof(MessageID));
                     bsIn.Read(rs);
                     std::cout<<rs.C_String()<<std::endl;
+                }
+                break;
+            case ID_CREATE_PLAYER:
+                {
+                    BitStream bsIn(packet->data, packet->length, false);
+                    bsIn.IgnoreBytes(sizeof(MessageID));
+                    NetworkID playerID;
+                    bsIn.Read(playerID);
+                    PlayerObject *player = new PlayerObject;
+                    player->SetNetworkIDManager(&m_networkIDManager);
+                    player->SetNetworkID(playerID);
                 }
                 break;
             default:
