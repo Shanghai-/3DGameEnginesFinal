@@ -20,7 +20,7 @@ public:
 
     void tick(float seconds);
 private:
-    RakPeerInterface* m_peer;
+    RakPeerInterface *m_peer;
     bool m_isServer;
 
     QSet<std::shared_ptr<NetworkComponent>> m_network;

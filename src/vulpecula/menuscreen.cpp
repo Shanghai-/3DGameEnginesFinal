@@ -40,7 +40,7 @@ MenuScreen::MenuScreen(Application *parent) : m_parent(parent)
     m_gw->registerUISystem(std::make_shared<TextDrawer>(300));
 
     std::shared_ptr<UIObject> serverButton = std::make_shared<UIObject>("button", m_gw->getNewObjID(), CENTER);
-    UITransform t = UITransform(CENTER, glm::vec2(-200.f, 0.0f), glm::vec2(300, 100));
+    UITransform t = UITransform(CENTER, glm::vec2(200.f, 0.0f), glm::vec2(300, 100));
     serverButton->addComponent(std::make_shared<UIHitbox>(serverButton, t, new ServerResponse(parent)));
     serverButton->addComponent(std::make_shared<UIRenderable>(serverButton, t, "uiquad", "purble"));
     t = UITransform(CENTER, glm::vec2(-200.f, 0.0f));
@@ -48,7 +48,7 @@ MenuScreen::MenuScreen(Application *parent) : m_parent(parent)
     m_gw->addUIObject(serverButton);
 
     std::shared_ptr<UIObject> clientButton = std::make_shared<UIObject>("button", m_gw->getNewObjID(), CENTER);
-    t = UITransform(CENTER, glm::vec2(200.f, 0.0f), glm::vec2(300, 100));
+    t = UITransform(CENTER, glm::vec2(-200.f, 0.0f), glm::vec2(300, 100));
     clientButton->addComponent(std::make_shared<UIHitbox>(clientButton, t, new ClientResponse(parent)));
     clientButton->addComponent(std::make_shared<UIRenderable>(clientButton, t, "uiquad", "purble"));
     t = UITransform(CENTER, glm::vec2(200.f, 0.0f));
