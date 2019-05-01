@@ -278,6 +278,8 @@ bool ResourceLoader::readObj(const QString &path, std::vector<glm::vec3> &vertic
     QString line("");
     QRegExp spaces("\\s+");
 
+    int faceCounter = 1;
+
     while(!line.isNull())
     {
         line = f.readLine().trimmed();
@@ -308,6 +310,14 @@ bool ResourceLoader::readObj(const QString &path, std::vector<glm::vec3> &vertic
             int numFaces = faces.size();
             faces.resize(numFaces + 3, defaultTuple);
 
+            QStringList test = parts[1].split("//");
+            assert(test.size() == 2);
+            int norm = QString(test[1]).toUInt();
+            if(faceCounter != norm) {
+                normalsV.push_back(normalsV[norm - 1]);
+                std::cout << norm << std::endl;
+            }
+
             bool success = true;
             success &= parseFaceVertex(parts[1], faces[numFaces]);
             success &= parseFaceVertex(parts[2], faces[numFaces + 1]);
@@ -323,6 +333,7 @@ bool ResourceLoader::readObj(const QString &path, std::vector<glm::vec3> &vertic
             const IndexTuple i2 = faces.at(numFaces + 2);
             glm::vec3 pos = glm::vec3(i[0] - 1, i1[0] - 1, i2[0] - 1);
             facesV.push_back(pos);
+            faceCounter++;
         }
     }
     return true;

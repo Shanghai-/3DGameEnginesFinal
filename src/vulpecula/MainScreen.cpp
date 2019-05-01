@@ -6,6 +6,7 @@
 #include "engine/systems/AudioSystem.h"
 #include "engine/systems/CollisionSystem.h"
 #include "engine/systems/AnimationSystem.h"
+#include "engine/systems/networksystem.h"
 
 // ENGINE COMPONENTS
 #include "engine/components/CCamera.h"
@@ -37,8 +38,9 @@
 
 #include <assert.h>
 
-MainScreen::MainScreen(Application *parent) :
-    m_parent(parent)
+MainScreen::MainScreen(Application *parent, bool isServer) :
+    m_parent(parent),
+    m_isServer(isServer)
 {
     m_gw = std::make_unique<GameWorld>();
     initializeGame();
@@ -50,6 +52,7 @@ MainScreen::~MainScreen()
 
 void MainScreen::initializeGame()
 {
+    auto netSys = std::make_shared<NetworkSystem>(400, m_isServer);
     auto collSys = std::make_shared<CollisionSystem>(300);
     auto animSys = std::make_shared<AnimationSystem>(500);
     auto renderSys = std::make_shared<RenderSystem>(200);
@@ -76,7 +79,10 @@ void MainScreen::initializeGame()
     // Player input handling
     auto playSys = std::make_shared<PlayerMovementSys>(100);
     m_gw->registerForTick(playSys);
-    //m_gw->registerForDraw(playSys);
+    m_gw->registerForDraw(playSys);
+
+    // Networking
+    m_gw->registerForTick(netSys);
 
 
     // Set up materials, lights, etc.
@@ -85,14 +91,16 @@ void MainScreen::initializeGame()
     // Player setup
     std::shared_ptr<GameObject> player = std::make_shared<GameObject>("Player", m_gw->getNewObjID());
     player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.f, 22.0f, 50.0f), glm::vec3(0.0f), glm::vec3(0.2f)));
+    //player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(20.f, 5.0f, -15.0f), glm::vec3(0.0f), glm::vec3(0.2f)));
     player->addComponent(std::make_shared<CCamera>(player, glm::vec3(0.0f, 0.4f, 0.0f)));
-    //TODO WHAT THE FUCK player->addComponent(std::make_shared<CAnimatedMesh>(player, "/course/cs1950u/.archive/2019/student/vulpecula/fox.fbx", "PureWhite"));
+    //player->addComponent(std::make_shared<CAnimatedMesh>(player, "/course/cs1950u/.archive/2019/student/vulpecula/fox.fbx", "PureWhite"));
+    player->addComponent(std::make_shared<CRenderable>(player, "Cube", "Star"));
     auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -0.375f, 0.f), 0.75f, 0.8f);
     auto comp = std::make_shared<CCollider>(player, coll, false);
     player->addComponent(comp);
     player->addComponent(std::make_shared<CInputReceiver>(player));
     player->addComponent(std::make_shared<ColEllipsoid>(player, glm::vec3(.75f, .5f, 1.25f)));
-    player->addComponent(std::make_shared<CPhysics>(player, glm::vec3(0.f, -.01f, 0.f)));
+    player->addComponent(std::make_shared<CPhysics>(player, glm::vec3(0.f, -.2f, 0.f)));
     m_gw->addGameObject(player);
 
     // Load the ambient audio, set up channels, etc.
@@ -157,7 +165,6 @@ void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
 
     for (int r = 0; r < num_splits; r++) {
         float c_add = 0.0f;
-
         for (int c = 0; c < num_splits; c++) {
             std::string name_concat = "Terrain" + std::to_string(r) + std::to_string(c);
             std::string filename_concat = baseFile + name_concat + ".obj";
@@ -169,18 +176,15 @@ void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
 
             std::shared_ptr<GameObject> ground = std::make_shared<GameObject>(name, m_gw->getNewObjID());
             ground->addComponent(std::make_shared<CTransform>(ground, true, center));
+            ground->addComponent(std::make_shared<CRenderable>(ground, filename, "Ground"));
 
             std::shared_ptr<CMeshCol> collider = std::make_shared<CMeshCol>(ground, filename);
             ground->addComponent(collider);
 
-
-            playSys->addGlobalMesh(collider, glm::ivec2(r, c));
+            playSys->addGlobalMesh(collider, glm::ivec2(c, r));
 
             if (c >= 3 && c <= 5 && r <= 2) {
-                playSys->addMesh(glm::ivec2(r, c));
-                ground->addComponent(std::make_shared<CRenderable>(ground, filename, "Cave"));
-            } else {
-                ground->addComponent(std::make_shared<CRenderable>(ground, filename, "Ground"));
+                playSys->addMesh(glm::ivec2(c, r));
             }
 
             m_gw->addGameObject(ground);
@@ -189,7 +193,11 @@ void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
         r_add -= 16.0f;
     }
 
-    /*std::shared_ptr<CMeshCol> collider = std::make_shared<CMeshCol>(ground, "/course/cs1950u/.archive/2019/student/vulpecula/terrain/Terrain33.obj");
+    /* std::shared_ptr<GameObject> ground = std::make_shared<GameObject>("Ground", m_gw->getNewObjID());
+    ground->addComponent(std::make_shared<CTransform>(ground, true, glm::vec3(20.0f, 0.f, -15.0f),
+                                                      glm::vec3(0.f), glm::vec3(1.0f)));
+    ground->addComponent(std::make_shared<CRenderable>(ground, "/gpfs/main/home/bwalsh1/course/cs195u/testSlice.obj", "Cave"));
+    std::shared_ptr<CMeshCol> collider = std::make_shared<CMeshCol>(ground, "/gpfs/main/home/bwalsh1/course/cs195u/testSlice.obj");
     ground->addComponent(collider);
     m_gw->addGameObject(ground);
 
@@ -213,7 +221,8 @@ void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
     cave->addComponent(std::make_shared<CRenderable>(cave, ":/models/cave.obj", "Cave"));
     std::shared_ptr<CMeshCol> caveMesh = std::make_shared<CMeshCol>(cave, ":/models/cave.obj");
     cave->addComponent(caveMesh);
-    //playSys->addMesh(caveMesh);
+    playSys->addGlobalMesh(caveMesh, glm::ivec2(-1, -1));
+    playSys->addMesh(glm::ivec2(-1, -1));
     m_gw->addGameObject(cave);
 
     // Guitar stuff

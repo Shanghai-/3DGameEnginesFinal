@@ -2,8 +2,10 @@
 #define MENUSCREEN_H
 
 #include "engine/frame/Screen.h"
+#include <memory>
 
 class Application;
+class GameWorld;
 
 class MenuScreen : public Screen
 {
@@ -27,6 +29,7 @@ public:
     void onScroll(QWheelEvent *event);
 
 private:
+    std::shared_ptr<GameWorld> m_gw;
     Application *m_parent;
 };
 

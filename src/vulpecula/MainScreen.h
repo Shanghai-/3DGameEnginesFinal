@@ -11,7 +11,7 @@ class Application;
 class MainScreen : public Screen
 {
 public:
-    MainScreen(Application *parent);
+    MainScreen(Application *parent, bool isServer);
     ~MainScreen();
 
     void tick(float seconds);
@@ -28,7 +28,6 @@ public:
     void onMouseMoved(QMouseEvent *event, int deltaX, int deltaY);
     void onScroll(QWheelEvent *event);
 
-
 private:
     void initializeGame();
     void loadGraphics();
@@ -38,6 +37,8 @@ private:
     void createAudioZone(std::shared_ptr<GameObject> zoneObj, QStringList files,
                          std::shared_ptr<CollisionVolume> vol);
     void createStar(std::shared_ptr<GameObject> starObj, QString file, std::shared_ptr<GameObject> zone);
+
+    bool m_isServer;
 
     Application *m_parent;
 
