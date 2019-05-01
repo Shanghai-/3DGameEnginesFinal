@@ -228,15 +228,15 @@ PlayerMovementSys::returnType PlayerMovementSys::checkCollision(glm::vec3 start,
 
     for(std::map<std::vector<int>, std::shared_ptr<CMeshCol>>::iterator it = m_meshMap.begin(); it != m_meshMap.end(); ++it) {
         std::shared_ptr<CMeshCol> mesh = it->second;
-        glm::vec3 transform = mesh->getSibling<CTransform>();
+        glm::vec3 transform = mesh->getSibling<CTransform>()->pos;
         std::vector<glm::vec3> faces = mesh->getFaces();
         std::vector<glm::vec3> vertexList = mesh->getVertices();
         std::vector<glm::vec3> normals = mesh->getNormals();
         for(int i = 0; i < faces.size(); i++) {
             glm::vec3 face = faces[i];
-            glm::vec3 v0 = scaleVector(vertexList[face[0]], model) + transform->pos;
-            glm::vec3 v1 = scaleVector(vertexList[face[1]], model) + transform->pos;
-            glm::vec3 v2 = scaleVector(vertexList[face[2]], model) + transform->pos;
+            glm::vec3 v0 = scaleVector(vertexList[face[0]], model) + transform;
+            glm::vec3 v1 = scaleVector(vertexList[face[1]], model) + transform;
+            glm::vec3 v2 = scaleVector(vertexList[face[2]], model) + transform;
 
             glm::vec4 norm = glm::normalize(model * glm::vec4(normals[i], 0.f));
             glm::vec3 N = glm::vec3(norm);
