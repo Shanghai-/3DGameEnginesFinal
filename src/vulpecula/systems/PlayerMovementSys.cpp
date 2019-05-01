@@ -14,6 +14,7 @@ PlayerMovementSys::PlayerMovementSys(int priority) :
 {
     m_input = InputManager::getGlobalInstance();
     m_graphics = Graphics::getGlobalInstance();
+    m_grounded = false;
 }
 
 PlayerMovementSys::~PlayerMovementSys()
@@ -127,6 +128,10 @@ void PlayerMovementSys::tick(float seconds)
         if (m_input->isPressed(Qt::Key_D)) {
             dir -= left * seconds;
         }
+        if(m_grounded && m_input->isPressed(Qt::Key_Space)) {
+            dir += glm::vec3(0.f, 2.f, 0.f);
+            m_grounded = false;
+        }
 
         // This makes the fox point in the direction that it is moving
         if (dir.x != 0.0f || dir.z != 0.0f) {
@@ -137,21 +142,25 @@ void PlayerMovementSys::tick(float seconds)
             transform->rot.y = angle;
         }
 
-        returnType values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
-        glm::vec3 hit = transform->pos + (dir * values.time);
-        transform->pos = hit + (0.01f * values.normal);
+//        returnType values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
+//        glm::vec3 hit = transform->pos + (dir * values.time);
+//        transform->pos = hit + (0.01f * values.normal);
 
         std::shared_ptr<CPhysics> phys = transform->getSibling<CPhysics>();
-        dir = phys->vel;
-        values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
-        hit = transform->pos + (dir * values.time);
+        dir += phys->vel;
+        returnType values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
+        glm::vec3 hit = transform->pos + (dir * values.time);
         transform->pos = hit + (0.001f * values.normal);
 
         if(values.time < 1.f) {
             phys->vel = glm::vec3(0.f, 0.f, 0.f);
+            if(values.normal.y > 0.f) {
+                m_grounded = true;
+            }
         }
         else {
             phys->vel += (phys->acc * seconds);
+            m_grounded = false;
         }
 
         //UNCOMMENT THIS ONCE WE ACTUALLY HAVE THE MESH CHUNKS IN
