@@ -153,9 +153,8 @@ void PlayerMovementSys::tick(float seconds)
         else {
             phys->vel += (phys->acc * seconds);
         }
-
         //UNCOMMENT THIS ONCE WE ACTUALLY HAVE THE MESH CHUNKS IN
-        //updateMeshMap(glm::vec2(transform->pos[0], transform->pos[2]));
+        updateMeshMap(glm::vec2(transform->pos[0], transform->pos[2]));
     }
 }
 

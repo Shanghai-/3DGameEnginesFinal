@@ -84,16 +84,15 @@ void MainScreen::initializeGame()
 
     // Player setup
     std::shared_ptr<GameObject> player = std::make_shared<GameObject>("Player", m_gw->getNewObjID());
-    //player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.01f, 0.0f, 0.01f), glm::vec3(0.0f), glm::vec3(0.6f, 0.6f, 1.8f)));
-    player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.f, 15.f, 0.f), glm::vec3(0.0f), glm::vec3(0.2f)));
+    player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.f, 22.0f, 50.0f), glm::vec3(0.0f), glm::vec3(0.2f)));
     player->addComponent(std::make_shared<CCamera>(player, glm::vec3(0.0f, 0.4f, 0.0f)));
-    player->addComponent(std::make_shared<CAnimatedMesh>(player, "/course/cs1950u/.archive/2019/student/vulpecula/fox.fbx", "PureWhite"));
+    //TODO WHAT THE FUCK player->addComponent(std::make_shared<CAnimatedMesh>(player, "/course/cs1950u/.archive/2019/student/vulpecula/fox.fbx", "PureWhite"));
     auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -0.375f, 0.f), 0.75f, 0.8f);
     auto comp = std::make_shared<CCollider>(player, coll, false);
     player->addComponent(comp);
     player->addComponent(std::make_shared<CInputReceiver>(player));
     player->addComponent(std::make_shared<ColEllipsoid>(player, glm::vec3(.75f, .5f, 1.25f)));
-    player->addComponent(std::make_shared<CPhysics>(player, glm::vec3(0.f, -.3f, 0.f)));
+    player->addComponent(std::make_shared<CPhysics>(player, glm::vec3(0.f, -.01f, 0.f)));
     m_gw->addGameObject(player);
 
     // Load the ambient audio, set up channels, etc.
@@ -150,7 +149,54 @@ void MainScreen::loadGraphics()
 
 void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
 {
-    std::shared_ptr<GameObject> terrain = std::make_shared<GameObject>("Ground", m_gw->getNewObjID());
+    // Terrain loading
+    glm::vec3 basePoint = glm::vec3(-65.0f, 0.0f, 62.0f);
+    float r_add = 0.0f;
+    std::string baseFile = "/course/cs1950u/.archive/2019/student/vulpecula/terrain/";
+    int num_splits = 10;
+
+    for (int r = 0; r < num_splits; r++) {
+        float c_add = 0.0f;
+
+        for (int c = 0; c < num_splits; c++) {
+            std::string name_concat = "Terrain" + std::to_string(r) + std::to_string(c);
+            std::string filename_concat = baseFile + name_concat + ".obj";
+            QString name(name_concat.data());
+            QString filename(filename_concat.data());
+
+            glm::vec3 center = basePoint + glm::vec3(c_add, 0, r_add);
+            //std::cout << center.x << ", " << center.y << ", " << center.z << std::endl;
+
+            std::shared_ptr<GameObject> ground = std::make_shared<GameObject>(name, m_gw->getNewObjID());
+            ground->addComponent(std::make_shared<CTransform>(ground, true, center));
+
+            std::shared_ptr<CMeshCol> collider = std::make_shared<CMeshCol>(ground, filename);
+            ground->addComponent(collider);
+
+
+            playSys->addGlobalMesh(collider, glm::ivec2(r, c));
+
+            if (c >= 3 && c <= 5 && r <= 2) {
+                playSys->addMesh(glm::ivec2(r, c));
+                ground->addComponent(std::make_shared<CRenderable>(ground, filename, "Cave"));
+            } else {
+                ground->addComponent(std::make_shared<CRenderable>(ground, filename, "Ground"));
+            }
+
+            m_gw->addGameObject(ground);
+            c_add += 16.0f;
+        }
+        r_add -= 16.0f;
+    }
+
+    /*std::shared_ptr<CMeshCol> collider = std::make_shared<CMeshCol>(ground, "/course/cs1950u/.archive/2019/student/vulpecula/terrain/Terrain33.obj");
+    ground->addComponent(collider);
+    m_gw->addGameObject(ground);
+
+    playSys->addGlobalMesh(collider, glm::ivec2(0));
+    playSys->addMesh(glm::ivec2(0)); */
+
+    /* std::shared_ptr<GameObject> terrain = std::make_shared<GameObject>("Ground", m_gw->getNewObjID());
     terrain->addComponent(std::make_shared<CTransform>(terrain, true, glm::vec3(0.0f, 0.f, 0.0f),
                                                        glm::vec3(0.f), glm::vec3(1.0f)));
     terrain->addComponent(std::make_shared<CRenderable>(terrain, ":/models/terrain.obj", "Ground"));
@@ -159,7 +205,7 @@ void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
     playSys->addGlobalMesh(terrainMesh, glm::ivec2(0, 0));
     playSys->addMesh(glm::ivec2(0, 0));
     m_testMesh = terrainMesh;
-    m_gw->addGameObject(terrain);
+    m_gw->addGameObject(terrain); */
 
     std::shared_ptr<GameObject> cave = std::make_shared<GameObject>("Cave", m_gw->getNewObjID());
     cave->addComponent(std::make_shared<CTransform>(cave, true, glm::vec3(0.0f, 0.f, 0.0f),
@@ -317,7 +363,7 @@ void MainScreen::tick(float seconds)
 void MainScreen::draw()
 {
     m_gw->draw();
-    m_testMesh->drawWireframe();
+    //m_testMesh->drawWireframe();
 }
 
 void MainScreen::resize(int w, int h)
