@@ -42,7 +42,7 @@ private:
 
     Application *m_parent;
 
-    std::unique_ptr<GameWorld> m_gw;
+    std::shared_ptr<GameWorld> m_gw;
     std::shared_ptr<CMeshCol> m_testMesh;
 };
 
