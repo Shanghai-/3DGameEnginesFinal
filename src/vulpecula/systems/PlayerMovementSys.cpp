@@ -6,14 +6,18 @@
 #include "engine/components/ColEllipsoid.h"
 #include "warmup1/CustomComponents/CPhysics.h"
 #include "engine/graphics/Shape.h"
+#include "engine/components/CRenderable.h"
 
 #include <iostream>
+#include <math.h>
 
 PlayerMovementSys::PlayerMovementSys(int priority) :
     System(priority)
 {
     m_input = InputManager::getGlobalInstance();
     m_graphics = Graphics::getGlobalInstance();
+    m_grounded = false;
+    m_curPos = glm::ivec2(4, 2);
 }
 
 PlayerMovementSys::~PlayerMovementSys()
@@ -74,12 +78,21 @@ void PlayerMovementSys::addGlobalMesh(std::shared_ptr<CMeshCol> mesh, glm::ivec2
 void PlayerMovementSys::addMesh(glm::ivec2 coord)
 {
     std::vector<int> vec = glmToStd(coord);
-    m_meshMap[vec] = m_globalMeshMap[vec];
+    std::shared_ptr<CMeshCol> coll = m_globalMeshMap[vec];
+    m_meshMap[vec] = coll;
+    coll->getSibling<CRenderable>()->setMaterialName("Cave");
 }
 
 void PlayerMovementSys::removeMesh(glm::ivec2 coord)
 {
-    m_meshMap.erase(m_meshMap.find(glmToStd(coord)));
+    std::map<std::vector<int>, std::shared_ptr<CMeshCol>>::iterator res = m_meshMap.find(glmToStd(coord));
+    if (res != m_meshMap.end()) {
+        std::cout << "hi" << std::endl;
+        m_meshMap.erase(res);
+        std::shared_ptr<CMeshCol> coll = m_globalMeshMap[glmToStd(coord)];
+        coll->getSibling<CRenderable>()->setMaterialName("Ground");
+    }
+
 }
 
 std::vector<int> PlayerMovementSys::glmToStd(glm::ivec2 vec)
@@ -103,11 +116,11 @@ void PlayerMovementSys::tick(float seconds)
 
     glm::vec3 forward = graphicsCam->getLook();
     forward.y = 0;
-    forward = glm::normalize(forward) * 3.0f;
+    forward = glm::normalize(forward) * 3.0f * 2.f;
 
     glm::vec3 left = glm::cross(graphicsCam->getUp(), graphicsCam->getLook());
     left.y = 0;
-    left = glm::normalize(left) * 3.0f;
+    left = glm::normalize(left) * 3.0f * 2.f;
 
     QSetIterator<std::shared_ptr<CTransform>> it(m_transforms);
 
@@ -127,6 +140,10 @@ void PlayerMovementSys::tick(float seconds)
         if (m_input->isPressed(Qt::Key_D)) {
             dir -= left * seconds;
         }
+        if(m_grounded && m_input->isPressed(Qt::Key_Space)) {
+            dir += glm::vec3(0.f, 2.f, 0.f);
+            m_grounded = false;
+        }
 
         // This makes the fox point in the direction that it is moving
         if (dir.x != 0.0f || dir.z != 0.0f) {
@@ -137,33 +154,38 @@ void PlayerMovementSys::tick(float seconds)
             transform->rot.y = angle;
         }
 
-        returnType values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
-        glm::vec3 hit = transform->pos + (dir * values.time);
-        transform->pos = hit + (0.01f * values.normal);
+//        returnType values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
+//        glm::vec3 hit = transform->pos + (dir * values.time);
+//        transform->pos = hit + (0.01f * values.normal);
 
         std::shared_ptr<CPhysics> phys = transform->getSibling<CPhysics>();
-        dir = phys->vel;
-        values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
-        hit = transform->pos + (dir * values.time);
-        transform->pos = hit + (0.001f * values.normal);
+        dir += phys->vel;
+        returnType values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
+        glm::vec3 hit = transform->pos + (dir * values.time);
+        //std::cout << glm::to_string(values.normal) << std::endl;
+        transform->pos = hit + (0.01f * values.normal);
 
         if(values.time < 1.f) {
             phys->vel = glm::vec3(0.f, 0.f, 0.f);
+            if(values.normal.y > 0.f) {
+                m_grounded = true;
+            }
         }
         else {
             phys->vel += (phys->acc * seconds);
+            m_grounded = false;
         }
 
         //UNCOMMENT THIS ONCE WE ACTUALLY HAVE THE MESH CHUNKS IN
-        //updateMeshMap(glm::vec2(transform->pos[0], transform->pos[2]));
+        updateMeshMap(glm::vec2(transform->pos[0], transform->pos[2]));
     }
 }
 
 void PlayerMovementSys::updateMeshMap(glm::vec2 pos2D)
 {
     glm::ivec2 posCoords;
-    posCoords[0] = glm::clamp((int)glm::floor(pos2D[0] / 16.f), 0, 9);
-    posCoords[1] = glm::clamp((int)glm::floor(pos2D[1] / 16.f), 0, 9);
+    posCoords[0] = glm::clamp((int)glm::floor((pos2D[0] - 8.f) / 16.f) + 5, 0, 9);
+    posCoords[1] = 9 - glm::clamp((int)glm::floor((pos2D[1] + 8.f) / 16.f) + 5, 0, 9);
     if(m_curPos != posCoords) {
         glm::ivec2 dir = posCoords - m_curPos;
         if(dir[0] != 0) {
@@ -219,16 +241,21 @@ PlayerMovementSys::returnType PlayerMovementSys::checkCollision(glm::vec3 start,
 
     for(std::map<std::vector<int>, std::shared_ptr<CMeshCol>>::iterator it = m_meshMap.begin(); it != m_meshMap.end(); ++it) {
         std::shared_ptr<CMeshCol> mesh = it->second;
+        glm::vec3 transform = mesh->getSibling<CTransform>()->pos;
         std::vector<glm::vec3> faces = mesh->getFaces();
         std::vector<glm::vec3> vertexList = mesh->getVertices();
         std::vector<glm::vec3> normals = mesh->getNormals();
         for(int i = 0; i < faces.size(); i++) {
             glm::vec3 face = faces[i];
-            glm::vec3 v0 = scaleVector(vertexList[face[0]], model);
-            glm::vec3 v1 = scaleVector(vertexList[face[1]], model);
-            glm::vec3 v2 = scaleVector(vertexList[face[2]], model);
+            glm::vec3 v0 = scaleVector(vertexList[face[0]] + transform, model);
+            glm::vec3 v1 = scaleVector(vertexList[face[1]] + transform, model);
+            glm::vec3 v2 = scaleVector(vertexList[face[2]] + transform, model);
 
             glm::vec4 norm = glm::normalize(model * glm::vec4(normals[i], 0.f));
+            //if(glm::length2(normals[i]) < 0.001f) {
+            if (isnan(norm.x) || isnan(norm.y) || isnan(norm.z)) {
+                //std::cout << glm::to_string(normals[i]) << std::endl;
+            }
             glm::vec3 N = glm::vec3(norm);
 
             //Check ellipsoid/interior
@@ -306,7 +333,10 @@ PlayerMovementSys::returnType PlayerMovementSys::checkCollision(glm::vec3 start,
         }
     }
 
-    values.normal = glm::vec3(glm::transpose(glm::inverse(model)) * glm::vec4(values.normal, 0.f));
+    if(glm::length2(values.normal) != 0.f) {
+        values.normal = glm::normalize(glm::vec3(glm::transpose(glm::inverse(model)) * glm::vec4(values.normal, 0.f)));
+    }
+
     values.contactPoint = glm::vec3(model * glm::vec4(values.contactPoint, 1.f));
 
     return values;
@@ -321,10 +351,11 @@ void PlayerMovementSys::draw()
         transform->getSibling<ColEllipsoid>()->drawWireframe();
     }
 
-    Graphics *g = Graphics::getGlobalInstance();
+    /* Graphics *g = Graphics::getGlobalInstance();
 
     g->clearTransform();
     g->translate(glm::vec3(0.f));
     g->scale(glm::vec3(1.f));
-    g->drawShape(m_shape);
+
+    g->drawShape(m_shape); */
 }

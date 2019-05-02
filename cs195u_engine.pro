@@ -249,7 +249,8 @@ SOURCES += \
     src/vulpecula/menuscreen.cpp \
     src/vulpecula/responders/clientresponse.cpp \
     src/vulpecula/responders/serverresponse.cpp \
-    src/engine/components/networkcomponent.cpp
+    src/engine/components/networkcomponent.cpp \
+    src/vulpecula/systems/ProgressTracker.cpp
 
 HEADERS += \
     libs/glew-1.10.0/include/GL/glew.h \
@@ -543,7 +544,8 @@ HEADERS += \
     src/vulpecula/menuscreen.h \
     src/vulpecula/responders/clientresponse.h \
     src/vulpecula/responders/serverresponse.h \
-    src/engine/components/networkcomponent.h
+    src/engine/components/networkcomponent.h \
+    src/vulpecula/systems/ProgressTracker.h
 
 FORMS += src/mainwindow.ui
 

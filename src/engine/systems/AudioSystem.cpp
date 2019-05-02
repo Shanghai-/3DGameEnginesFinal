@@ -270,6 +270,16 @@ void AudioSystem::setChannelMuted(const QString &name, const bool &isMuted)
     if (cg != nullptr) cg->setMute(isMuted);
 }
 
+void AudioSystem::fadeChannelVolume(const QString &name, const float &targetVolume, const float &timeInSeconds)
+{
+    FMOD::ChannelGroup *cg = m_channels.value(name);
+    if (cg != nullptr) {
+        unsigned long long clock;
+        cg->getDSPClock(&clock, nullptr);
+        cg->setFadePointRamp(clock + (timeInSeconds * 44100.0f), targetVolume);
+    }
+}
+
 
 /*******************************
  * EFFECT MANAGEMENT FUNCTIONS *
