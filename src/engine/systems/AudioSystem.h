@@ -28,6 +28,7 @@ public:
     void setChannelChild(const QString &parent, const QString &child);
     void setChannelVolume(const QString &name, const float &volume);
     void setChannelMuted(const QString &name, const bool &isMuted);
+    void fadeChannelVolume(const QString &name, const float &targetVolume, const float &timeInSeconds);
 
     FMOD::DSP *createEffect(FMOD_DSP_TYPE type);
     void addEffectAtStart(FMOD::DSP *effect, QString effectName, QString channelName, bool pre_fader);

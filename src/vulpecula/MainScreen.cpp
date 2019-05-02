@@ -27,6 +27,7 @@
 // CUSTOM SYSTEMS
 #include "vulpecula/systems/RandomAudioManager.h"
 #include "vulpecula/systems/PlayerMovementSys.h"
+#include "vulpecula/systems/ProgressTracker.h"
 
 // CUSTOM COMPONENTS
 #include "vulpecula/components/RandomAudioSource.h"
@@ -193,28 +194,6 @@ void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
         r_add -= 16.0f;
     }
 
-    /* std::shared_ptr<GameObject> ground = std::make_shared<GameObject>("Ground", m_gw->getNewObjID());
-    ground->addComponent(std::make_shared<CTransform>(ground, true, glm::vec3(20.0f, 0.f, -15.0f),
-                                                      glm::vec3(0.f), glm::vec3(1.0f)));
-    ground->addComponent(std::make_shared<CRenderable>(ground, "/gpfs/main/home/bwalsh1/course/cs195u/testSlice.obj", "Cave"));
-    std::shared_ptr<CMeshCol> collider = std::make_shared<CMeshCol>(ground, "/gpfs/main/home/bwalsh1/course/cs195u/testSlice.obj");
-    ground->addComponent(collider);
-    m_gw->addGameObject(ground);
-
-    playSys->addGlobalMesh(collider, glm::ivec2(0));
-    playSys->addMesh(glm::ivec2(0)); */
-
-    /* std::shared_ptr<GameObject> terrain = std::make_shared<GameObject>("Ground", m_gw->getNewObjID());
-    terrain->addComponent(std::make_shared<CTransform>(terrain, true, glm::vec3(0.0f, 0.f, 0.0f),
-                                                       glm::vec3(0.f), glm::vec3(1.0f)));
-    terrain->addComponent(std::make_shared<CRenderable>(terrain, ":/models/terrain.obj", "Ground"));
-    std::shared_ptr<CMeshCol> terrainMesh = std::make_shared<CMeshCol>(terrain, ":/models/terrain.obj");
-    terrain->addComponent(terrainMesh);
-    playSys->addGlobalMesh(terrainMesh, glm::ivec2(0, 0));
-    playSys->addMesh(glm::ivec2(0, 0));
-    m_testMesh = terrainMesh;
-    m_gw->addGameObject(terrain); */
-
     std::shared_ptr<GameObject> cave = std::make_shared<GameObject>("Cave", m_gw->getNewObjID());
     cave->addComponent(std::make_shared<CTransform>(cave, true, glm::vec3(0.0f, 0.f, 0.0f),
                                                     glm::vec3(0.f), glm::vec3(1.0f)));
@@ -278,6 +257,8 @@ void MainScreen::initializeAudio(std::shared_ptr<GameObject> player)
     m_gw->registerForTick(audioSys);
 
     m_gw->registerForTick(std::make_shared<RandomAudioManager>(895, audioSys));
+
+    m_gw->registerForTick(std::make_shared<ProgressTracker>(905, audioSys));
 
     // Create the wind sound emitter
     std::shared_ptr<GameObject> windEmitter = std::make_shared<GameObject>("WindEmitter", m_gw->getNewObjID());
