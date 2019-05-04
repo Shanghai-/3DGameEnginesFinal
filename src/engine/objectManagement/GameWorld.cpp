@@ -293,6 +293,9 @@ void GameWorld::tick(float seconds)
     // Finally, we delete any GameObjects that queued themselves
     // to be deleted during the tick.
     if (!m_toDelete.empty()) deleteGameObjects();
+
+    // Update elapsed time
+    m_time += seconds;
 }
 
 void GameWorld::draw()
@@ -335,6 +338,11 @@ void GameWorld::resize(int w, int h)
         std::shared_ptr<UISystem> s = im.next();
         s->resize(w, h);
     }
+}
+
+float GameWorld::getElapsedTime()
+{
+    return m_time;
 }
 
 void GameWorld::refillIDs()

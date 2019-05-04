@@ -3,6 +3,7 @@
 #include "engine/components/CTransform.h"
 #include "engine/graphics/Shape.h"
 #include "engine/components/CCamera.h"
+#include "engine/objectManagement/GameWorld.h"
 
 #include <QImage>
 
@@ -55,6 +56,7 @@ void RenderSystem::draw()
         if (behindPlane(cam->getPosZPlane(), points)) continue;
 
         m_graphics->setMaterial(r->getMaterialName().toStdString());
+        m_graphics->getActiveShader()->setUniform("time", m_gameWorld->getElapsedTime());
         m_graphics->drawShape(r->getShapeName().toStdString());
     }
 
@@ -71,7 +73,6 @@ void RenderSystem::draw()
         m_graphics->getActiveShader()->setTexture("skyboxTexture", *(m_skyboxTex.get()));
         m_graphics->clearTransform();
         m_graphics->translate(cam->getCameraObject()->getEye());
-        //m_graphics->translate(glm::vec3(0.0f));
         m_graphics->scale(glm::vec3(10.0f));
         m_graphics->setView(cam->getCameraObject()->getView());
         m_graphics->setProjection(cam->getCameraObject()->getProjection());

@@ -127,7 +127,7 @@ bool ResourceLoader::parseFaceVertex(const QString &vertString, IndexTuple &vert
         {
             vertex[0] = QString(parts[0]).toUInt(&success);
             vertex[1] = QString(parts[1]).toUInt(&success);
-            vertex[2] = QString(parts[1]).toUInt(&success);
+            vertex[2] = QString(parts[2]).toUInt(&success);
         }
         else
         {
@@ -315,7 +315,6 @@ bool ResourceLoader::readObj(const QString &path, std::vector<glm::vec3> &vertic
             int norm = QString(test[1]).toUInt();
             if(faceCounter != norm) {
                 normalsV.push_back(normalsV[norm - 1]);
-                std::cout << norm << std::endl;
             }
 
             bool success = true;

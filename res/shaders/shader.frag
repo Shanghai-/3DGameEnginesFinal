@@ -107,6 +107,8 @@ void main(){
         tc = material.texStart + tc * (material.texEnd - material.texStart);
         vec4 texColor = clamp(texture(tex, tc), 0, 1); // Get base color from texture
 
+        if (texColor.a == 0) discard;
+
         material_color = texColor.rgb;
         a = material.alpha * texColor.a;
     }

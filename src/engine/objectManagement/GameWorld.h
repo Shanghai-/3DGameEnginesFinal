@@ -155,6 +155,13 @@ public:
      */
     void resize(int w, int h);
 
+    /**
+     * @brief getElapsedTime returns the amount of time in seconds
+     *        since this GameWorld started ticking.
+     * @return a float representing the time elapsed in seconds
+     */
+    float getElapsedTime();
+
 private:
     // Adds additional IDs to the end of the ID queue
     void refillIDs();
@@ -215,6 +222,9 @@ private:
     QQueue<uint> m_ids;
     QMutex m_id_mutex; // For thread safety on getID calls
     uint m_highest_id;
+
+    // For keeping track of time
+    float m_time = 0.0f;
 };
 
 #endif // GAMEWORLD_H

@@ -92,10 +92,9 @@ void MainScreen::initializeGame()
     // Player setup
     std::shared_ptr<GameObject> player = std::make_shared<GameObject>("Player", m_gw->getNewObjID());
     player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.f, 22.0f, 50.0f), glm::vec3(0.0f), glm::vec3(0.2f)));
-    //player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(20.f, 5.0f, -15.0f), glm::vec3(0.0f), glm::vec3(0.2f)));
     player->addComponent(std::make_shared<CCamera>(player, glm::vec3(0.0f, 0.4f, 0.0f)));
     //player->addComponent(std::make_shared<CAnimatedMesh>(player, "/course/cs1950u/.archive/2019/student/vulpecula/fox.fbx", "PureWhite"));
-    player->addComponent(std::make_shared<CRenderable>(player, "Cube", "Star"));
+    player->addComponent(std::make_shared<CRenderable>(player, "cube", "Star"));
     auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -0.375f, 0.f), 0.75f, 0.8f);
     auto comp = std::make_shared<CCollider>(player, coll, false);
     player->addComponent(comp);
@@ -114,6 +113,12 @@ void MainScreen::initializeGame()
 void MainScreen::loadGraphics()
 {
     Graphics *g = Graphics::getGlobalInstance();
+
+    // SHADERS
+
+    g->addShader("Water", ":/shaders/water.vert", ":/shaders/water.frag");
+
+    // MATERIALS
 
     Material fox;
     fox.useLighting = false;
@@ -137,10 +142,27 @@ void MainScreen::loadGraphics()
     star.color = glm::vec3(0.9f, 0.9f, 0.52549f);
     g->addMaterial("Star", star);
 
-    Material debug_enter;
+    Material water;
+    water.shaderName = "Water";
+    g->addMaterial("Water", water);
+
+    Material powerLine;
+    powerLine.useLighting = true;
+    powerLine.color = glm::vec3(0.07f, 0.07f, 0.07f);
+    g->addMaterial("PowerLine", powerLine);
+
+    g->addTexture("TowerTex", ":/images/pylon.png");
+    Material powerTower;
+    powerTower.useLighting = true;
+    powerTower.textureName = "TowerTex";
+    g->addMaterial("PowerTower", powerTower);
+
+    /* Material debug_enter;
     debug_enter.useLighting = false;
     debug_enter.color = glm::vec3(0.1f, 1.0f, 0.3f);
-    g->addMaterial("Debug_Enter", debug_enter);
+    g->addMaterial("Debug_Enter", debug_enter); */
+
+    // LIGHTS
 
     Light ambient;
     ambient.type = Light::LIGHT_TYPE::AMBIENT;
@@ -194,6 +216,7 @@ void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
         r_add -= 16.0f;
     }
 
+    // Cave stuff
     std::shared_ptr<GameObject> cave = std::make_shared<GameObject>("Cave", m_gw->getNewObjID());
     cave->addComponent(std::make_shared<CTransform>(cave, true, glm::vec3(0.0f, 0.f, 0.0f),
                                                     glm::vec3(0.f), glm::vec3(1.0f)));
@@ -203,6 +226,43 @@ void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
     playSys->addGlobalMesh(caveMesh, glm::ivec2(-1, -1));
     playSys->addMesh(glm::ivec2(-1, -1));
     m_gw->addGameObject(cave);
+
+    // Power towers & lines
+    std::shared_ptr<GameObject> tower1 = std::make_shared<GameObject>("Tower1", m_gw->getNewObjID());
+    tower1->addComponent(std::make_shared<CTransform>(tower1, true, glm::vec3(-59.96385, 3.5, -62.57478),
+                                                      glm::vec3(0.0f, 1.570795f, 0.0f), glm::vec3(2.0f)));
+    tower1->addComponent(std::make_shared<CRenderable>(tower1, "/course/cs1950u/.archive/2019/student/vulpecula/env/pylon.obj",
+                                                       "PowerTower"));
+    auto towerColl = std::make_shared<CollBox>(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3(8, 20, 8));
+    tower1->addComponent(std::make_shared<CCollider>(tower1, towerColl, false));
+    m_gw->addGameObject(tower1);
+
+    std::shared_ptr<GameObject> tower2 = std::make_shared<GameObject>("Tower2", m_gw->getNewObjID());
+    tower2->addComponent(std::make_shared<CTransform>(tower2, true, glm::vec3(0.59753, 0, -55.72558),
+                                                      glm::vec3(0.0f, 1.570795f, 0.0f), glm::vec3(2.0f)));
+    tower2->addComponent(std::make_shared<CRenderable>(tower2, "/course/cs1950u/.archive/2019/student/vulpecula/env/pylon.obj",
+                                                       "PowerTower"));
+    towerColl = std::make_shared<CollBox>(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3(8, 20, 8));
+    tower2->addComponent(std::make_shared<CCollider>(tower2, towerColl, false));
+    m_gw->addGameObject(tower2);
+
+    glm::vec3 positions[] = {glm::vec3(-4.67219, 22.0, -63.88128), glm::vec3(-4.67219, 22.0, -52.61531),
+                             glm::vec3(-4.67219, 17.26755, -50.16875), glm::vec3(-4.67219, 17.26755, -66.36208),
+                             glm::vec3(-4.67219, 11.56965, -64.20455), glm::vec3(-4.67219, 11.56965, -52.38642)};
+    for (int i = 0; i < 6; i++) {
+        std::shared_ptr<GameObject> line = std::make_shared<GameObject>("PowerLine", m_gw->getNewObjID());
+        line->addComponent(std::make_shared<CTransform>(line, true, positions[i]));
+        line->addComponent(std::make_shared<CRenderable>(line, "/course/cs1950u/.archive/2019/student/vulpecula/env/wire.obj",
+                                                          "PowerLine"));
+        m_gw->addGameObject(line);
+    }
+
+    // River
+    std::shared_ptr<GameObject> water = std::make_shared<GameObject>("Water", m_gw->getNewObjID());
+    water->addComponent(std::make_shared<CTransform>(water, true, glm::vec3(-42.88062, -7.24381, -13.71469)));
+    water->addComponent(std::make_shared<CRenderable>(water, "/course/cs1950u/.archive/2019/student/vulpecula/env/water.obj",
+                                                      "Water"));
+    m_gw->addGameObject(water);
 
     // Guitar stuff
     std::shared_ptr<GameObject> guitarZone = std::make_shared<GameObject>("GuitarZone", m_gw->getNewObjID());
@@ -254,11 +314,11 @@ void MainScreen::initializeAudio(std::shared_ptr<GameObject> player)
     audioSys->createChannel("Music");
     audioSys->createChannel("SFX");
 
-    m_gw->registerForTick(audioSys);
+    //m_gw->registerForTick(audioSys);
 
-    m_gw->registerForTick(std::make_shared<RandomAudioManager>(895, audioSys));
+    //m_gw->registerForTick(std::make_shared<RandomAudioManager>(895, audioSys));
 
-    m_gw->registerForTick(std::make_shared<ProgressTracker>(905, audioSys));
+    //m_gw->registerForTick(std::make_shared<ProgressTracker>(905, audioSys));
 
     // Create the wind sound emitter
     std::shared_ptr<GameObject> windEmitter = std::make_shared<GameObject>("WindEmitter", m_gw->getNewObjID());

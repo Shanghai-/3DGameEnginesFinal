@@ -6,5 +6,6 @@
         <file>gold.png</file>
         <file>heart_empty.png</file>
         <file>title.png</file>
+        <file>pylon.png</file>
     </qresource>
 </RCC>
