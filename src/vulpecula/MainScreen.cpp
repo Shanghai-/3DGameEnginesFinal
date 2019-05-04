@@ -53,7 +53,7 @@ MainScreen::~MainScreen()
 
 void MainScreen::initializeGame()
 {
-    auto netSys = std::make_shared<NetworkSystem>(400, m_isServer);
+    auto netSys = std::make_shared<NetworkSystem>(400, m_gw, m_isServer);
     auto collSys = std::make_shared<CollisionSystem>(300);
     auto animSys = std::make_shared<AnimationSystem>(500);
     auto renderSys = std::make_shared<RenderSystem>(200);

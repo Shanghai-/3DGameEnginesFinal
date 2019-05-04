@@ -250,7 +250,10 @@ SOURCES += \
     src/vulpecula/responders/clientresponse.cpp \
     src/vulpecula/responders/serverresponse.cpp \
     src/engine/components/networkcomponent.cpp \
-    src/vulpecula/systems/ProgressTracker.cpp
+    src/vulpecula/systems/ProgressTracker.cpp \
+    src/vulpecula/systems/particlesys.cpp \
+    src/Particles/OpenGLShape.cpp \
+    src/Particles/ResourceLoader2.cpp
 
 HEADERS += \
     libs/glew-1.10.0/include/GL/glew.h \
@@ -545,7 +548,10 @@ HEADERS += \
     src/vulpecula/responders/clientresponse.h \
     src/vulpecula/responders/serverresponse.h \
     src/engine/components/networkcomponent.h \
-    src/vulpecula/systems/ProgressTracker.h
+    src/vulpecula/systems/ProgressTracker.h \
+    src/vulpecula/systems/particlesys.h \
+    src/Particles/OpenGLShape.h \
+    src/Particles/ResourceLoader2.h
 
 FORMS += src/mainwindow.ui
 

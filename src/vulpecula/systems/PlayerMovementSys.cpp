@@ -160,20 +160,29 @@ void PlayerMovementSys::tick(float seconds)
 
         std::shared_ptr<CPhysics> phys = transform->getSibling<CPhysics>();
         dir += phys->vel;
-        returnType values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
-        glm::vec3 hit = transform->pos + (dir * values.time);
-        //std::cout << glm::to_string(values.normal) << std::endl;
-        transform->pos = hit + (0.01f * values.normal);
 
-        if(values.time < 1.f) {
-            phys->vel = glm::vec3(0.f, 0.f, 0.f);
-            if(values.normal.y > 0.f) {
-                m_grounded = true;
+        int repetitions = 3;
+        float timeTraveled = 0.f;
+        for(int i = 0; i < repetitions; i++) {
+            returnType values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
+            glm::vec3 hit = transform->pos + (dir * values.time);
+            //std::cout << glm::to_string(values.normal) << std::endl;
+            transform->pos = hit + (0.01f * values.normal);
+
+            if(values.time < 1.f) {
+                phys->vel = glm::vec3(0.f, 0.f, 0.f);
+                if(values.normal.y > 0.f) {
+                    m_grounded = true;
+                }
             }
-        }
-        else {
-            phys->vel += (phys->acc * seconds);
-            m_grounded = false;
+            else {
+                phys->vel += (phys->acc * seconds);
+                m_grounded = false;
+            }
+            timeTraveled += values.time;
+            if(timeTraveled >= 1.f) {
+                break;
+            }
         }
 
         //UNCOMMENT THIS ONCE WE ACTUALLY HAVE THE MESH CHUNKS IN

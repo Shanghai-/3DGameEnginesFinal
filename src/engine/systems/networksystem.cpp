@@ -3,6 +3,8 @@
 #include "raknet/MessageIdentifiers.h"
 #include "raknet/BitStream.h"
 #include "raknet/RakNetTypes.h"
+#include "engine/components/CTransform.h"
+#include "engine/objectManagement/GameWorld.h"
 
 #define MAX_CLIENTS 10
 #define SERVER_PORT 60000
@@ -10,11 +12,13 @@
 enum GameMessages
 {
     ID_GAME_MESSAGE_1 = ID_USER_PACKET_ENUM+1,
-    ID_CREATE_PLAYER = ID_USER_PACKET_ENUM+2
+    ID_CREATE_PLAYER = ID_USER_PACKET_ENUM+2,
+    ID_TRANSFORM = ID_USER_PACKET_ENUM+3
 };
 
-NetworkSystem::NetworkSystem(int priority, bool isServer) : System(priority),
-    m_isServer(isServer)
+NetworkSystem::NetworkSystem(int priority, std::shared_ptr<GameWorld> gameworld, bool isServer) : System(priority),
+    m_isServer(isServer),
+    m_gw(gameworld)
 {
     m_peer = RakPeerInterface::GetInstance();
 
@@ -27,7 +31,7 @@ NetworkSystem::NetworkSystem(int priority, bool isServer) : System(priority),
         SocketDescriptor sd;
         m_peer->Startup(1, &sd, 1);
 
-        m_peer->Connect("10.116.72.95", SERVER_PORT, 0, 0);
+        m_peer->Connect("10.116.72.56", SERVER_PORT, 0, 0);
     }
 }
 
@@ -89,6 +93,7 @@ void NetworkSystem::tick(float seconds)
                 bsOut.Write((MessageID)ID_GAME_MESSAGE_1);
                 bsOut.Write("Hello world");
                 m_peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED,0,packet->systemAddress,false);
+
                 }
                 break;
             case ID_NEW_INCOMING_CONNECTION:
@@ -131,10 +136,39 @@ void NetworkSystem::tick(float seconds)
                     player->SetNetworkID(playerID);
                 }
                 break;
+            case ID_TRANSFORM:
+                {
+//                    BitStream bsIn(packet->data, packet->length, false);
+//                    bsIn.IgnoreBytes(sizeof(MessageID));
+                    float posX,posY,posZ,rotX,rotY,rotZ;
+
+                }
+                break;
             default:
                 std::cout<<"Message with identifier "<<packet->data[0]<<" has arrived"<<std::endl;
                 break;
             }
     }
+
+//    if (m_isServer) {
+//        // send packets to clients
+//    } else {
+//        //send transformation to server
+//        std::shared_ptr<CTransform> trans = m_player->getSibling<CTransform>();
+//        MessageID typeId = ID_TRANSFORM;
+//        BitStream bsOut;
+//        bsOut.Write(typeID);
+//        bsOut.Write(trans->pos.x);
+//        bsOut.Write(trans->pos.y);
+//        bsOut.Write(trans->pos.z);
+//        bsOut.Write(trans->rot.x);
+//        bsOut.Write(trans->rot.y);
+//        bsOut.Write(trans->rot.z);
+//    }
+
+}
+
+void NetworkSystem::SetPlayer(std::shared_ptr<NetworkComponent> comp) {
+    m_player = comp;
 }
 
