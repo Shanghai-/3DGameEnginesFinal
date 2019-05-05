@@ -80,17 +80,16 @@ void PlayerMovementSys::addMesh(glm::ivec2 coord)
     std::vector<int> vec = glmToStd(coord);
     std::shared_ptr<CMeshCol> coll = m_globalMeshMap[vec];
     m_meshMap[vec] = coll;
-    coll->getSibling<CRenderable>()->setMaterialName("Cave");
+    //coll->getSibling<CRenderable>()->setMaterialName("Cave");
 }
 
 void PlayerMovementSys::removeMesh(glm::ivec2 coord)
 {
-    std::map<std::vector<int>, std::shared_ptr<CMeshCol>>::iterator res = m_meshMap.find(glmToStd(coord));
+    auto res = m_meshMap.find(glmToStd(coord));
     if (res != m_meshMap.end()) {
-        std::cout << "hi" << std::endl;
         m_meshMap.erase(res);
-        std::shared_ptr<CMeshCol> coll = m_globalMeshMap[glmToStd(coord)];
-        coll->getSibling<CRenderable>()->setMaterialName("Ground");
+        //std::shared_ptr<CMeshCol> coll = m_globalMeshMap[glmToStd(coord)];
+        //coll->getSibling<CRenderable>()->setMaterialName("Ground");
     }
 
 }

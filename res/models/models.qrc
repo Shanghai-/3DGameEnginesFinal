@@ -2,7 +2,5 @@
     <qresource prefix="/models">
         <file>Love.obj</file>
         <file>star.obj</file>
-        <file>cave.obj</file>
-        <file>terrain.obj</file>
     </qresource>
 </RCC>

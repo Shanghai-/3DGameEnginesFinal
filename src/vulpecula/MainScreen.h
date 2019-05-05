@@ -29,21 +29,32 @@ public:
     void onScroll(QWheelEvent *event);
 
 private:
+    enum PrefabType {
+        PINE_CLUSTER_1,
+        PINE_CLUSTER_2,
+        PINE_CLUSTER_3,
+        LONE_PINE
+    };
+
     void initializeGame();
     void loadGraphics();
     void loadMap(std::shared_ptr<PlayerMovementSys> playSys);
     void initializeAudio(std::shared_ptr<GameObject> player);
 
+    void loadTerrain(std::shared_ptr<PlayerMovementSys> playSys);
+    void loadDecorations();
+    void loadObjectives();
+
     void createAudioZone(std::shared_ptr<GameObject> zoneObj, QStringList files,
                          std::shared_ptr<CollisionVolume> vol);
     void createStar(std::shared_ptr<GameObject> starObj, QString file, std::shared_ptr<GameObject> zone);
+    void createPrefab(PrefabType type, glm::vec3 position, glm::vec3 rotationDeg, glm::vec3 scale);
 
     bool m_isServer;
 
     Application *m_parent;
 
     std::shared_ptr<GameWorld> m_gw;
-    std::shared_ptr<CMeshCol> m_testMesh;
 };
 
 #endif // MAINSCREEN_H
