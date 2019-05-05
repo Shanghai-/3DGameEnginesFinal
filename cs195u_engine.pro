@@ -115,7 +115,6 @@ SOURCES += \
     src/engine/ui/UIClickSystem.cpp \
     src/dungeon_crawler/StartButtonResp.cpp \
     src/dungeon_crawler/PauseScreen.cpp \
-    src/engine/ui/FullScreenQuadScript.cpp \
     src/engine/components/CAudioSource.cpp \
     src/engine/systems/AudioSystem.cpp \
     src/vulpecula/MainScreen.cpp \
@@ -253,7 +252,11 @@ SOURCES += \
     src/vulpecula/systems/ProgressTracker.cpp \
     src/vulpecula/systems/particlesys.cpp \
     src/Particles/OpenGLShape.cpp \
-    src/Particles/ResourceLoader2.cpp
+    src/Particles/ResourceLoader2.cpp \
+    src/vulpecula/responders/WinResp.cpp \
+    src/engine/ui/scripts/TimedFade.cpp \
+    src/engine/ui/scripts/FullScreenQuadScript.cpp \
+    src/vulpecula/responders/Standable.cpp
 
 HEADERS += \
     libs/glew-1.10.0/include/GL/glew.h \
@@ -360,7 +363,6 @@ HEADERS += \
     src/engine/ui/UISystem.h \
     src/engine/ui/TextDrawer.h \
     src/engine/ui/UIScriptComp.h \
-    src/engine/ui/Script.h \
     src/dungeon_crawler/HealthScript.h \
     src/engine/ui/UIScriptSys.h \
     src/dungeon_crawler/LandingScreen.h \
@@ -369,7 +371,6 @@ HEADERS += \
     src/engine/ui/UIClickSystem.h \
     src/dungeon_crawler/StartButtonResp.h \
     src/dungeon_crawler/PauseScreen.h \
-    src/engine/ui/FullScreenQuadScript.h \
     src/engine/components/CAudioSource.h \
     src/engine/systems/AudioSystem.h \
     src/vulpecula/MainScreen.h \
@@ -551,7 +552,12 @@ HEADERS += \
     src/vulpecula/systems/ProgressTracker.h \
     src/vulpecula/systems/particlesys.h \
     src/Particles/OpenGLShape.h \
-    src/Particles/ResourceLoader2.h
+    src/Particles/ResourceLoader2.h \
+    src/vulpecula/responders/WinResp.h \
+    src/engine/ui/scripts/TimedFade.h \
+    src/engine/ui/scripts/FullScreenQuadScript.h \
+    src/engine/ui/scripts/Script.h \
+    src/vulpecula/responders/Standable.h
 
 FORMS += src/mainwindow.ui
 

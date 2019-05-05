@@ -93,6 +93,15 @@ public:
     void onCollide(std::shared_ptr<GameObject> other);
 
     /**
+     * @brief onCollisionContinue is called every frame where this
+     *        Collider remains in contact with another Collider it
+     *        has already collided with.
+     * @param other - the owner of the Collider that this Collider
+     *        continues to touch
+     */
+    void onCollisionContinue(std::shared_ptr<GameObject> other);
+
+    /**
      * @brief onCollisionEnd is called when this Collider exits
      *        another (trigger) collider. This is where the callback
      *        to the CollisionResponse is generated.

@@ -31,20 +31,6 @@ AudioSystem::AudioSystem(int priority, std::shared_ptr<GameObject> listener) :
     errChk(FMOD::System_Create(&m_sys));
     errChk(m_sys->init(NUM_CHANNELS, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, nullptr));
 
-    // TODO:
-    // TESTING Allow user to add/remove DSP units from channel groups (e.g. echo, lowpass)
-    //      => User should be able to name DSP units and refer to them by name
-    // 7) Look into loading and retaining sounds in memory rather than re-loading (do I even re-load?)
-    // 8) Building off of that: delete tempfiles for sounds that are no longer in use
-
-    // DONE:
-    // Add endpoint for getting/setting master volume (for things like settings menus)
-    // Use CAudioComponent's channel group no. to put it into the given channelgroup
-    // Looping
-    // Allow user to easily set channel volume (individual and group)
-    // Allow sounds to play upon trigger rather than always upon load
-    // Allow user to specify stereo spread (especially/only for ambient sources)
-
     FMOD::ChannelGroup *master;
     errChk(m_sys->getMasterChannelGroup(&master));
     m_channels.insert("Master", master);
@@ -54,7 +40,6 @@ AudioSystem::AudioSystem(int priority, std::shared_ptr<GameObject> listener) :
 
 AudioSystem::~AudioSystem()
 {
-    // TODO: Check this for leaks
     FMOD::Channel *toDelete;
     FMOD_RESULT res;
     for (int i = 0; i < NUM_CHANNELS; i++) {
@@ -65,6 +50,7 @@ AudioSystem::~AudioSystem()
         }
     }
 
+    qDeleteAll(m_files);
     m_files.empty();
 
     m_sys->release();
@@ -102,13 +88,8 @@ void AudioSystem::tick(float seconds)
     glm::vec3 camForward = graphicsCam->getLook();
     FMOD_VECTOR forward = { camForward.x, camForward.y, camForward.z };
 
-//    std::cout << "look: " << glm::to_string(graphicsCam->getLook()) << std::endl;
-//    std::cout << "left: " << glm::to_string(graphicsCam->getLookPerp()) << std::endl;
-
     glm::vec3 camUp = glm::cross(camForward, graphicsCam->getLookPerp());
     FMOD_VECTOR up = { camUp.x, camUp.y, camUp.z };
-
-//    std::cout << "up: " << glm::to_string(camUp) << std::endl;
 
     FMOD_VECTOR vel = { (camPos.x - m_oldX) / seconds,
                         (camPos.y - m_oldY) / seconds,
@@ -361,6 +342,7 @@ void AudioSystem::loadSound(std::shared_ptr<CAudioSource> s)
     // and add it to our loaded sounds map.
     if (!m_files.contains(s->getPath())) {
         auto f = QTemporaryFile::createNativeFile(s->getPath());
+        f->setAutoRemove(true);
         m_files.insert(s->getPath(), f);
     }
 

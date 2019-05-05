@@ -54,7 +54,7 @@ private:
 
     Application *m_parent;
 
-    std::shared_ptr<GameWorld> m_gw;
+    std::unique_ptr<GameWorld> m_gw;
 };
 
 #endif // MAINSCREEN_H

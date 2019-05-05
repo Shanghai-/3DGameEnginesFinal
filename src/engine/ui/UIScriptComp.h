@@ -2,7 +2,7 @@
 #define UISCRIPTCOMP_H
 
 #include "UIComponent.h"
-#include "Script.h"
+#include "engine/ui/scripts/Script.h"
 
 class UIScriptComp : public UIComponent
 {

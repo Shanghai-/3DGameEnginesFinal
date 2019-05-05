@@ -72,8 +72,12 @@ void CollisionSystem::tick(float seconds)
                 continue;
             }
 
-            //auto paired = std::make_pair(thisColl, other);
-            bool isATrigger = thisColl->isTrigger() || other->isTrigger();
+            // TODO/NOTE: Originally we only tracked start/continue/end for triggers
+            // and not solid volumes. However, a situation came up where it was useful
+            // for solid objects, so I changed it.
+            //bool isATrigger = thisColl->isTrigger() || other->isTrigger();
+            bool isATrigger = true;
+
             bool alreadyColliding = isATrigger &&
                     (m_currently_colliding.contains(thisColl, other)
                     || m_currently_colliding.contains(other, thisColl));
@@ -82,7 +86,9 @@ void CollisionSystem::tick(float seconds)
             {
                 if (isATrigger) {
                     if (alreadyColliding) {
-                        // TODO: OnCollisionContinued?
+                        thisColl->onCollisionContinue(other->getParent());
+                        other->onCollisionContinue(thisColl->getParent());
+
                     } else {
                         m_currently_colliding.insert(thisColl, other);
                         thisColl->onCollide(other->getParent());
@@ -90,10 +96,11 @@ void CollisionSystem::tick(float seconds)
                     }
 
                 } else {
+                    // TODO/NOTE: This clause should never hit currently
+                    // (see NOTE above)
                     thisColl->onCollide(other->getParent());
                     other->onCollide(thisColl->getParent());
                 }
-
 
             } else if (alreadyColliding) {
 

@@ -207,8 +207,9 @@ void CollBox::drawWireframe()
     auto thisTrans = m_owner->getSibling<CTransform>();
 
     g->clearTransform();
-    g->translate(thisTrans->toWorld(m_localPos));
+    g->translate(thisTrans->toWorld(glm::vec3(m_localPos.x, -m_localPos.y, m_localPos.z)));
     g->scale(m_dims);
+
     g->drawShape("wire_cube");
 }
 

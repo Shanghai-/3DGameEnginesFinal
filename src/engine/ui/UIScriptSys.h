@@ -23,6 +23,8 @@ public:
 
 private:
     QVector<std::shared_ptr<UIScriptComp>> m_scripts;
+
+    int m_width, m_height;
 };
 
 #endif // UISCRIPTSYS_H

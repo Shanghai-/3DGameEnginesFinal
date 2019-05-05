@@ -1,6 +1,10 @@
 #include "ProgressTracker.h"
 
 #include "engine/components/CTransform.h"
+#include "engine/components/CCollider.h"
+#include "engine/components/volumes/CollCylinder.h"
+#include "engine/objectManagement/GameWorld.h"
+#include "vulpecula/responders/WinResp.h"
 
 ProgressTracker::ProgressTracker(int priority, std::shared_ptr<AudioSystem> audioSys) :
     System(priority),
@@ -23,6 +27,8 @@ void ProgressTracker::addComponent(const std::shared_ptr<Component> &c)
 {
     if (c->getParent()->getName().contains("Zone")) {
         m_totalStars++;
+
+
     }
 }
 
@@ -47,8 +53,16 @@ void ProgressTracker::removeComponent(const std::shared_ptr<Component> &c)
         }
 
         if (m_curStars == m_totalStars) {
-            // TODO: player won the game! start the endgame sequence
-            // (aka put a trigger up on the cliff that, when they walk into it, pans the camera up to the sky)
+            // Player won the game! start the endgame sequence
+            // Places a trigger up on the cliff that, when touched, fades the screen to white
+
+            auto winTrigger = std::make_shared<GameObject>("WinTrigger", m_gameWorld->getNewObjID());
+            winTrigger->addComponent(std::make_shared<CTransform>(winTrigger, true, glm::vec3(0.0f, 21.0f, 37.0f)));
+            auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -10.f, 0.f), 20.0f, 3.5f);
+            auto resp = std::make_shared<WinResp>(m_gameWorld);
+            winTrigger->addComponent(std::make_shared<CCollider>(winTrigger, coll, true, resp));
+
+            m_gameWorld->addGameObject(winTrigger);
         }
     }
 }

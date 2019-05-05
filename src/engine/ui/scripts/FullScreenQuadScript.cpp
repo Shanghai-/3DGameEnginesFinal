@@ -1,5 +1,7 @@
 #include "FullScreenQuadScript.h"
 
+#include <iostream>
+
 FullScreenQuadScript::FullScreenQuadScript(std::shared_ptr<UIRenderable> to_resize) :
     m_targetQuad(to_resize)
 {
@@ -19,5 +21,6 @@ void FullScreenQuadScript::onDraw()
 
 void FullScreenQuadScript::onResize(int w, int h)
 {
+    std::cout << "adkjsfasdf" << std::endl;
     m_targetQuad->getTransform()->setScale(glm::vec2(w, h));
 }

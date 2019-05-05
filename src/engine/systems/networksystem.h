@@ -16,7 +16,7 @@ class PlayerObject : public NetworkIDObject {};
 class NetworkSystem : public System
 {
 public:
-    NetworkSystem(int priority, std::shared_ptr<GameWorld> gameworld, bool isServer);
+    NetworkSystem(int priority, GameWorld *gameworld, bool isServer);
     ~NetworkSystem();
 
     QString getComponentType() const;
@@ -30,7 +30,7 @@ private:
     bool m_isServer;
     NetworkIDManager m_networkIDManager;
     QSet<std::shared_ptr<NetworkComponent>> m_network;
-    std::shared_ptr<GameWorld> m_gw;
+    GameWorld *m_gw;
     std::shared_ptr<NetworkComponent> m_player;
 };
 

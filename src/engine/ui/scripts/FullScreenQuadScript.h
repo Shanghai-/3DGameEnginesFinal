@@ -2,7 +2,7 @@
 #define FULLSCREENQUADSCRIPT_H
 
 #include "Script.h"
-#include "UIRenderable.h"
+#include "engine/ui/UIRenderable.h"
 
 class FullScreenQuadScript : public Script
 {

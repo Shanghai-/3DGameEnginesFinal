@@ -14,8 +14,13 @@ public:
     CPhysics(std::shared_ptr<GameObject> parent, glm::vec3 grav);
     ~CPhysics();
 
+    glm::vec3 getGravity();
+
     glm::vec3 vel, acc;
     bool canJump;
+
+private:
+    glm::vec3 m_gravity;
 };
 
 #endif // CPHYSICS_H

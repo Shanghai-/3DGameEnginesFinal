@@ -11,6 +11,7 @@ public:
 
     virtual void onCollide(std::shared_ptr<GameObject> other) = 0;
     virtual void onCollisionEnd(std::shared_ptr<GameObject> other) {}
+    virtual void onCollisionContinue(std::shared_ptr<GameObject> other) {}
 };
 
 #endif // COLLISIONRESPONSE_H

@@ -10,7 +10,7 @@
 #include "engine/ui/UIText.h"
 #include "engine/ui/UIScriptSys.h"
 #include "engine/ui/UIScriptComp.h"
-#include "engine/ui/FullScreenQuadScript.h"
+#include "engine/ui/scripts/FullScreenQuadScript.h"
 #include "engine/input/InputManager.h"
 
 #include "engine/frame/Application.h"

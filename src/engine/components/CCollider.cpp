@@ -53,6 +53,13 @@ void CCollider::onCollide(std::shared_ptr<GameObject> other)
     }
 }
 
+void CCollider::onCollisionContinue(std::shared_ptr<GameObject> other)
+{
+    if (m_collResp != nullptr) {
+        m_collResp->onCollisionContinue(other);
+    }
+}
+
 void CCollider::onCollisionEnd(std::shared_ptr<GameObject> other)
 {
     if (m_collResp != nullptr) {

@@ -16,7 +16,7 @@ enum GameMessages
     ID_TRANSFORM = ID_USER_PACKET_ENUM+3
 };
 
-NetworkSystem::NetworkSystem(int priority, std::shared_ptr<GameWorld> gameworld, bool isServer) : System(priority),
+NetworkSystem::NetworkSystem(int priority, GameWorld *gameworld, bool isServer) : System(priority),
     m_isServer(isServer),
     m_gw(gameworld)
 {

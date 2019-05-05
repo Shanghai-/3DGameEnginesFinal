@@ -1,7 +1,7 @@
 #ifndef HEALTHSCRIPT_H
 #define HEALTHSCRIPT_H
 
-#include "engine/ui/Script.h"
+#include "engine/ui/scripts/Script.h"
 #include "engine/ui/UIRenderable.h"
 #include "CHealth.h"
 

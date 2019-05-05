@@ -311,7 +311,9 @@ bool ResourceLoader::readObj(const QString &path, std::vector<glm::vec3> &vertic
             faces.resize(numFaces + 3, defaultTuple);
 
             QStringList test = parts[1].split("//");
-            assert(test.size() == 2);
+            if (test.size() == 1) test = parts[1].split("/");
+            assert(test.size() >= 2);
+            assert(test.size() <= 3);
             int norm = QString(test[1]).toUInt();
             if(faceCounter != norm) {
                 normalsV.push_back(normalsV[norm - 1]);
