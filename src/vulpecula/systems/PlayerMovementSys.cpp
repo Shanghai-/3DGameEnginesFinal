@@ -20,6 +20,7 @@ PlayerMovementSys::PlayerMovementSys(int priority) :
     m_graphics = Graphics::getGlobalInstance();
     m_grounded = false;
     m_curPos = glm::ivec2(4, 2);
+    m_vel = glm::vec3(0.f);
 }
 
 PlayerMovementSys::~PlayerMovementSys()
@@ -142,7 +143,8 @@ void PlayerMovementSys::tick(float seconds)
             dir -= left * seconds;
         }
         if(m_grounded && m_input->isPressed(Qt::Key_Space)) {
-            dir += glm::vec3(0.f, 2.f, 0.f);
+            std::shared_ptr<CPhysics> phys = transform->getSibling<CPhysics>();
+            phys->vel += glm::vec3(0.f, .1f, 0.f);
             m_grounded = false;
         }
 
@@ -178,7 +180,6 @@ void PlayerMovementSys::tick(float seconds)
             }
             else {
                 phys->vel += (phys->acc * seconds);
-                m_grounded = false;
             }
             timeTraveled += values.time;
             if(timeTraveled >= 1.f) {
