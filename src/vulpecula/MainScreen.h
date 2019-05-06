@@ -33,7 +33,8 @@ private:
         PINE_CLUSTER_1,
         PINE_CLUSTER_2,
         PINE_CLUSTER_3,
-        LONE_PINE
+        LONE_PINE,
+        POWER_LINE
     };
 
     void initializeGame();

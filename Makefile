@@ -918,13 +918,13 @@ compiler_rcc_make_all: qrc_shaders.cpp qrc_fonts.cpp qrc_images.cpp qrc_models.c
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_shaders.cpp qrc_fonts.cpp qrc_images.cpp qrc_models.cpp qrc_sounds.cpp
 qrc_shaders.cpp: res/shaders/shaders.qrc \
-		res/shaders/skybox.vert \
-		res/shaders/water.frag \
 		res/shaders/shader.frag \
-		res/shaders/water.vert \
+		res/shaders/animated.vert \
+		res/shaders/water.frag \
 		res/shaders/skybox.frag \
 		res/shaders/shader.vert \
-		res/shaders/animated.vert
+		res/shaders/water.vert \
+		res/shaders/skybox.vert
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name shaders res/shaders/shaders.qrc -o qrc_shaders.cpp
 
 qrc_fonts.cpp: res/fonts/fonts.qrc \
@@ -932,13 +932,13 @@ qrc_fonts.cpp: res/fonts/fonts.qrc \
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name fonts res/fonts/fonts.qrc -o qrc_fonts.cpp
 
 qrc_images.cpp: res/images/images.qrc \
-		res/images/heart_empty.png \
 		res/images/grass.png \
 		res/images/pylon.png \
 		res/images/dungeontex.png \
 		res/images/gold.png \
 		res/images/title.png \
-		res/images/heart.png
+		res/images/heart.png \
+		res/images/heart_empty.png
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name images res/images/images.qrc -o qrc_images.cpp
 
 qrc_models.cpp: res/models/models.qrc \
@@ -947,75 +947,75 @@ qrc_models.cpp: res/models/models.qrc \
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name models res/models/models.qrc -o qrc_models.cpp
 
 qrc_sounds.cpp: res/sounds/sounds.qrc \
-		res/sounds/mus_piano.ogg \
-		res/sounds/wind.ogg \
-		res/sounds/piano_06.ogg \
-		res/sounds/bell_03.ogg \
-		res/sounds/chm_hi_01.ogg \
-		res/sounds/guitar_06.ogg \
-		res/sounds/mallet_09.ogg \
-		res/sounds/woodwind_02.ogg \
-		res/sounds/piano_01.ogg \
-		res/sounds/bell_07.ogg \
+		res/sounds/piano_05.ogg \
 		res/sounds/chm_hi_05.ogg \
 		res/sounds/guitar_01.ogg \
 		res/sounds/chm_md_03.ogg \
 		res/sounds/mallet_04.ogg \
 		res/sounds/violin_03.ogg \
+		res/sounds/bell_03.ogg \
 		res/sounds/mallet_10.ogg \
-		res/sounds/star_swell.ogg \
-		res/sounds/woodwind_06.ogg \
-		res/sounds/piano_05.ogg \
-		res/sounds/bell_02.ogg \
+		res/sounds/mus_mallet.ogg \
 		res/sounds/guitar_05.ogg \
 		res/sounds/mallet_08.ogg \
+		res/sounds/woodwind_04.ogg \
 		res/sounds/violin_07.ogg \
-		res/sounds/woodwind_01.ogg \
-		res/sounds/bell_06.ogg \
+		res/sounds/bell_07.ogg \
+		res/sounds/piano_04.ogg \
 		res/sounds/chm_hi_04.ogg \
+		res/sounds/mus_bell.ogg \
 		res/sounds/guitar_09.ogg \
 		res/sounds/chm_md_02.ogg \
 		res/sounds/mallet_03.ogg \
 		res/sounds/violin_02.ogg \
-		res/sounds/woodwind_05.ogg \
-		res/sounds/bell_01.ogg \
-		res/sounds/piano_04.ogg \
-		res/sounds/mus_woodwind.ogg \
+		res/sounds/bell_02.ogg \
 		res/sounds/guitar_04.ogg \
+		res/sounds/mus_violin.ogg \
 		res/sounds/chm_md_06.ogg \
-		res/sounds/mus_bell.ogg \
 		res/sounds/mallet_07.ogg \
+		res/sounds/woodwind_03.ogg \
 		res/sounds/violin_06.ogg \
-		res/sounds/mus_mallet.ogg \
-		res/sounds/bell_05.ogg \
+		res/sounds/bell_06.ogg \
+		res/sounds/mus_guitar.ogg \
+		res/sounds/piano_03.ogg \
 		res/sounds/chm_hi_03.ogg \
 		res/sounds/guitar_08.ogg \
 		res/sounds/chm_md_01.ogg \
 		res/sounds/mallet_02.ogg \
 		res/sounds/violin_01.ogg \
-		res/sounds/woodwind_04.ogg \
-		res/sounds/piano_03.ogg \
-		res/sounds/bell_09.ogg \
+		res/sounds/wind.ogg \
+		res/sounds/bell_01.ogg \
+		res/sounds/piano_07.ogg \
 		res/sounds/guitar_03.ogg \
 		res/sounds/chm_md_05.ogg \
+		res/sounds/woodwind_02.ogg \
 		res/sounds/mallet_06.ogg \
 		res/sounds/violin_05.ogg \
-		res/sounds/bell_04.ogg \
-		res/sounds/piano_07.ogg \
+		res/sounds/mus_woodwind.ogg \
+		res/sounds/bell_05.ogg \
+		res/sounds/piano_02.ogg \
 		res/sounds/chm_hi_02.ogg \
 		res/sounds/guitar_07.ogg \
-		res/sounds/mus_violin.ogg \
 		res/sounds/mallet_01.ogg \
-		res/sounds/mus_guitar.ogg \
-		res/sounds/woodwind_03.ogg \
-		res/sounds/piano_02.ogg \
-		res/sounds/bell_08.ogg \
+		res/sounds/woodwind_06.ogg \
+		res/sounds/bell_09.ogg \
+		res/sounds/star_swell.ogg \
+		res/sounds/piano_06.ogg \
 		res/sounds/chm_hi_06.ogg \
 		res/sounds/guitar_02.ogg \
 		res/sounds/chm_md_04.ogg \
+		res/sounds/woodwind_01.ogg \
 		res/sounds/mallet_05.ogg \
 		res/sounds/violin_04.ogg \
-		res/sounds/mallet_11.ogg
+		res/sounds/bell_04.ogg \
+		res/sounds/mallet_11.ogg \
+		res/sounds/mus_piano.ogg \
+		res/sounds/piano_01.ogg \
+		res/sounds/chm_hi_01.ogg \
+		res/sounds/guitar_06.ogg \
+		res/sounds/woodwind_05.ogg \
+		res/sounds/mallet_09.ogg \
+		res/sounds/bell_08.ogg
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name sounds res/sounds/sounds.qrc -o qrc_sounds.cpp
 
 compiler_moc_header_make_all: moc_mainwindow.cpp moc_view.cpp moc_particlesys.cpp
@@ -14607,6 +14607,54 @@ MainScreen.o: src/vulpecula/MainScreen.cpp src/vulpecula/MainScreen.h \
 		src/engine/components/volumes/CollBox.h \
 		src/engine/components/volumes/CollSphere.h \
 		src/engine/components/volumes/CollComposite.h \
+		src/engine/frame/Application.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QStack \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstack.h \
+		src/view.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtOpenGL/QGLWidget \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtOpenGL/qgl.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qopengl.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qt_windows.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qopengles2ext.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qopenglext.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtWidgets/qwidget.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qmargins.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpaintdevice.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpalette.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qcolor.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qrgb.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qbrush.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qmatrix.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpolygon.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qline.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qtransform.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpainterpath.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qimage.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpixmap.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qsharedpointer.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qfont.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qfontmetrics.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qfontinfo.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qcursor.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpaintengine.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpainter.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qtextoption.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpen.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtOpenGL/qglcolormap.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtOpenGL/qtopenglglobal.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/QSurfaceFormat \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qsurfaceformat.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QTime \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qdatetime.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QTimer \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qtimer.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qbasictimer.h \
+		src/warmup1/WarmupApp.h \
+		src/warmup1/WarmupScreen.h \
+		src/dungeon_crawler/DungeonCrawlerApp.h \
+		src/vulpecula/VulpeculaApp.h \
 		src/vulpecula/systems/RandomAudioManager.h \
 		src/vulpecula/components/RandomAudioSource.h \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QStringList \

@@ -11,6 +11,8 @@
 #include <iostream>
 #include <math.h>
 
+#define PLAYER_SPEED 3.0f
+
 PlayerMovementSys::PlayerMovementSys(int priority) :
     System(priority)
 {
@@ -116,11 +118,11 @@ void PlayerMovementSys::tick(float seconds)
 
     glm::vec3 forward = graphicsCam->getLook();
     forward.y = 0;
-    forward = glm::normalize(forward) * 3.0f * 2.f;
+    forward = glm::normalize(forward) * PLAYER_SPEED;
 
     glm::vec3 left = glm::cross(graphicsCam->getUp(), graphicsCam->getLook());
     left.y = 0;
-    left = glm::normalize(left) * 3.0f * 2.f;
+    left = glm::normalize(left) * PLAYER_SPEED;
 
     QSetIterator<std::shared_ptr<CTransform>> it(m_transforms);
 
@@ -142,7 +144,7 @@ void PlayerMovementSys::tick(float seconds)
         }
         if(m_grounded && m_input->isPressed(Qt::Key_Space)) {
             std::shared_ptr<CPhysics> phys = transform->getSibling<CPhysics>();
-            phys->vel += glm::vec3(0.f, 2.f, 0.f);
+            phys->vel += glm::vec3(0.f, .1f, 0.f);
             m_grounded = false;
         }
 
@@ -178,12 +180,16 @@ void PlayerMovementSys::tick(float seconds)
             }
             else {
                 phys->vel += (phys->acc * seconds);
-                m_grounded = false;
             }
             timeTraveled += values.time;
             if(timeTraveled >= 1.f) {
                 break;
             }
+        }
+
+        if (transform->pos.y < -35.0f) {
+            transform->pos = glm::vec3(transform->pos.x, 22.0f, transform->pos.z);
+            phys->vel.y = 0.0f;
         }
 
         //UNCOMMENT THIS ONCE WE ACTUALLY HAVE THE MESH CHUNKS IN
