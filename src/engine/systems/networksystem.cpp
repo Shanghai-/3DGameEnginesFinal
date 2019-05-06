@@ -30,8 +30,8 @@ NetworkSystem::NetworkSystem(int priority, GameWorld *gameworld, bool isServer) 
     } else {
         SocketDescriptor sd;
         m_peer->Startup(1, &sd, 1);
-
-        m_peer->Connect("10.116.72.56", SERVER_PORT, 0, 0);
+        m_peer->Ping("255.255.255.255", SERVER_PORT, true);
+        //m_peer->Connect("255.255.255.255", SERVER_PORT, 0, 0);
     }
 }
 
@@ -114,6 +114,19 @@ void NetworkSystem::tick(float seconds)
                     std::cout<<"A client lost the connection"<<std::endl;
                 } else {
                     std::cout<<"Connection lost"<<std::endl;
+                }
+                break;
+//            case ID_UNCONNECTED_PING_OPEN_CONNECTIONS:
+//                m_peer->AdvertiseSystem(packet->systemAddress.ToString(true), SERVER_PORT, 0, 0);
+//                break;
+//            case ID_ADVERTISE_SYSTEM:
+//                {
+//                    std::cout<<"it worked"<<std::endl;
+//                }
+//                break;
+            case ID_UNCONNECTED_PONG:
+                {
+                    m_peer->Connect(packet->systemAddress.ToString(false), SERVER_PORT, 0, 0);
                 }
                 break;
             case ID_GAME_MESSAGE_1:
