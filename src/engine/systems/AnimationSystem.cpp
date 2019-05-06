@@ -59,7 +59,7 @@ void AnimationSystem::tick(float seconds)
 
             // Convert the time the animation has been running from seconds to animation ticks
             // These do not necessarily match the tick rate of the engine, which is 60 TPS.
-            float timeInTicks = m->addSeconds(seconds) * a.getTicksPerSec();
+            float timeInTicks = m->addSeconds((seconds * 1.5)) * a.getTicksPerSec();
 
             // Convert the animation running time (in ticks) to a frame in the animation.
             // If the animation loops, that means we take the time mod the duration, so it starts over if we go past the end
