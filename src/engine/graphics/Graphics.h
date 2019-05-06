@@ -531,11 +531,9 @@ public:
     Graphics(Graphics const&) = delete;
     void operator=(Graphics const&) = delete;
 
-    void addUIQuad();
-
 private:
     void addQuad();
-
+    void addUIQuad();
     void addCircle();
     void addCylinder();
     void addSphere();

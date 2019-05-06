@@ -9,8 +9,6 @@
 #include "engine/ui/scripts/FullScreenQuadScript.h"
 #include "engine/ui/scripts/TimedFade.h"
 
-#include "engine/graphics/Graphics.h"
-
 WinResp::WinResp(GameWorld *gw) :
     m_gw(gw)
 {
@@ -24,8 +22,6 @@ void WinResp::onCollide(std::shared_ptr<GameObject> other)
 {
     if (other->getName() == "Player") {
         other->removeComponent<CInputReceiver>(); // Disable player input
-
-        Graphics::getGlobalInstance()->addUIQuad();
 
         auto fader = std::make_shared<UIObject>("FadeToWhite", m_gw->getNewObjID(), BOT_LEFT);
         auto renderable = std::make_shared<UIRenderable>(fader, UITransform(BOT_LEFT), "uiquad", "WhiteFade");

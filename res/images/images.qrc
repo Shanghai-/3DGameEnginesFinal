@@ -7,5 +7,6 @@
         <file>heart_empty.png</file>
         <file>title.png</file>
         <file>pylon.png</file>
+        <file>chainlink.png</file>
     </qresource>
 </RCC>
