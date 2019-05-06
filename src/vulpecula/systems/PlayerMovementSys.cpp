@@ -90,9 +90,10 @@ void PlayerMovementSys::removeMesh(glm::ivec2 coord)
 {
     auto res = m_meshMap.find(glmToStd(coord));
     if (res != m_meshMap.end()) {
+        //m_globalMeshMap[glmToStd(coord)]->getSibling<CRenderable>()->setMaterialName("Ground");
         m_meshMap.erase(res);
         //std::shared_ptr<CMeshCol> coll = m_globalMeshMap[glmToStd(coord)];
-        //coll->getSibling<CRenderable>()->setMaterialName("Ground");
+
     }
 
 }
@@ -169,7 +170,6 @@ void PlayerMovementSys::tick(float seconds)
         for(int i = 0; i < repetitions; i++) {
             returnType values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
             glm::vec3 hit = transform->pos + (dir * values.time);
-            //std::cout << glm::to_string(values.normal) << std::endl;
             transform->pos = hit + (0.01f * values.normal);
 
             if(values.time < 1.f) {

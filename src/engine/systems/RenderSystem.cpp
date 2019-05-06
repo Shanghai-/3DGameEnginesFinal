@@ -23,6 +23,7 @@ void RenderSystem::draw()
     m_graphics->setShader("default");
     std::shared_ptr<CCamera> cam = m_graphics->getActiveCamera();
 
+
     QSetIterator<std::shared_ptr<CRenderable>> it(m_renderComponents);
     while (it.hasNext()) {
         std::shared_ptr<CRenderable> r = it.next();
@@ -59,6 +60,7 @@ void RenderSystem::draw()
         m_graphics->getActiveShader()->setUniform("time", m_gameWorld->getElapsedTime());
         m_graphics->drawShape(r->getShapeName().toStdString());
     }
+
 
     if (m_skyboxTex) {
         GLint oldCullingMode, oldDepthMode;

@@ -38,6 +38,7 @@
 // CUSTOM COMPONENTS
 #include "vulpecula/components/RandomAudioSource.h"
 #include "warmup1/CustomComponents/CPhysics.h"
+#include "vulpecula/responders/waterresponse.h"
 
 // CUSTOM MISC.
 #include "vulpecula/responders/GuitarZoneResp.h"
@@ -434,6 +435,14 @@ void MainScreen::loadDecorations()
     water->addComponent(std::make_shared<CTransform>(water, true, glm::vec3(-39.88062, -7.24381, -11.71469)));
     water->addComponent(std::make_shared<CRenderable>(water, basePath + "water.obj", "Water"));
     m_gw->addGameObject(water);
+
+    std::shared_ptr<GameObject> waterCollider = std::make_shared<GameObject>("WaterCol", m_gw->getNewObjID());
+    water->addComponent(std::make_shared<CTransform>(waterCollider, true, glm::vec3(-39.3268f, -8.33925f, -36.2637f)));
+    auto waterColBox = std::make_shared<CollBox>(glm::vec3(0.f), glm::vec3(39.1286f, 2.f, 85.2655f));
+    auto waterColResp = std::make_shared<WaterResponse>();
+    water->addComponent(std::make_shared<CCollider>(waterCollider, waterColBox, true, waterColResp));
+
+
 
     createPrefab(PINE_CLUSTER_1, glm::vec3(13.1068, 5.10292, 44.8788), glm::vec3(0), glm::vec3(1.378));
     createPrefab(PINE_CLUSTER_1, glm::vec3(-21.4215, 11.5213, 57.7421), glm::vec3(0, -102, 0), glm::vec3(1.378));
