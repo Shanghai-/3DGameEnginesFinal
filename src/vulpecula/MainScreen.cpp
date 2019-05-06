@@ -191,6 +191,7 @@ void MainScreen::loadGraphics()
     Material fencing;
     fencing.useLighting = true;
     fencing.textureName = "ChainLink";
+    fencing.textureRepeat = glm::vec2(8.0f, 8.0f);
     g->addMaterial("ChainLink", fencing);
 
     // UI MATERIALS
@@ -413,15 +414,15 @@ void MainScreen::loadDecorations()
     foundation->addComponent(std::make_shared<CCollider>(foundation, foundColl, false, foundResp));
     m_gw->addGameObject(foundation);
 
-    /* std::shared_ptr<GameObject> fence = std::make_shared<GameObject>("ChainFence", m_gw->getNewObjID());
+    std::shared_ptr<GameObject> fence = std::make_shared<GameObject>("ChainFence", m_gw->getNewObjID());
     fence->addComponent(std::make_shared<CTransform>(fence, true, glm::vec3(0.751355, 3.01966, -55.3009)));
-    fence->addComponent(std::make_shared<CRenderable>(fence, basePath.append("WireFence.obj"), "ChainLink"));
+    fence->addComponent(std::make_shared<CRenderable>(fence, basePath + "WireFence.obj", "ChainLink"));
     m_gw->addGameObject(fence);
 
     std::shared_ptr<GameObject> fenceposts = std::make_shared<GameObject>("Fenceposts", m_gw->getNewObjID());
-    fenceposts->addComponent(std::make_shared<CTransform>(fenceposts, true, glm::vec3(0.639584, 3.09837, 55.447)));
-    fenceposts->addComponent(std::make_shared<CRenderable>(fenceposts, basePath.append("WireFencePosts.obj"), "LightGrey"));
-    m_gw->addGameObject(fenceposts); */
+    fenceposts->addComponent(std::make_shared<CTransform>(fenceposts, true, glm::vec3(0.639584, 3.09837, -55.447)));
+    fenceposts->addComponent(std::make_shared<CRenderable>(fenceposts, basePath + "WireFencePosts.obj", "LightGrey"));
+    m_gw->addGameObject(fenceposts);
 
     createPrefab(POWER_LINE, glm::vec3(-4.67219, 23.0, -63.88128), glm::vec3(0), glm::vec3(1));
     createPrefab(POWER_LINE, glm::vec3(-4.67219, 23.0, -52.61531), glm::vec3(0), glm::vec3(1));
@@ -502,7 +503,7 @@ void MainScreen::loadObjectives()
     createAudioZone(woodZone, woodSounds, collCyl);
 
     std::shared_ptr<GameObject> woodStar = std::make_shared<GameObject>("WoodStar", m_gw->getNewObjID());
-    woodStar->addComponent(std::make_shared<CTransform>(woodStar, true, glm::vec3(4.38416, 1.87211, -49.35240),
+    woodStar->addComponent(std::make_shared<CTransform>(woodStar, true, glm::vec3(4.38416, 1.87211, -51.35240),
                                                         glm::vec3(0.0f), glm::vec3(0.5f)));
     createStar(woodStar, ":/sounds/mus_woodwind.ogg", woodZone);
 
@@ -569,6 +570,14 @@ void MainScreen::createAudioZone(std::shared_ptr<GameObject> zoneObj, QStringLis
 void MainScreen::createStar(std::shared_ptr<GameObject> starObj, QString file, std::shared_ptr<GameObject> zone)
 {
     assert(starObj != nullptr);
+
+    Graphics *g = Graphics::getGlobalInstance();
+    Light l;
+    l.type = Light::LIGHT_TYPE::POINT;
+    l.pos = glm::vec3(starObj->getComponent<CTransform>()->pos);
+    l.color = glm::vec3(0.9f, 0.9f, 0.52549f);
+    l.att = glm::vec2(0.15f, 0.01f);
+    g->addLight(l);
 
     starObj->addComponent(std::make_shared<CRenderable>(starObj, ":/models/star.obj", "Star"));
 

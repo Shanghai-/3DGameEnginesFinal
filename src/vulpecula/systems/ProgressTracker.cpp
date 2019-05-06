@@ -27,8 +27,6 @@ void ProgressTracker::addComponent(const std::shared_ptr<Component> &c)
 {
     if (c->getParent()->getName().contains("Zone")) {
         m_totalStars++;
-
-
     }
 }
 
@@ -39,7 +37,7 @@ void ProgressTracker::removeComponent(const std::shared_ptr<Component> &c)
 
         switch (m_curStars) {
             case 2:
-                m_audioSys->fadeChannelVolume("Music", 0.45f, 1.5f);
+                //m_audioSys->fadeChannelVolume("Music", 0.45f, 1.5f);
                 m_audioSys->fadeChannelVolume("Ambient", 0.4f, 1.5f);
                 break;
             case 3:

@@ -920,13 +920,13 @@ compiler_rcc_make_all: qrc_shaders.cpp qrc_fonts.cpp qrc_images.cpp qrc_models.c
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_shaders.cpp qrc_fonts.cpp qrc_images.cpp qrc_models.cpp qrc_sounds.cpp
 qrc_shaders.cpp: res/shaders/shaders.qrc \
+		res/shaders/animated.vert \
 		res/shaders/skybox.vert \
 		res/shaders/water.vert \
 		res/shaders/shader.frag \
 		res/shaders/skybox.frag \
 		res/shaders/water.frag \
-		res/shaders/shader.vert \
-		res/shaders/animated.vert
+		res/shaders/shader.vert
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name shaders res/shaders/shaders.qrc -o qrc_shaders.cpp
 
 qrc_fonts.cpp: res/fonts/fonts.qrc \
@@ -934,90 +934,91 @@ qrc_fonts.cpp: res/fonts/fonts.qrc \
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name fonts res/fonts/fonts.qrc -o qrc_fonts.cpp
 
 qrc_images.cpp: res/images/images.qrc \
+		res/images/chainlink.png \
 		res/images/grass.png \
+		res/images/dungeontex.png \
 		res/images/pylon.png \
 		res/images/heart_empty.png \
-		res/images/gold.png \
 		res/images/title.png \
-		res/images/dungeontex.png \
+		res/images/gold.png \
 		res/images/heart.png
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name images res/images/images.qrc -o qrc_images.cpp
 
 qrc_models.cpp: res/models/models.qrc \
-		res/models/star.obj \
-		res/models/Love.obj
+		res/models/Love.obj \
+		res/models/star.obj
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name models res/models/models.qrc -o qrc_models.cpp
 
 qrc_sounds.cpp: res/sounds/sounds.qrc \
-		res/sounds/chm_hi_06.ogg \
+		res/sounds/woodwind_06.ogg \
+		res/sounds/bell_03.ogg \
+		res/sounds/guitar_07.ogg \
+		res/sounds/piano_03.ogg \
+		res/sounds/mallet_01.ogg \
+		res/sounds/violin_05.ogg \
+		res/sounds/woodwind_01.ogg \
+		res/sounds/chm_hi_02.ogg \
+		res/sounds/bell_07.ogg \
 		res/sounds/guitar_02.ogg \
-		res/sounds/mus_mallet.ogg \
+		res/sounds/piano_07.ogg \
 		res/sounds/chm_md_04.ogg \
 		res/sounds/mallet_05.ogg \
-		res/sounds/violin_04.ogg \
 		res/sounds/mallet_11.ogg \
-		res/sounds/woodwind_06.ogg \
 		res/sounds/mus_piano.ogg \
-		res/sounds/bell_05.ogg \
-		res/sounds/chm_hi_01.ogg \
+		res/sounds/woodwind_05.ogg \
+		res/sounds/chm_hi_06.ogg \
+		res/sounds/mus_mallet.ogg \
+		res/sounds/bell_02.ogg \
 		res/sounds/guitar_06.ogg \
+		res/sounds/piano_02.ogg \
+		res/sounds/violin_04.ogg \
 		res/sounds/mallet_09.ogg \
-		res/sounds/woodwind_01.ogg \
-		res/sounds/piano_04.ogg \
-		res/sounds/bell_09.ogg \
-		res/sounds/mus_bell.ogg \
-		res/sounds/chm_hi_05.ogg \
+		res/sounds/chm_hi_01.ogg \
+		res/sounds/bell_06.ogg \
 		res/sounds/guitar_01.ogg \
 		res/sounds/chm_md_03.ogg \
-		res/sounds/mallet_04.ogg \
-		res/sounds/violin_03.ogg \
-		res/sounds/woodwind_05.ogg \
-		res/sounds/mallet_10.ogg \
-		res/sounds/bell_04.ogg \
-		res/sounds/guitar_05.ogg \
-		res/sounds/mallet_08.ogg \
-		res/sounds/violin_07.ogg \
-		res/sounds/piano_03.ogg \
-		res/sounds/mus_violin.ogg \
-		res/sounds/bell_08.ogg \
-		res/sounds/chm_hi_04.ogg \
-		res/sounds/chm_md_02.ogg \
-		res/sounds/mus_guitar.ogg \
-		res/sounds/guitar_09.ogg \
-		res/sounds/mallet_03.ogg \
-		res/sounds/violin_02.ogg \
-		res/sounds/woodwind_04.ogg \
-		res/sounds/piano_07.ogg \
-		res/sounds/bell_03.ogg \
-		res/sounds/guitar_04.ogg \
-		res/sounds/chm_md_06.ogg \
-		res/sounds/mallet_07.ogg \
-		res/sounds/violin_06.ogg \
-		res/sounds/piano_02.ogg \
-		res/sounds/bell_07.ogg \
-		res/sounds/mus_woodwind.ogg \
-		res/sounds/chm_hi_03.ogg \
-		res/sounds/guitar_08.ogg \
-		res/sounds/chm_md_01.ogg \
-		res/sounds/star_swell.ogg \
-		res/sounds/wind.ogg \
-		res/sounds/mallet_02.ogg \
-		res/sounds/violin_01.ogg \
-		res/sounds/woodwind_03.ogg \
-		res/sounds/bell_02.ogg \
 		res/sounds/piano_06.ogg \
+		res/sounds/mallet_04.ogg \
+		res/sounds/mallet_10.ogg \
+		res/sounds/mus_woodwind.ogg \
+		res/sounds/woodwind_04.ogg \
+		res/sounds/chm_hi_05.ogg \
+		res/sounds/bell_01.ogg \
+		res/sounds/guitar_05.ogg \
+		res/sounds/piano_01.ogg \
+		res/sounds/violin_03.ogg \
+		res/sounds/mallet_08.ogg \
+		res/sounds/mus_violin.ogg \
+		res/sounds/bell_05.ogg \
+		res/sounds/mus_guitar.ogg \
+		res/sounds/chm_md_02.ogg \
+		res/sounds/guitar_09.ogg \
+		res/sounds/piano_05.ogg \
+		res/sounds/mallet_03.ogg \
+		res/sounds/violin_07.ogg \
+		res/sounds/woodwind_03.ogg \
+		res/sounds/chm_hi_04.ogg \
+		res/sounds/guitar_04.ogg \
+		res/sounds/bell_09.ogg \
+		res/sounds/chm_md_06.ogg \
+		res/sounds/violin_02.ogg \
+		res/sounds/mallet_07.ogg \
+		res/sounds/wind.ogg \
+		res/sounds/bell_04.ogg \
+		res/sounds/chm_md_01.ogg \
+		res/sounds/guitar_08.ogg \
+		res/sounds/piano_04.ogg \
+		res/sounds/mallet_02.ogg \
+		res/sounds/violin_06.ogg \
+		res/sounds/mus_bell.ogg \
+		res/sounds/woodwind_02.ogg \
+		res/sounds/chm_hi_03.ogg \
+		res/sounds/bell_08.ogg \
+		res/sounds/star_swell.ogg \
 		res/sounds/guitar_03.ogg \
 		res/sounds/chm_md_05.ogg \
 		res/sounds/mallet_06.ogg \
-		res/sounds/violin_05.ogg \
-		res/sounds/piano_01.ogg \
-		res/sounds/bell_06.ogg \
-		res/sounds/chm_hi_02.ogg \
-		res/sounds/guitar_07.ogg \
-		res/sounds/mallet_01.ogg \
-		res/sounds/woodwind_02.ogg \
-		res/sounds/bell_01.ogg \
-		res/sounds/piano_05.ogg
+		res/sounds/violin_01.ogg
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name sounds res/sounds/sounds.qrc -o qrc_sounds.cpp
 
 compiler_moc_header_make_all: moc_mainwindow.cpp moc_view.cpp moc_particlesys.cpp
@@ -21623,33 +21624,7 @@ WinResp.o: src/vulpecula/responders/WinResp.cpp src/vulpecula/responders/WinResp
 		src/engine/ui/UIScriptComp.h \
 		src/engine/ui/scripts/Script.h \
 		src/engine/ui/scripts/FullScreenQuadScript.h \
-		src/engine/ui/scripts/TimedFade.h \
-		src/engine/graphics/Graphics.h \
-		src/engine/util/CommonIncludes.h \
-		libs/glew-1.10.0/include/GL/glew.h \
-		libs/glm/gtx/string_cast.hpp \
-		libs/glm/gtx/integer.hpp \
-		libs/glm/gtx/integer.inl \
-		libs/glm/gtx/quaternion.hpp \
-		libs/glm/gtc/constants.hpp \
-		libs/glm/gtc/constants.inl \
-		libs/glm/gtc/quaternion.hpp \
-		libs/glm/gtx/quaternion.inl \
-		libs/glm/gtx/norm.hpp \
-		libs/glm/gtx/norm.inl \
-		libs/glm/gtx/string_cast.inl \
-		libs/glm/gtx/transform.hpp \
-		libs/glm/gtc/matrix_transform.hpp \
-		libs/glm/gtc/matrix_transform.inl \
-		libs/glm/gtx/transform.inl \
-		libs/glm/gtc/type_ptr.hpp \
-		libs/glm/gtc/type_ptr.inl \
-		src/engine/graphics/Shader.h \
-		src/engine/graphics/VBO.h \
-		src/engine/graphics/GraphicsDebug.h \
-		src/engine/graphics/Constants.h \
-		src/engine/graphics/Material.h \
-		src/engine/graphics/Light.h
+		src/engine/ui/scripts/TimedFade.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o WinResp.o src/vulpecula/responders/WinResp.cpp
 
 TimedFade.o: src/engine/ui/scripts/TimedFade.cpp src/engine/ui/scripts/TimedFade.h \
