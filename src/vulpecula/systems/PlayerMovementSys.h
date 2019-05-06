@@ -53,6 +53,8 @@ private:
     glm::ivec2 m_curPos;
     void updateMeshMap(glm::vec2 pos2D);
     bool m_grounded;
+    \
+    glm::vec3 m_vel;
     // System interface
 };
 
