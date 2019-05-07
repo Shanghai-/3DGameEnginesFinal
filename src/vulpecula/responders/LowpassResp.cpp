@@ -30,11 +30,11 @@ void LowpassResp::onCollisionEnd(std::shared_ptr<GameObject> other)
                 m_audio->addEffectAtStart(existing, "Lowpass", "Ambient", false);
 
                 FMOD::DSP *other = m_audio->createEffect(FMOD_DSP_TYPE_LOWPASS);
-                other->setParameterFloat(FMOD_DSP_LOWPASS_CUTOFF, 950.0f);
+                other->setParameterFloat(FMOD_DSP_LOWPASS_CUTOFF, 1500.0f);
                 m_audio->addEffectAtStart(other, "Lowpass", "SFX", false);
 
                 FMOD::DSP *third = m_audio->createEffect(FMOD_DSP_TYPE_LOWPASS);
-                other->setParameterFloat(FMOD_DSP_LOWPASS_CUTOFF, 950.0f);
+                third->setParameterFloat(FMOD_DSP_LOWPASS_CUTOFF, 800.0f);
                 m_audio->addEffectAtStart(third, "Lowpass", "Music", false);
             }
         } else {

@@ -5,6 +5,7 @@
 #include "engine/objectManagement/GameWorld.h"
 #include "engine/components/volumes/CollisionVolume.h"
 #include "systems/PlayerMovementSys.h"
+#include "engine/systems/AudioSystem.h"
 
 class Application;
 
@@ -41,7 +42,8 @@ private:
     void initializeGame();
     void loadGraphics();
     void loadMap(std::shared_ptr<PlayerMovementSys> playSys);
-    void initializeAudio(std::shared_ptr<GameObject> player);
+    AudioSystem *initializeAudio(std::shared_ptr<GameObject> player);
+    void setupUI();
 
     void loadTerrain(std::shared_ptr<PlayerMovementSys> playSys);
     void loadDecorations();

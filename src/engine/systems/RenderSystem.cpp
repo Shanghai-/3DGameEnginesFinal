@@ -33,9 +33,9 @@ void RenderSystem::draw()
 
         m_graphics->clearTransform();
         m_graphics->translate(trans->pos);
-        m_graphics->rotate(trans->rot.x, glm::vec3(1,0,0));
-        m_graphics->rotate(trans->rot.y, glm::vec3(0,1,0));
         m_graphics->rotate(trans->rot.z, glm::vec3(0,0,1));
+        m_graphics->rotate(trans->rot.y, glm::vec3(0,1,0));
+        m_graphics->rotate(trans->rot.x, glm::vec3(1,0,0));
         m_graphics->scale(trans->scale);
 
         AABB bounds = r->getShape()->getBounds();

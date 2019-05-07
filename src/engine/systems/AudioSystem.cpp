@@ -142,8 +142,11 @@ void AudioSystem::tick(float seconds)
                 FMOD::ChannelGroup *cg = m_channels.value(channelGroupName);
 
                 if (cg == nullptr) {
+                    std::cout << "Channel group '" << qPrintable(channelGroupName) << "' created." << std::endl;
                     m_sys->createChannelGroup(qPrintable(channelGroupName), &cg);
                     m_channels.insert(channelGroupName, cg);
+                } else {
+                    std::cout << "Adding to existing channel group '" << qPrintable(channelGroupName) << "'." << std::endl;
                 }
 
                 // Add the sound to the group
@@ -154,11 +157,7 @@ void AudioSystem::tick(float seconds)
             s->channel->setVolume(s->getVolume());
 
             // If the sound is muted, mute the channel
-            if (s->isMuted()) {
-                s->channel->setMute(true);
-            } else {
-                s->channel->setMute(false);
-            }
+            s->channel->setMute(s->isMuted());
 
             // Since the sound is playing, not paused, the channel shouldn't be paused
             s->channel->setPaused(false);

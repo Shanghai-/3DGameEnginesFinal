@@ -9,7 +9,7 @@
 class RandomAudioManager : public System
 {
 public:
-    RandomAudioManager(int priority, const std::shared_ptr<AudioSystem> &as);
+    RandomAudioManager(int priority, AudioSystem *as);
     ~RandomAudioManager();
 
     QString getComponentType() const;
@@ -18,7 +18,7 @@ public:
     void tick(float seconds);
 
 private:
-    std::shared_ptr<AudioSystem> m_as;
+    AudioSystem *m_as;
     QSet<std::shared_ptr<RandomAudioSource>> m_sources;
 };
 

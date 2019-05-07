@@ -3,7 +3,6 @@
 // ENGINE SYSTEMS
 #include "engine/systems/RenderSystem.h"
 #include "engine/systems/ThirdPersonCamSys.h"
-#include "engine/systems/AudioSystem.h"
 #include "engine/systems/CollisionSystem.h"
 #include "engine/systems/AnimationSystem.h"
 #include "engine/systems/networksystem.h"
@@ -22,6 +21,8 @@
 // UI IMPORTS
 #include "engine/ui/UIScriptSys.h"
 #include "engine/ui/UIDrawer.h"
+#include "engine/ui/TextDrawer.h"
+#include "engine/ui/UIText.h"
 
 // ENGINE MISC.
 #include "engine/components/volumes/CollCylinder.h"
@@ -71,7 +72,9 @@ void MainScreen::initializeGame()
     auto partSys = std::make_shared<ParticleSys>(100);
 
     TextureCube::Cubemap skyMap = {"front.png", "back.png", "left.png", "right.png", "up.png", "down.png"};
-    renderSys->setSkybox(std::make_shared<TextureCube>("/course/cs1950u/.archive/2019/student/vulpecula/skybox/", skyMap));
+    auto skybox = std::make_shared<TextureCube>("/course/cs1950u/.archive/2019/student/vulpecula/skybox/",
+                                                skyMap);
+    renderSys->setSkybox(skybox);
 
     // Renderer
     m_gw->registerForDraw(renderSys);
@@ -92,7 +95,7 @@ void MainScreen::initializeGame()
     m_gw->registerForTick(animSys);
 
     // Player input handling
-    auto playSys = std::make_shared<PlayerMovementSys>(100);
+    auto playSys = std::make_shared<PlayerMovementSys>(110);
     m_gw->registerForTick(playSys);
     //m_gw->registerForDraw(playSys);
 
@@ -102,17 +105,22 @@ void MainScreen::initializeGame()
     // UI Systems
     m_gw->registerUISystem(std::make_shared<UIScriptSys>(100));
     m_gw->registerUISystem(std::make_shared<UIDrawer>(200));
-
+    m_gw->registerUISystem(std::make_shared<TextDrawer>(300));
 
     // Set up materials, lights, etc.
     loadGraphics();
 
+    // Load in the map
+    loadMap(playSys);
+
+    setupUI();
+
     // Player setup
     std::shared_ptr<GameObject> player = std::make_shared<GameObject>("Player", m_gw->getNewObjID());
-    player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.f, 22.0f, 50.0f), glm::vec3(0.0f), glm::vec3(0.2f)));
+    player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.f, 22.0f, 50.0f), glm::vec3(0.0f), glm::vec3(0.23f)));
     player->addComponent(std::make_shared<CCamera>(player, glm::vec3(0.0f, 0.4f, 0.0f)));
-    //player->addComponent(std::make_shared<CAnimatedMesh>(player, "/course/cs1950u/.archive/2019/student/vulpecula/fox.fbx", "PureWhite"));
-    player->addComponent(std::make_shared<CRenderable>(player, "cube", "Star"));
+    player->addComponent(std::make_shared<CAnimatedMesh>(player, "/course/cs1950u/.archive/2019/student/vulpecula/fox.fbx", "PureWhite"));
+    //player->addComponent(std::make_shared<CRenderable>(player, "/course/cs1950u/.archive/2019/student/vulpecula/fox.obj", "White"));
     auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -0.375f, 0.f), 0.75f, 0.8f);
     auto comp = std::make_shared<CCollider>(player, coll, false);
     player->addComponent(comp);
@@ -122,10 +130,10 @@ void MainScreen::initializeGame()
     m_gw->addGameObject(player);
 
     // Load the ambient audio, set up channels, etc.
-    initializeAudio(player);
+    AudioSystem *audioSys = initializeAudio(player);
 
-    // Load in the map
-    loadMap(playSys);
+    auto progressTracker = std::make_shared<ProgressTracker>(905, audioSys);
+    m_gw->registerForTick(progressTracker);
 }
 
 void MainScreen::loadGraphics()
@@ -143,6 +151,11 @@ void MainScreen::loadGraphics()
     fox.color = glm::vec3(0.95f, 0.95f, 0.95f);
     fox.shaderName = "Animated";
     g->addMaterial("PureWhite", fox);
+
+    Material bah;
+    bah.useLighting = false;
+    bah.color = glm::vec3(0.95f);
+    g->addMaterial("White", bah);
 
     Material noSnow;
     noSnow.useLighting = true;
@@ -243,7 +256,7 @@ void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
     loadObjectives();
 }
 
-void MainScreen::initializeAudio(std::shared_ptr<GameObject> player)
+AudioSystem *MainScreen::initializeAudio(std::shared_ptr<GameObject> player)
 {
     std::shared_ptr<AudioSystem> audioSys = std::make_shared<AudioSystem>(900, player);
     audioSys->createChannel("Ambient");
@@ -252,9 +265,7 @@ void MainScreen::initializeAudio(std::shared_ptr<GameObject> player)
 
     m_gw->registerForTick(audioSys);
 
-    m_gw->registerForTick(std::make_shared<RandomAudioManager>(895, audioSys));
-
-    m_gw->registerForTick(std::make_shared<ProgressTracker>(905, audioSys));
+    m_gw->registerForTick(std::make_shared<RandomAudioManager>(895, audioSys.get()));
 
     // Create the wind sound emitter
     std::shared_ptr<GameObject> windEmitter = std::make_shared<GameObject>("WindEmitter", m_gw->getNewObjID());
@@ -298,6 +309,36 @@ void MainScreen::initializeAudio(std::shared_ptr<GameObject> player)
     auto lowResp = std::make_shared<LowpassResp>(lowpassTrans->pos, audioSys.get());
     lowpassTrigger->addComponent(std::make_shared<CCollider>(lowpassTrigger, lowColl, true, lowResp));
     m_gw->addGameObject(lowpassTrigger);
+
+    return audioSys.get();
+}
+
+void MainScreen::setupUI()
+{
+    Graphics *g = Graphics::getGlobalInstance();
+    g->addUIQuad(); // Required because of fuckiness
+
+    std::string baseFile = "/course/cs1950u/.archive/2019/student/vulpecula/ui/";
+    g->addTexture("Star1", baseFile + "star1.png");
+    g->addTexture("StarX", baseFile + "x.png");
+    g->addTexture("Count0", baseFile + "1.png");
+    Material ui;
+    ui.useLighting = false;
+    ui.textureName = "Star1";
+    g->addMaterial("Star1", ui);
+    ui.textureName = "StarX";
+    g->addMaterial("StarX", ui);
+    ui.textureName = "Count0";
+    g->addMaterial("Count0", ui);
+
+    std::shared_ptr<UIObject> starCounter = std::make_shared<UIObject>("StarCount", m_gw->getNewObjID(), TOP_RIGHT);
+    UITransform t = UITransform(TOP_LEFT, glm::vec2(-215, -10), glm::vec2(100));
+    starCounter->addComponent(std::make_shared<UIRenderable>(starCounter, t, "uiquad", "Star1"));
+    t = UITransform(TOP_LEFT, glm::vec2(-115, -10), glm::vec2(45, 100));
+    starCounter->addComponent(std::make_shared<UIRenderable>(starCounter, t, "uiquad", "StarX"));
+    t = UITransform(TOP_RIGHT, glm::vec2(-10, -10), glm::vec2(55, 100));
+    starCounter->addComponent(std::make_shared<UIRenderable>(starCounter, t, "uiquad", "Count0"));
+    m_gw->addUIObject(starCounter);
 }
 
 void MainScreen::loadTerrain(std::shared_ptr<PlayerMovementSys> playSys)
@@ -317,26 +358,19 @@ void MainScreen::loadTerrain(std::shared_ptr<PlayerMovementSys> playSys)
             QString name(name_concat.data());
             QString filename(filename_concat.data());
 
-            if (r < 3) {
-                std::string texture_concat = baseFile + name_concat + ".png";
-                g->addTexture(name_concat, texture_concat);
-                Material m;
-                m.useLighting = true;
-                m.textureName = name_concat;
-                g->addMaterial(name_concat, m);
-            }
+            std::string texture_concat = baseFile + name_concat + ".png";
+            g->addTexture(name_concat, texture_concat);
+            Material m;
+            m.useLighting = true;
+            m.textureName = name_concat;
+            g->addMaterial(name_concat, m);
 
             glm::vec3 center = basePoint + glm::vec3(c_add, 0, r_add);
             //std::cout << center.x << ", " << center.y << ", " << center.z << std::endl;
 
             std::shared_ptr<GameObject> ground = std::make_shared<GameObject>(name, m_gw->getNewObjID());
             ground->addComponent(std::make_shared<CTransform>(ground, true, center));
-            //ground->addComponent(std::make_shared<CRenderable>(ground, filename, "Ground"));
-            if (r < 3) {
-                ground->addComponent(std::make_shared<CRenderable>(ground, filename, name));
-            } else {
-                ground->addComponent(std::make_shared<CRenderable>(ground, filename, "Ground"));
-            }
+            ground->addComponent(std::make_shared<CRenderable>(ground, filename, name));
 
             std::shared_ptr<CMeshCol> collider = std::make_shared<CMeshCol>(ground, filename);
             ground->addComponent(collider);
@@ -456,6 +490,7 @@ void MainScreen::loadDecorations()
     water->addComponent(std::make_shared<CRenderable>(water, basePath + "water.obj", "Water"));
     m_gw->addGameObject(water);
 
+    // This collider goes under the water in the river and teleports you back to land if you fall in
     std::shared_ptr<GameObject> waterCollider = std::make_shared<GameObject>("WaterCol", m_gw->getNewObjID());
     waterCollider->addComponent(std::make_shared<CTransform>(waterCollider, true, glm::vec3(-39.3268f, -8.33925f, -36.2637f)));
     auto waterColBox = std::make_shared<CollBox>(glm::vec3(0.f), glm::vec3(39.1286f, 2.f, 85.2655f));
@@ -466,28 +501,54 @@ void MainScreen::loadDecorations()
     // Tree prefabs
     createPrefab(PINE_CLUSTER_1, glm::vec3(13.1068, 5.10292, 44.8788), glm::vec3(0), glm::vec3(1.378));
     createPrefab(PINE_CLUSTER_1, glm::vec3(-21.4215, 11.5213, 57.7421), glm::vec3(0, -102, 0), glm::vec3(1.378));
-    createPrefab(PINE_CLUSTER_1, glm::vec3(-9.84175, 4.80746, 31.1118), glm::vec3(0, 104, 1.77), glm::vec3(1.698));
+    createPrefab(PINE_CLUSTER_1, glm::vec3(-9.84175, 4.80746, 31.1118), glm::vec3(0, 104, -1.77), glm::vec3(1.698));
     createPrefab(PINE_CLUSTER_1, glm::vec3(-30.2848, 6.64869, -3.73108), glm::vec3(0, -61.4, 0), glm::vec3(1.946));
     createPrefab(PINE_CLUSTER_1, glm::vec3(-35.4438, 7.54247, 16.3926), glm::vec3(0, -209, 0), glm::vec3(2.165));
     createPrefab(PINE_CLUSTER_1, glm::vec3(-52.1693, 5.57712, 48.7226), glm::vec3(0, -54.1, 0), glm::vec3(1.946));
     createPrefab(PINE_CLUSTER_1, glm::vec3(24.2396, 12.4489, -15.3473), glm::vec3(0, 47.1, -2.43), glm::vec3(1.922));
 
-    createPrefab(PINE_CLUSTER_2, glm::vec3(-38.196, 5.14758, 7.87281), glm::vec3(0, -0.386, 0.614), glm::vec3(2.845));
+    createPrefab(PINE_CLUSTER_2, glm::vec3(-38.196, 5.14758, 7.87281), glm::vec3(0, -0.386, -0.614), glm::vec3(2.845));
     createPrefab(PINE_CLUSTER_2, glm::vec3(-46.7794, 5.50239, 34.5427), glm::vec3(0, -10.6, -9.36), glm::vec3(2.972));
-    createPrefab(PINE_CLUSTER_2, glm::vec3(-56.1566, 4.93349, 59.8012), glm::vec3(0, -0.386, 0.614), glm::vec3(2.845));
-    createPrefab(PINE_CLUSTER_2, glm::vec3(4.50326, 7.75222, -23.4455), glm::vec3(0, -19.46, 0.614), glm::vec3(2.845));
+    createPrefab(PINE_CLUSTER_2, glm::vec3(-56.1566, 4.93349, 59.8012), glm::vec3(0, -0.386, -0.614), glm::vec3(2.845));
+    createPrefab(PINE_CLUSTER_2, glm::vec3(4.50326, 7.75222, -23.4455), glm::vec3(0, -19.46, -0.614), glm::vec3(2.845));
+    createPrefab(PINE_CLUSTER_2, glm::vec3(25.6707, 6.36277, -79.5819), glm::vec3(0, 180, 0), glm::vec3(2.985));
 
     createPrefab(PINE_CLUSTER_3, glm::vec3(29.4384, 3.4635, 42.5876), glm::vec3(0, -37.3, 0), glm::vec3(2.563));
-    createPrefab(PINE_CLUSTER_3, glm::vec3(30.0131, 10.7604, -12.2763), glm::vec3(0, -38.4, 1.45), glm::vec3(2.563));
+    createPrefab(PINE_CLUSTER_3, glm::vec3(30.0131, 10.7604, -12.2763), glm::vec3(0, -38.4, -1.45), glm::vec3(2.563));
+    createPrefab(PINE_CLUSTER_3, glm::vec3(-14.4813, 4.67825, -76.728), glm::vec3(0, -37.3, 0), glm::vec3(2.17));
+    createPrefab(PINE_CLUSTER_3, glm::vec3(78.605, 7.70869, -74.5635), glm::vec3(0, -42.8, 0), glm::vec3(2.168));
 
     createPrefab(LONE_PINE, glm::vec3(-16.652, 11.0895, 52.2194), glm::vec3(0, -12, 0), glm::vec3(1.595));
     createPrefab(LONE_PINE, glm::vec3(-24.9716, 9.90567, 63.9324), glm::vec3(0, -27.3, 0), glm::vec3(2.146));
+    createPrefab(LONE_PINE, glm::vec3(78.7954, 12.678, -82.5545), glm::vec3(0), glm::vec3(4.198));
 
     createPrefab(DEAD_TREES_1, glm::vec3(66.1866, -12.0862, 31.6698), glm::vec3(0, 188, -1.22), glm::vec3(1.295));
     createPrefab(DEAD_TREES_1, glm::vec3(86.3694, -11.9013, 12.1939), glm::vec3(0, 18.8, -9.41), glm::vec3(1));
     createPrefab(DEAD_TREES_1, glm::vec3(84.781, -11.9367, 26.4879), glm::vec3(0, 0, -1.53), glm::vec3(1.113));
     createPrefab(DEAD_TREES_1, glm::vec3(74.3494, -8.62159, 47.7303), glm::vec3(14, 138, 12.6), glm::vec3(1));
     createPrefab(DEAD_TREES_1, glm::vec3(76.9788, 3.40437, 58.9934), glm::vec3(0, -230, 22.6), glm::vec3(1));
+
+    // Campfire pit thing
+    std::shared_ptr<GameObject> pit = std::make_shared<GameObject>("FirePit", m_gw->getNewObjID());
+    pit->addComponent(std::make_shared<CTransform>(pit, true, glm::vec3(5.00744, 0.678763, 0.729272),
+                                                   glm::vec3(0), glm::vec3(0.326)));
+    pit->addComponent(std::make_shared<CRenderable>(pit, basePath + "FirePit.obj", "LightGrey"));
+    m_gw->addGameObject(pit);
+
+    // Log benches
+    std::shared_ptr<GameObject> topBench = std::make_shared<GameObject>("Bench1", m_gw->getNewObjID());
+    topBench->addComponent(std::make_shared<CTransform>(topBench, true, glm::vec3(6.04883, 1.56262, -7.72923),
+                                                        glm::radians(glm::vec3(0, -8.97, 4.21)),
+                                                        glm::vec3(0.8f)));
+    topBench->addComponent(std::make_shared<CRenderable>(topBench, basePath + "LogBench.obj", "FallenTree"));
+    m_gw->addGameObject(topBench);
+
+    std::shared_ptr<GameObject> rightBench = std::make_shared<GameObject>("Bench1", m_gw->getNewObjID());
+    rightBench->addComponent(std::make_shared<CTransform>(rightBench, true, glm::vec3(12.9403, 1.3812, 1.5824),
+                                                          glm::radians(glm::vec3(0, -89.2, 0)),
+                                                          glm::vec3(0.8f)));
+    rightBench->addComponent(std::make_shared<CRenderable>(rightBench, basePath + "LogBench.obj", "FallenTree"));
+    m_gw->addGameObject(rightBench);
 }
 
 void MainScreen::loadObjectives()
@@ -524,7 +585,7 @@ void MainScreen::loadObjectives()
     // Woodwind stuff
     std::shared_ptr<GameObject> woodZone = std::make_shared<GameObject>("WoodZone", m_gw->getNewObjID());
     woodZone->addComponent(std::make_shared<CTransform>(woodZone, true, glm::vec3(4.38416, 0.87211, -49.35240)));
-    collCyl = std::make_shared<CollCylinder>(glm::vec3(0.f), 5.0f, 14.0f);
+    collCyl = std::make_shared<CollCylinder>(glm::vec3(0.f, -5.0f, 0.0f), 10.0f, 20.0f);
     QStringList woodSounds = {":/sounds/woodwind_01.ogg", ":/sounds/woodwind_02.ogg",
                               ":/sounds/woodwind_03.ogg", ":/sounds/woodwind_04.ogg",
                               ":/sounds/woodwind_05.ogg", ":/sounds/woodwind_06.ogg"};
@@ -552,8 +613,7 @@ void MainScreen::loadObjectives()
     // Mallet stuff
     std::shared_ptr<GameObject> malletZone = std::make_shared<GameObject>("MalletZone", m_gw->getNewObjID());
     malletZone->addComponent(std::make_shared<CTransform>(malletZone, true, glm::vec3(49.7665, 9.95386, -69.8576)));
-    //coll = std::make_shared<CollCylinder>(glm::vec3(0.f), 25.0f, 37.0f);
-    collBox = std::make_shared<CollBox>(glm::vec3(0.0f), glm::vec3(61.6809, 19.7155, -32.4943));
+    collBox = std::make_shared<CollBox>(glm::vec3(0.0f), glm::vec3(61.6809, 19.7155, 32.4943));
     QStringList malletSounds = {":/sounds/mallet_01.ogg", ":/sounds/mallet_02.ogg", ":/sounds/mallet_03.ogg",
                                 ":/sounds/mallet_04.ogg", ":/sounds/mallet_05.ogg", ":/sounds/mallet_06.ogg",
                                 ":/sounds/mallet_07.ogg", ":/sounds/mallet_08.ogg", ":/sounds/mallet_09.ogg",
@@ -565,6 +625,19 @@ void MainScreen::loadObjectives()
                                                         glm::vec3(0.0f), glm::vec3(0.5f)));
     createStar(malletStar, ":/sounds/mus_mallet.ogg", malletZone);
 
+    // Violin stuff
+    std::shared_ptr<GameObject> violinZone = std::make_shared<GameObject>("ViolinZone", m_gw->getNewObjID());
+    violinZone->addComponent(std::make_shared<CTransform>(violinZone, true, glm::vec3(9.10849, 5.29479, -1.05351)));
+    collBox = std::make_shared<CollBox>(glm::vec3(0.0f), glm::vec3(33.6207, 14.7337, 36.2146));
+    QStringList violinSounds = {":/sounds/violin_01.ogg", ":/sounds/violin_02.ogg", ":/sounds/violin_03.ogg",
+                                ":/sounds/violin_04.ogg", ":/sounds/violin_05.ogg", ":/sounds/violin_06.ogg",
+                                ":/sounds/violin_07.ogg"};
+    createAudioZone(violinZone, violinSounds, collBox);
+
+    std::shared_ptr<GameObject> violinStar = std::make_shared<GameObject>("ViolinStar", m_gw->getNewObjID());
+    violinStar->addComponent(std::make_shared<CTransform>(violinStar, true, glm::vec3(9.03275, 2.19744, -2.70519),
+                                                          glm::vec3(0.0f), glm::vec3(0.5f)));
+    createStar(violinStar, ":/sounds/mus_violin.ogg", violinZone);
 }
 
 void MainScreen::createAudioZone(std::shared_ptr<GameObject> zoneObj, QStringList files, std::shared_ptr<CollisionVolume> vol)
