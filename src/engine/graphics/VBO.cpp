@@ -60,7 +60,7 @@ VBO& VBO::operator=(VBO &&that) {
 
 VBO::~VBO()
 {
-    glDeleteBuffers(1, &m_handle);
+    //glDeleteBuffers(1, &m_handle);
 }
 
 void VBO::bind() const {

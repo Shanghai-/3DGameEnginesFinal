@@ -11,7 +11,7 @@ IBO::IBO(int *data, int size) :
 
 IBO::~IBO()
 {
-    glDeleteBuffers(1, &m_handle);
+    //glDeleteBuffers(1, &m_handle);
 }
 
 void IBO::bind() const {

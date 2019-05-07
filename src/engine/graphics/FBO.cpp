@@ -26,7 +26,7 @@ FBO::FBO(int width, int height, int numberOfColorAttachments, int numColorCompon
 
 FBO::~FBO()
 {
-    glDeleteFramebuffers(1, &m_handle);
+    //glDeleteFramebuffers(1, &m_handle);
 }
 
 void FBO::generateColorAttachments(int count, int numComponents, Texture::FILTER_METHOD filterMethod,
