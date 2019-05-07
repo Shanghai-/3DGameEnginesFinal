@@ -139,11 +139,9 @@ void AudioSystem::tick(float seconds)
                 s->channel->set3DSpread(s->getStereoSpread());
 
                 QString channelGroupName = s->getChannelGroup();
-                std::cout << qPrintable(channelGroupName) << std::endl;
                 FMOD::ChannelGroup *cg = m_channels.value(channelGroupName);
 
                 if (cg == nullptr) {
-                    std::cout << "crearing..." << std::endl;
                     m_sys->createChannelGroup(qPrintable(channelGroupName), &cg);
                     m_channels.insert(channelGroupName, cg);
                 }

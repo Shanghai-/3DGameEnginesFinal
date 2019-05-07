@@ -34,6 +34,7 @@ private:
         PINE_CLUSTER_2,
         PINE_CLUSTER_3,
         LONE_PINE,
+        DEAD_TREES_1,
         POWER_LINE
     };
 

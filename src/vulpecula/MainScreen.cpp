@@ -43,6 +43,7 @@
 #include "vulpecula/responders/GuitarZoneResp.h"
 #include "vulpecula/responders/GuitarStarResp.h"
 #include "vulpecula/responders/Standable.h"
+#include "vulpecula/responders/LowpassResp.h"
 
 #include <glm/gtx/rotate_vector.hpp>
 #include <assert.h>
@@ -177,6 +178,9 @@ void MainScreen::loadGraphics()
     darkGrey.color = glm::vec3(0.7f);
     g->addMaterial("LightGrey", darkGrey);
 
+    darkGrey.color = glm::vec3(0.3f);
+    g->addMaterial("DeadTrees", darkGrey);
+
     Material pine;
     pine.useLighting = true;
     pine.color = glm::vec3(0.28235, 0.4745, 0.1686);
@@ -184,7 +188,7 @@ void MainScreen::loadGraphics()
     g->addMaterial("Pine", pine);
 
     pine.color = glm::vec3(0.34117, 0.30196, 0.21176);
-    g->addMaterial("DeadTree", pine);
+    g->addMaterial("FallenTree", pine);
 
     g->addTexture("ChainLink", ":/images/chainlink.png");
     Material fencing;
@@ -200,6 +204,11 @@ void MainScreen::loadGraphics()
     fade.alpha = 0.0f;
     fade.color = glm::vec3(1.0f);
     g->addMaterial("WhiteFade", fade);
+
+    Material pureBlack;
+    pureBlack.useLighting = false;
+    pureBlack.color = glm::vec3(0.0f);
+    g->addMaterial("UIBlack", pureBlack);
 
     // LIGHTS
 
@@ -276,6 +285,14 @@ void MainScreen::initializeAudio(std::shared_ptr<GameObject> player)
     audioSys->setChannelVolume("Ambient", 0.5f);
     audioSys->setChannelVolume("Music", 0.3f); // Music starts very quiet and gets louder with more tracks
     audioSys->setChannelVolume("SFX", 0.8f);
+
+    std::shared_ptr<GameObject> lowpassTrigger = std::make_shared<GameObject>("Lowpass", m_gw->getNewObjID());
+    auto lowpassTrans = std::make_shared<CTransform>(lowpassTrigger, true, glm::vec3(-18.8043, -2.29797, 52.7059));
+    lowpassTrigger->addComponent(lowpassTrans);
+    auto lowColl = std::make_shared<CollBox>(glm::vec3(0.0f), glm::vec3(1.0, 9.68446, 13.3109));
+    auto lowResp = std::make_shared<LowpassResp>(lowpassTrans->pos, audioSys.get());
+    lowpassTrigger->addComponent(std::make_shared<CCollider>(lowpassTrigger, lowColl, true, lowResp));
+    m_gw->addGameObject(lowpassTrigger);
 }
 
 void MainScreen::loadTerrain(std::shared_ptr<PlayerMovementSys> playSys)
@@ -348,7 +365,7 @@ void MainScreen::loadTerrain(std::shared_ptr<PlayerMovementSys> playSys)
     std::shared_ptr<GameObject> tree = std::make_shared<GameObject>("FallenTree", m_gw->getNewObjID());
     auto treeTrans = std::make_shared<CTransform>(tree, true, glm::vec3(-25.9757, -4.91587, -35.09472));
     tree->addComponent(treeTrans);
-    tree->addComponent(std::make_shared<CRenderable>(tree, QString((baseFile + "FallenTree.obj").data()), "DeadTree"));
+    tree->addComponent(std::make_shared<CRenderable>(tree, QString((baseFile + "FallenTree.obj").data()), "FallenTree"));
     auto treeColl = std::make_shared<CollBox>(glm::vec3(-7.0f, -6.0f, 8.0f), glm::vec3(25.0f, 2.0f, 16.0f));
     auto treeResp = std::make_shared<Standable>(treeTrans.get(), glm::vec3(-7.0f, -5.0f, 8.0f));
     tree->addComponent(std::make_shared<CCollider>(tree, treeColl, false, treeResp));
@@ -371,10 +388,6 @@ void MainScreen::loadTerrain(std::shared_ptr<PlayerMovementSys> playSys)
     house->addComponent(std::make_shared<CTransform>(house, true, glm::vec3(66.187, 4.69492, -72.675),
                                                      glm::vec3(0, glm::radians(208.0f), 0), glm::vec3(1.858f)));
     house->addComponent(std::make_shared<CRenderable>(house, (baseFile + "House.obj").data(), "House"));
-    /* auto houseColl = std::make_shared<CMeshCol>(house, (baseFile + "HouseColl.obj").data());
-    house->addComponent(houseColl);
-    playSys->addGlobalMesh(houseColl, glm::ivec2(-2, -2));
-    playSys->addMesh(glm::ivec2(-2, -2)); */
     m_gw->addGameObject(house);
 
     std::shared_ptr<GameObject> wall = std::make_shared<GameObject>("StoneWall", m_gw->getNewObjID());
@@ -403,6 +416,7 @@ void MainScreen::loadDecorations()
     tower2->addComponent(std::make_shared<CCollider>(tower2, towerColl, false));
     m_gw->addGameObject(tower2);
 
+    // Pylon foundation
     std::shared_ptr<GameObject> foundation = std::make_shared<GameObject>("Foundation", m_gw->getNewObjID());
     auto foundTrans = std::make_shared<CTransform>(foundation, true, glm::vec3(0.59753, -0.1, -55.72558),
                                                    glm::vec3(0), glm::vec3(15.0f, 1.0f, 15.0f));
@@ -413,16 +427,17 @@ void MainScreen::loadDecorations()
     foundation->addComponent(std::make_shared<CCollider>(foundation, foundColl, false, foundResp));
     m_gw->addGameObject(foundation);
 
+    // Pylon fence & posts
     std::shared_ptr<GameObject> fence = std::make_shared<GameObject>("ChainFence", m_gw->getNewObjID());
     fence->addComponent(std::make_shared<CTransform>(fence, true, glm::vec3(0.751355, 3.01966, -55.3009)));
     fence->addComponent(std::make_shared<CRenderable>(fence, basePath + "WireFence.obj", "ChainLink"));
     m_gw->addGameObject(fence);
-
     std::shared_ptr<GameObject> fenceposts = std::make_shared<GameObject>("Fenceposts", m_gw->getNewObjID());
     fenceposts->addComponent(std::make_shared<CTransform>(fenceposts, true, glm::vec3(0.639584, 3.09837, -55.447)));
     fenceposts->addComponent(std::make_shared<CRenderable>(fenceposts, basePath + "WireFencePosts.obj", "LightGrey"));
     m_gw->addGameObject(fenceposts);
 
+    // Power line wire things
     createPrefab(POWER_LINE, glm::vec3(-4.67219, 23.0, -63.88128), glm::vec3(0), glm::vec3(1));
     createPrefab(POWER_LINE, glm::vec3(-4.67219, 23.0, -52.61531), glm::vec3(0), glm::vec3(1));
     createPrefab(POWER_LINE, glm::vec3(-4.67219, 17.26755, -50.16875), glm::vec3(0), glm::vec3(1));
@@ -436,21 +451,31 @@ void MainScreen::loadDecorations()
     water->addComponent(std::make_shared<CRenderable>(water, basePath + "water.obj", "Water"));
     m_gw->addGameObject(water);
 
+    // Tree prefabs
     createPrefab(PINE_CLUSTER_1, glm::vec3(13.1068, 5.10292, 44.8788), glm::vec3(0), glm::vec3(1.378));
     createPrefab(PINE_CLUSTER_1, glm::vec3(-21.4215, 11.5213, 57.7421), glm::vec3(0, -102, 0), glm::vec3(1.378));
     createPrefab(PINE_CLUSTER_1, glm::vec3(-9.84175, 4.80746, 31.1118), glm::vec3(0, 104, 1.77), glm::vec3(1.698));
     createPrefab(PINE_CLUSTER_1, glm::vec3(-30.2848, 6.64869, -3.73108), glm::vec3(0, -61.4, 0), glm::vec3(1.946));
     createPrefab(PINE_CLUSTER_1, glm::vec3(-35.4438, 7.54247, 16.3926), glm::vec3(0, -209, 0), glm::vec3(2.165));
     createPrefab(PINE_CLUSTER_1, glm::vec3(-52.1693, 5.57712, 48.7226), glm::vec3(0, -54.1, 0), glm::vec3(1.946));
+    createPrefab(PINE_CLUSTER_1, glm::vec3(24.2396, 12.4489, -15.3473), glm::vec3(0, 47.1, -2.43), glm::vec3(1.922));
 
     createPrefab(PINE_CLUSTER_2, glm::vec3(-38.196, 5.14758, 7.87281), glm::vec3(0, -0.386, 0.614), glm::vec3(2.845));
     createPrefab(PINE_CLUSTER_2, glm::vec3(-46.7794, 5.50239, 34.5427), glm::vec3(0, -10.6, -9.36), glm::vec3(2.972));
     createPrefab(PINE_CLUSTER_2, glm::vec3(-56.1566, 4.93349, 59.8012), glm::vec3(0, -0.386, 0.614), glm::vec3(2.845));
+    createPrefab(PINE_CLUSTER_2, glm::vec3(4.50326, 7.75222, -23.4455), glm::vec3(0, -19.46, 0.614), glm::vec3(2.845));
 
     createPrefab(PINE_CLUSTER_3, glm::vec3(29.4384, 3.4635, 42.5876), glm::vec3(0, -37.3, 0), glm::vec3(2.563));
+    createPrefab(PINE_CLUSTER_3, glm::vec3(30.0131, 10.7604, -12.2763), glm::vec3(0, -38.4, 1.45), glm::vec3(2.563));
 
     createPrefab(LONE_PINE, glm::vec3(-16.652, 11.0895, 52.2194), glm::vec3(0, -12, 0), glm::vec3(1.595));
     createPrefab(LONE_PINE, glm::vec3(-24.9716, 9.90567, 63.9324), glm::vec3(0, -27.3, 0), glm::vec3(2.146));
+
+    createPrefab(DEAD_TREES_1, glm::vec3(66.1866, -12.0862, 31.6698), glm::vec3(0, 188, -1.22), glm::vec3(1.295));
+    createPrefab(DEAD_TREES_1, glm::vec3(86.3694, -11.9013, 12.1939), glm::vec3(0, 18.8, -9.41), glm::vec3(1));
+    createPrefab(DEAD_TREES_1, glm::vec3(84.781, -11.9367, 26.4879), glm::vec3(0, 0, -1.53), glm::vec3(1.113));
+    createPrefab(DEAD_TREES_1, glm::vec3(74.3494, -8.62159, 47.7303), glm::vec3(14, 138, 12.6), glm::vec3(1));
+    createPrefab(DEAD_TREES_1, glm::vec3(76.9788, 3.40437, 58.9934), glm::vec3(0, -230, 22.6), glm::vec3(1));
 }
 
 void MainScreen::loadObjectives()
@@ -480,7 +505,7 @@ void MainScreen::loadObjectives()
     createAudioZone(pianoZone, pianoSounds, collBox);
 
     std::shared_ptr<GameObject> pianoStar = std::make_shared<GameObject>("PianoStar", m_gw->getNewObjID());
-    pianoStar->addComponent(std::make_shared<CTransform>(pianoStar, true, glm::vec3(72.46654, -17.79739, -14.88554),
+    pianoStar->addComponent(std::make_shared<CTransform>(pianoStar, true, glm::vec3(72.46654, -16, -14.88554),
                                                          glm::vec3(0.f, 6.0f, 0.f), glm::vec3(0.5f)));
     createStar(pianoStar, ":/sounds/mus_piano.ogg", pianoZone);
 
@@ -622,6 +647,11 @@ void MainScreen::createPrefab(MainScreen::PrefabType type, glm::vec3 position, g
         prefab->addComponent(std::make_shared<CRenderable>(prefab, basePath.append("LonePine.obj"), "Pine"));
         auto coll = std::make_shared<CollCylinder>(glm::vec3(0, -1.9f * scale.y, 0), 5 * scale.y, 1.1 * scale.x);
         prefab->addComponent(std::make_shared<CCollider>(prefab, coll, false));
+        break;
+    }
+    case DEAD_TREES_1:
+    {
+        prefab->addComponent(std::make_shared<CRenderable>(prefab, basePath.append("DeadTrees1.obj"), "DeadTrees"));
         break;
     }
     case POWER_LINE:
