@@ -12,9 +12,8 @@
 #include "engine/graphics/ShaderAttribLocations.h"
 //#include "sphere.h"
 
-ParticleSys::ParticleSys(QGLFormat format, QWidget *parent)
-    : QGLWidget(format, parent),
-      m_width(width()), m_height(height()),
+ParticleSys::ParticleSys(int priority)
+    : System(priority),
       m_phongProgram(0), m_textureProgram(0), m_horizontalBlurProgram(0), m_verticalBlurProgram(0),
       m_quad(nullptr), m_sphere(nullptr),
       m_blurFBO1(nullptr), m_blurFBO2(nullptr),
@@ -23,14 +22,7 @@ ParticleSys::ParticleSys(QGLFormat format, QWidget *parent)
       m_angleX(-0.5f), m_angleY(0.5f), m_zoom(4.f)
 {
     m_numParticles = 5000;
-}
 
-ParticleSys::~ParticleSys()
-{
-    glDeleteVertexArrays(1, &m_particlesVAO);
-}
-
-void ParticleSys::initializeGL() {
     ResourceLoader2::initializeGlew();
     glEnable(GL_DEPTH_TEST);
 
@@ -38,14 +30,6 @@ void ParticleSys::initializeGL() {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     // Create shader programs.
-    m_phongProgram = ResourceLoader2::createShaderProgram(
-                ":/shaders/phong.vert", ":/shaders/phong.frag");
-    m_textureProgram = ResourceLoader2::createShaderProgram(
-                ":/shaders/quad.vert", ":/shaders/texture.frag");
-    m_horizontalBlurProgram = ResourceLoader2::createShaderProgram(
-                ":/shaders/quad.vert", ":/shaders/horizontalBlur.frag");
-    m_verticalBlurProgram = ResourceLoader2::createShaderProgram(
-                ":/shaders/quad.vert", ":/shaders/verticalBlur.frag");
     m_particleUpdateProgram = ResourceLoader2::createShaderProgram(
                 ":/shaders/quad.vert", ":/shaders/particles_update.frag");
     m_particleDrawProgram = ResourceLoader2::createShaderProgram(
@@ -76,18 +60,18 @@ void ParticleSys::initializeGL() {
     // It doesn't need any data associated with it, so we don't have to make a full VAO instance
     glGenVertexArrays(1, &m_particlesVAO);
     // TODO [Task 12] Create m_particlesFBO1 and 2 with std::make_shared
-    //m_particlesFBO1 = std::make_shared<FBO>(5000, 1, FBO::DEPTH_STENCIL_ATTACHMENT::NONE,  Texture::WRAP_METHOD::CLAMP_TO_EDGE, Texture::FILTER_METHOD::NEAREST, Texture::DATA_TYPE::UNSIGNED_BYTE);
-    //m_particlesFBO2 = std::make_shared<FBO>(m_numParticles, 1, 2, 4, FBO::DEPTH_STENCIL_ATTACHMENT::NONE, Texture::WRAP_METHOD::CLAMP_TO_EDGE, Texture::FILTER_METHOD::NEAREST, GL_FLOAT);
+    m_particlesFBO1 = std::make_shared<FBO>(m_numParticles, 1, 2, 4, FBO::DEPTH_STENCIL_ATTACHMENT::NONE, Texture::FILTER_METHOD::NEAREST, Texture::WRAP_METHOD::CLAMP_TO_EDGE, Texture::DATA_TYPE::FLOAT);
+    m_particlesFBO2 = std::make_shared<FBO>(m_numParticles, 1, 2, 4, FBO::DEPTH_STENCIL_ATTACHMENT::NONE, Texture::FILTER_METHOD::NEAREST, Texture::WRAP_METHOD::CLAMP_TO_EDGE, Texture::DATA_TYPE::FLOAT);
+
     // Print the max FBO dimension.
     GLint maxRenderBufferSize;
     glGetIntegerv(GL_MAX_RENDERBUFFER_SIZE_EXT, &maxRenderBufferSize);
     std::cout << "Max FBO size: " << maxRenderBufferSize << std::endl;
 }
 
-void ParticleSys::paintGL() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    drawParticles();
-    update();
+ParticleSys::~ParticleSys()
+{
+    glDeleteVertexArrays(1, &m_particlesVAO);
 }
 
 void ParticleSys::drawParticles() {
@@ -140,10 +124,41 @@ void ParticleSys::setParticleViewport() {
 
 
 void ParticleSys::rebuildMatrices() {
-    m_view = glm::translate(glm::vec3(0, 0, -m_zoom)) *
-             glm::rotate(m_angleY, glm::vec3(1,0,0)) *
-             glm::rotate(m_angleX, glm::vec3(0,1,0));
+//    m_view = glm::translate(glm::vec3(0, 0, -m_zoom)) *
+//             glm::rotate(m_angleY, glm::vec3(1,0,0)) *
+//             glm::rotate(m_angleX, glm::vec3(0,1,0));
 
-    m_projection = glm::perspective(0.8f, (float)width()/height(), 0.1f, 100.f);
-    update();
+//    m_projection = glm::perspective(0.8f, (float)width()/height(), 0.1f, 100.f);
+//    update();
+}
+
+void ParticleSys::draw() {
+//    glClear(GL_COLOR_BUFFER_BIT);
+    drawParticles();
+    glViewport(0, 0, m_screenWidth, m_screenHeight);
+//    update();
+}
+
+void ParticleSys::resize(int w, int h)
+{
+    m_screenHeight = h;
+    m_screenWidth = w;
+}
+
+void ParticleSys::tick(float seconds)
+{
+
+}
+
+QString ParticleSys::getComponentType() const {
+    return "";
+}
+
+void ParticleSys::addComponent(const std::shared_ptr<Component> &c) {
+
+}
+
+void ParticleSys::removeComponent(const std::shared_ptr<Component> &c)
+{
+
 }

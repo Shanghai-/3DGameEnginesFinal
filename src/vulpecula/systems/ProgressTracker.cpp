@@ -38,15 +38,21 @@ void ProgressTracker::removeComponent(const std::shared_ptr<Component> &c)
         switch (m_curStars) {
             case 2:
                 //m_audioSys->fadeChannelVolume("Music", 0.45f, 1.5f);
-                m_audioSys->fadeChannelVolume("Ambient", 0.4f, 1.5f);
+                m_audioSys->setChannelVolume("Music", 0.45f);
+                //m_audioSys->fadeChannelVolume("Ambient", 0.4f, 1.5f);
+                m_audioSys->setChannelVolume("Ambient", 0.4f);
                 break;
             case 3:
-                m_audioSys->fadeChannelVolume("Music", 0.6f, 1.5f);
-                m_audioSys->fadeChannelVolume("Ambient", 0.25f, 1.5f);
+                //m_audioSys->fadeChannelVolume("Music", 0.6f, 1.5f);
+                m_audioSys->setChannelVolume("Music", 0.6f);
+                //m_audioSys->fadeChannelVolume("Ambient", 0.25f, 1.5f);
+                m_audioSys->setChannelVolume("Ambient", 0.25f);
                 break;
             case 4:
-                m_audioSys->fadeChannelVolume("Music", 1.0f, 1.5f);
-                m_audioSys->fadeChannelVolume("Ambient", 0.1f, 1.5f);
+                //m_audioSys->fadeChannelVolume("Music", 1.0f, 1.5f);
+                m_audioSys->setChannelVolume("Music", 0.7f);
+                //m_audioSys->fadeChannelVolume("Ambient", 0.1f, 1.5f);
+                m_audioSys->setChannelVolume("Ambient", 0.1f);
                 break;
         }
 
@@ -59,6 +65,7 @@ void ProgressTracker::removeComponent(const std::shared_ptr<Component> &c)
             auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -10.f, 0.f), 20.0f, 3.5f);
             auto resp = std::make_shared<WinResp>(m_gameWorld);
             winTrigger->addComponent(std::make_shared<CCollider>(winTrigger, coll, true, resp));
+            // TODO: Renderable
 
             m_gameWorld->addGameObject(winTrigger);
         }

@@ -34,10 +34,12 @@
 #include "vulpecula/systems/RandomAudioManager.h"
 #include "vulpecula/systems/PlayerMovementSys.h"
 #include "vulpecula/systems/ProgressTracker.h"
+#include "vulpecula/systems/particlesys.h"
 
 // CUSTOM COMPONENTS
 #include "vulpecula/components/RandomAudioSource.h"
 #include "warmup1/CustomComponents/CPhysics.h"
+#include "vulpecula/responders/waterresponse.h"
 
 // CUSTOM MISC.
 #include "vulpecula/responders/GuitarZoneResp.h"
@@ -66,6 +68,7 @@ void MainScreen::initializeGame()
     auto collSys = std::make_shared<CollisionSystem>(300);
     auto animSys = std::make_shared<AnimationSystem>(500);
     auto renderSys = std::make_shared<RenderSystem>(200);
+    auto partSys = std::make_shared<ParticleSys>(100);
 
     TextureCube::Cubemap skyMap = {"front.png", "back.png", "left.png", "right.png", "up.png", "down.png"};
     renderSys->setSkybox(std::make_shared<TextureCube>("/course/cs1950u/.archive/2019/student/vulpecula/skybox/", skyMap));
@@ -76,6 +79,8 @@ void MainScreen::initializeGame()
 
     // This displays wireframes around all colliders
     //m_gw->registerForDraw(collSys);
+    m_gw->registerForDraw(partSys);
+    m_gw->registerForTick(partSys);
 
     // 3rd person camera system
     m_gw->registerForTick(std::make_shared<ThirdPersonCamSys>(401, 3.0f, 100.0f, 4.0f));
@@ -450,6 +455,13 @@ void MainScreen::loadDecorations()
     water->addComponent(std::make_shared<CTransform>(water, true, glm::vec3(-39.88062, -7.24381, -11.71469)));
     water->addComponent(std::make_shared<CRenderable>(water, basePath + "water.obj", "Water"));
     m_gw->addGameObject(water);
+
+    std::shared_ptr<GameObject> waterCollider = std::make_shared<GameObject>("WaterCol", m_gw->getNewObjID());
+    waterCollider->addComponent(std::make_shared<CTransform>(waterCollider, true, glm::vec3(-39.3268f, -8.33925f, -36.2637f)));
+    auto waterColBox = std::make_shared<CollBox>(glm::vec3(0.f), glm::vec3(39.1286f, 2.f, 85.2655f));
+    auto waterColResp = std::make_shared<WaterResponse>();
+    waterCollider->addComponent(std::make_shared<CCollider>(waterCollider, waterColBox, true, waterColResp));\
+    m_gw->addGameObject(waterCollider);
 
     // Tree prefabs
     createPrefab(PINE_CLUSTER_1, glm::vec3(13.1068, 5.10292, 44.8788), glm::vec3(0), glm::vec3(1.378));
