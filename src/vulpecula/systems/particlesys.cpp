@@ -30,14 +30,6 @@ ParticleSys::ParticleSys(int priority)
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     // Create shader programs.
-    m_phongProgram = ResourceLoader2::createShaderProgram(
-                ":/shaders/phong.vert", ":/shaders/phong.frag");
-    m_textureProgram = ResourceLoader2::createShaderProgram(
-                ":/shaders/quad.vert", ":/shaders/texture.frag");
-    m_horizontalBlurProgram = ResourceLoader2::createShaderProgram(
-                ":/shaders/quad.vert", ":/shaders/horizontalBlur.frag");
-    m_verticalBlurProgram = ResourceLoader2::createShaderProgram(
-                ":/shaders/quad.vert", ":/shaders/verticalBlur.frag");
     m_particleUpdateProgram = ResourceLoader2::createShaderProgram(
                 ":/shaders/quad.vert", ":/shaders/particles_update.frag");
     m_particleDrawProgram = ResourceLoader2::createShaderProgram(
