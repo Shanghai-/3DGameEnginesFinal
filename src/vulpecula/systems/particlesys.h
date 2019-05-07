@@ -7,6 +7,7 @@
 #include "glm/glm.hpp"            // glm::vec*, mat*, and basic glm functions
 #include "glm/gtx/transform.hpp"  // glm::translate, scale, rotate
 #include "glm/gtc/type_ptr.hpp"   // glm::value_ptr
+#include "engine/systems/System.h"
 
 #include <memory>  // std::unique_ptr
 
@@ -14,19 +15,13 @@
 
 class OpenGLShape;
 
-class ParticleSys : public QGLWidget {
-    Q_OBJECT
+class ParticleSys : public System {
 
 public:
-    ParticleSys(QGLFormat format, QWidget *parent = 0);
+    ParticleSys(int priority);
     ~ParticleSys();
 
-protected:
-    void initializeGL();
-    void paintGL();
-
 private:
-    void drawBlur();
     void drawParticles();
     void setParticleViewport();
 
@@ -60,6 +55,18 @@ private:
     /** For mouse interaction. */
     float m_angleX, m_angleY, m_zoom;
     QPoint m_prevMousePos;
+
+    int m_screenWidth;
+    int m_screenHeight;
+
+    // System interface
+public:
+    QString getComponentType() const;
+    void addComponent(const std::shared_ptr<Component> &c);
+    void removeComponent(const std::shared_ptr<Component> &c);
+    void tick(float seconds);
+    void draw();
+    void resize(int w, int h);
 };
 
 #endif // PARTICLESYS_H

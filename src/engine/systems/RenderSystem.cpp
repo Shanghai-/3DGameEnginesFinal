@@ -20,6 +20,7 @@ RenderSystem::~RenderSystem()
 
 void RenderSystem::draw()
 {
+
     m_graphics->setShader("default");
     std::shared_ptr<CCamera> cam = m_graphics->getActiveCamera();
 
