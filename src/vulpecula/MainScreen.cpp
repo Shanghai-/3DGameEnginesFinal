@@ -250,7 +250,7 @@ void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
     loadTerrain(playSys);
 
     // Power towers & lines, trees, water, etc.
-    loadDecorations();
+    loadDecorations(playSys);
 
     // Stars
     loadObjectives();
@@ -435,7 +435,7 @@ void MainScreen::loadTerrain(std::shared_ptr<PlayerMovementSys> playSys)
     m_gw->addGameObject(wall);
 }
 
-void MainScreen::loadDecorations()
+void MainScreen::loadDecorations(std::shared_ptr<PlayerMovementSys> playSys)
 {
     QString basePath = "/course/cs1950u/.archive/2019/student/vulpecula/env/";
 
@@ -494,7 +494,7 @@ void MainScreen::loadDecorations()
     std::shared_ptr<GameObject> waterCollider = std::make_shared<GameObject>("WaterCol", m_gw->getNewObjID());
     waterCollider->addComponent(std::make_shared<CTransform>(waterCollider, true, glm::vec3(-39.3268f, -8.33925f, -36.2637f)));
     auto waterColBox = std::make_shared<CollBox>(glm::vec3(0.f), glm::vec3(39.1286f, 2.f, 85.2655f));
-    auto waterColResp = std::make_shared<WaterResponse>();
+    auto waterColResp = std::make_shared<WaterResponse>(playSys);
     waterCollider->addComponent(std::make_shared<CCollider>(waterCollider, waterColBox, true, waterColResp));\
     m_gw->addGameObject(waterCollider);
 
