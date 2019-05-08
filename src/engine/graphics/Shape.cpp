@@ -238,6 +238,8 @@ void Shape::addFaces(const std::vector<int> &faces) {
 }
 
 void Shape::build() {
+    m_bounds.calculatePoints();
+
     // VBOs
     std::vector<VBOAttribMarker> posMarkers;
     posMarkers.push_back(VBOAttribMarker(ShaderAttrib::POSITION, 3, 0));

@@ -281,6 +281,7 @@ public:
     void setSpecularColor(const glm::vec3 &color);
     void setSpecularColor(const glm::vec4 &color);
     void setShininess(float shininess);
+    void setEmissive(float emissive);
     void setTextureRepeat(const glm::vec2 &repeat);
     void setTextureStart(const glm::vec2 &start);
     void setTextureEnd(const glm::vec2 &end);

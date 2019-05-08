@@ -68,6 +68,24 @@ void GameWorld::registerForTick(std::shared_ptr<System> s)
         idx++;
     }
 
+    QSetIterator<std::shared_ptr<GameObject>> im(m_gameObjects);
+    while(im.hasNext()) {
+        std::shared_ptr<GameObject> g = im.next();
+
+        QList<std::shared_ptr<Component>> components = g->getComponentList();
+        QListIterator<std::shared_ptr<Component>> iz(components);
+        while (iz.hasNext())
+        {
+            std::shared_ptr<Component> c = iz.next();
+
+            QString componentType = typeid(*c).name();
+            if (componentType == s->getComponentType()) {
+                s->addComponent(c);
+                c->addSystem(s.get());
+            }
+        }
+    }
+
     m_tickSysList.insert(idx, s);
 }
 

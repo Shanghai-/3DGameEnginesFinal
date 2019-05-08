@@ -486,6 +486,11 @@ void Graphics::setShininess(float shininess) {
     setUniform("material.shininess", shininess);
 }
 
+void Graphics::setEmissive(float emissive)
+{
+    setUniform("material.emissive", emissive);
+}
+
 void Graphics::setTextureRepeat(const glm::vec2 &repeat) {
     setUniform("material.texRepeat", repeat);
 }
@@ -559,6 +564,7 @@ void Graphics::setMaterial(const Material &m) {
     if(m.useLighting) {
         setSpecularColor(m.specularColor);
         setShininess(m.shininess);
+        setEmissive(m.emissive);
     }
 
     // Texture uniforms
