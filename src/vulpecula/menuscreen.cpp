@@ -14,6 +14,7 @@
 #include "vulpecula/responders/clientresponse.h"
 
 
+
 MenuScreen::MenuScreen(Application *parent) : m_parent(parent)
 {
     // Set up graphics
@@ -54,6 +55,12 @@ MenuScreen::MenuScreen(Application *parent) : m_parent(parent)
     t = UITransform(CENTER, glm::vec2(200.f, 0.0f));
     clientButton->addComponent(std::make_shared<UIText>(clientButton, t, "Client", 36, "white"));
     m_gw->addUIObject(clientButton);
+
+
+    m_particle = false;
+
+    //m_gw->registerForTick(partSys);
+
 }
 
 MenuScreen::~MenuScreen() {
@@ -87,7 +94,16 @@ void MenuScreen::onFocusLost()
 
 void MenuScreen::onKeyPressed(QKeyEvent *event)
 {
-
+    if(event->key() == Qt::Key_P) {
+        if(m_particle) {
+            m_gw->removeFromDraw(m_partSys);
+        }
+        else {
+            m_partSys = std::make_shared<ParticleSys>(100);
+            m_gw->registerForDraw(m_partSys);
+        }
+        m_particle = !m_particle;
+    }
 }
 
 void MenuScreen::onKeyHeld(QKeyEvent *event)

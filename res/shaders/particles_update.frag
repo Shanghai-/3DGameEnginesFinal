@@ -68,6 +68,7 @@ vec4 updateVelocity(int index) {
     // - w component is age, so add dt
     vec3 v = texture(prevVel, uv).xyz;
     v.y = v.y + G * dt;
+    v.x = v.x + (.1 * dt);
     return vec4(v, texture(prevVel, uv).w + dt);
 }
 

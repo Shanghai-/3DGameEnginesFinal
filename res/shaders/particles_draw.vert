@@ -87,7 +87,7 @@ void main() {
     velAge = texelFetch(vel, ivec2(particleID, 0), 0);
 
     // Calculate diameter based on age and lifetime
-    float diameter = 0.02;
+    float diameter = 0.2;
     diameter *= min(min(1.0, velAge.w / (0.1 * posTime.w)),
                     min(1.0, abs(posTime.w - velAge.w) / (0.1 * posTime.w)));
 

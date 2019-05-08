@@ -69,7 +69,7 @@ void MainScreen::initializeGame()
     auto collSys = std::make_shared<CollisionSystem>(300);
     auto animSys = std::make_shared<AnimationSystem>(500);
     auto renderSys = std::make_shared<RenderSystem>(200);
-    auto partSys = std::make_shared<ParticleSys>(100);
+
 
     TextureCube::Cubemap skyMap = {"front.png", "back.png", "left.png", "right.png", "up.png", "down.png"};
     auto skybox = std::make_shared<TextureCube>("/course/cs1950u/.archive/2019/student/vulpecula/skybox/",
@@ -82,8 +82,7 @@ void MainScreen::initializeGame()
 
     // This displays wireframes around all colliders
     //m_gw->registerForDraw(collSys);
-    m_gw->registerForDraw(partSys);
-    m_gw->registerForTick(partSys);
+
 
     // 3rd person camera system
     m_gw->registerForTick(std::make_shared<ThirdPersonCamSys>(401, 3.0f, 100.0f, 4.0f));
@@ -134,6 +133,10 @@ void MainScreen::initializeGame()
 
     auto progressTracker = std::make_shared<ProgressTracker>(905, audioSys);
     m_gw->registerForTick(progressTracker);
+
+//    auto partSys = std::make_shared<ParticleSys>(100);
+//    m_gw->registerForDraw(partSys);
+//    m_gw->registerForTick(partSys);
 }
 
 void MainScreen::loadGraphics()
