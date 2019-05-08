@@ -265,7 +265,7 @@ void NetworkSystem::tick(float seconds)
 //                                auto trans = m_player->getSibling<CTransform>();
 //                                trans->pos = pos;
 //                                trans->rot = rot;
-                                break;
+                                continue;
                             } else {
                                 auto playerObj = m_networkIDManager.GET_OBJECT_FROM_ID<PlayerObject*>(netID);
                                 auto trans = playerObj->networkComponent->getSibling<CTransform>();
