@@ -6,6 +6,7 @@
 #include "engine/components/CTransform.h"
 #include "engine/objectManagement/GameWorld.h"
 #include "engine/components/CRenderable.h"
+#include "engine/components/CAnimatedMesh.h"
 
 #define MAX_CLIENTS 10
 #define SERVER_PORT 60000
@@ -133,7 +134,6 @@ void NetworkSystem::tick(float seconds)
                         player->SetNetworkIDManager(&m_networkIDManager);
                         BitStream bsOut;
                         bsOut.Write((MessageID)ID_CREATE_PLAYER);
-                        std::cout<<"New Player"<<std::endl;
                         bsOut.Write(player->GetNetworkID());
                         bsOut.Write(packet->guid);
                         m_peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, true);
@@ -149,7 +149,6 @@ void NetworkSystem::tick(float seconds)
                 break;
             case ID_CREATE_PLAYER:
                 {
-                    std::cout<<"Create Player"<<std::endl;
                     //This will sync all player network ids across the server
                     BitStream bsIn(packet->data, packet->length, false);
                     bsIn.IgnoreBytes(sizeof(MessageID));
@@ -174,17 +173,17 @@ void NetworkSystem::tick(float seconds)
                             oldPlayerObject->SetNetworkID(netID);
                             addPlayer(oldPlayerObject, name, netID);
                             m_activeNetworkIDs.insert(netID);
-                            std::cout<<netID<<std::endl;
+                            //std::cout<<netID<<std::endl;
                         }
                         //std::cout<< "playerID should be:" << std::endl;
                         m_player->setNetworkID(playerID);
                         BitStream bsOut;
                         bsOut.Write((MessageID)ID_NETWORKID_INITIALIZED);
-                        std::cout<<"[";
-                        for (NetworkID id : m_activeNetworkIDs) {
-                            std::cout<< id << ","<< std::endl;
-                        }
-                        std::cout<<"]"<<std::endl;
+//                        std::cout<<"[";
+//                        for (NetworkID id : m_activeNetworkIDs) {
+//                            std::cout<< id << ","<< std::endl;
+//                        }
+//                        std::cout<<"]"<<std::endl;
                         bsOut.Write(playerID);
                         m_peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_serverAddress, false);
                     } else {
@@ -217,8 +216,7 @@ void NetworkSystem::tick(float seconds)
                         bsOut.Write(m_activeNetworkIDs.size());
 //                        std::cout<<"active Net IDs: " <<m_activeNetworkIDs.size()<<std::endl;
 //                        std::cout<<"netobjs: "<<m_networkObjects.contains(m_player)<<std::endl;
-                        for (NetworkID id : m_activeNetworkIDs) {
-                            std::cout<<id<<std::endl;
+                        for (auto id : m_activeNetworkIDs) {
                             bsOut.Write(id);
                             auto netObj = m_networkIDManager.GET_OBJECT_FROM_ID<PlayerObject*>(id)->networkComponent;
                             std::shared_ptr<CTransform> trans = netObj->getSibling<CTransform>();
@@ -230,6 +228,26 @@ void NetworkSystem::tick(float seconds)
                 break;
             case ID_SERVER_TRANSFORM:
                 {
+//                    if (!m_isInitialized) {
+//                        break;
+//                    }
+//                    BitStream bsIn(packet->data, packet->length, false);
+//                    bsIn.IgnoreBytes(sizeof(MessageID));
+//                    int len;
+//                    bsIn.Read(len);
+//                    for (int i = 0; i < len; i++) {
+//                        NetworkID netID;
+//                        bsIn.Read(netID);
+//                        float posX,posY,posZ,rotX,rotY,rotZ;
+//                        bsIn.ReadVector(posX,posY,posZ);
+//                        bsIn.ReadVector(rotX,rotY,rotZ);
+//                        glm::vec3 pos(posX,posY,posZ);
+//                        glm::vec3 rot(rotX,rotY,rotZ);
+//                        auto playerObj = m_networkIDManager.GET_OBJECT_FROM_ID<PlayerObject*>(netID);
+//                        auto trans = playerObj->networkComponent->getSibling<CTransform>();
+//                        trans->pos = pos;
+//                        trans->rot = rot;
+//                    }
                         BitStream bsIn(packet->data, packet->length, false);
                         bsIn.IgnoreBytes(sizeof(MessageID));
                         int len;
@@ -239,7 +257,6 @@ void NetworkSystem::tick(float seconds)
                             float posX,posY,posZ,rotX,rotY,rotZ;
                             NetworkID netID;
                             bsIn.Read(netID);
-                            std::cout<<netID<<std::endl;
                             bsIn.ReadVector(posX,posY,posZ);
                             bsIn.ReadVector(rotX,rotY,rotZ);
                             glm::vec3 pos(posX,posY,posZ);
@@ -248,7 +265,7 @@ void NetworkSystem::tick(float seconds)
 //                                auto trans = m_player->getSibling<CTransform>();
 //                                trans->pos = pos;
 //                                trans->rot = rot;
-                                continue;
+                                break;
                             } else {
                                 auto playerObj = m_networkIDManager.GET_OBJECT_FROM_ID<PlayerObject*>(netID);
                                 auto trans = playerObj->networkComponent->getSibling<CTransform>();
@@ -295,7 +312,7 @@ void NetworkSystem::setPlayer(std::shared_ptr<NetworkComponent> comp) {
         m_player->setNetworkID(player->GetNetworkID());
         player->networkComponent = m_player;
         m_activeNetworkIDs.insert(player->GetNetworkID());
-        std::cout<<player->GetNetworkID()<<std::endl;
+        //std::cout<<player->GetNetworkID()<<std::endl;
     }
 }
 
@@ -305,8 +322,8 @@ void NetworkSystem::addPlayer(PlayerObject *playerObject, QString name, NetworkI
     player->addComponent(netComp);
     playerObject->networkComponent = netComp;
     player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.f, 22.0f, 50.0f), glm::vec3(0.0f), glm::vec3(0.2f)));
-    //player->addComponent(std::make_shared<CAnimatedMesh>(player, "/course/cs1950u/.archive/2019/student/vulpecula/fox.fbx", "PureWhite"));
-    player->addComponent(std::make_shared<CRenderable>(player, "cube", "Star"));
+    player->addComponent(std::make_shared<CAnimatedMesh>(player, "/course/cs1950u/.archive/2019/student/vulpecula/fox.fbx", "PureWhite"));
+//    player->addComponent(std::make_shared<CRenderable>(player, "cube", "Star"));
 //                    auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -0.375f, 0.f), 0.75f, 0.8f);
 //                    auto comp = std::make_shared<CCollider>(player, coll, false);
 //                    player->addComponent(comp);
