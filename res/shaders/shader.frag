@@ -8,6 +8,7 @@ struct Material
     float alpha;
     vec3 specularColor;
     float shininess;
+    float emissive;
 
     int useTexture;
     vec2 texRepeat;
@@ -35,7 +36,7 @@ struct Light
 // Materials
 uniform sampler2D tex;
 uniform sampler2D fontTex;
-uniform Material material = Material(1, vec3(1), 1, vec3(0), 1, 1, vec2(1), vec2(0), vec2(1));
+uniform Material material = Material(1, vec3(1), 1, vec3(0), 1, 0, 1, vec2(1), vec2(0), vec2(1));
 uniform FontMaterial font = FontMaterial(0, vec2(0), vec2(1));
 
 // Lighting
@@ -145,6 +146,8 @@ void main(){
             fragColor.rgb += get_contribution(Light(0, vec3(0.3), vec3(-1), vec3(0), vec2(0), 0), material_color);
         }
 
+        fragColor.rgb += material_color * material.emissive;
+        fragColor.rgb = clamp(fragColor.rgb, 0, 1);
         fragColor.a = a;
     }
     else {

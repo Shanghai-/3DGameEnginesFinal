@@ -6,6 +6,7 @@
 #include "engine/objectManagement/GameWorld.h"
 
 #include <QImage>
+#include <glm/gtx/string_cast.hpp>
 
 RenderSystem::RenderSystem(int priority) :
     System(priority),
@@ -42,8 +43,9 @@ void RenderSystem::draw()
         bounds.updateBounds(m_graphics->getTransform());
         QVector<glm::vec4> *points = bounds.getPoints();
 
+        /*
         // Code below draws AABB bounds for debuggo
-        /* m_graphics->clearTransform();
+        m_graphics->clearTransform();
         m_graphics->translate(trans->pos);
         bounds.draw(m_graphics);
         m_graphics->clearTransform();

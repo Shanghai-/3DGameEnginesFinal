@@ -19,9 +19,9 @@ ParticleSys::ParticleSys(int priority)
       m_blurFBO1(nullptr), m_blurFBO2(nullptr),
       m_particlesFBO1(nullptr), m_particlesFBO2(nullptr),
       m_firstPass(true), m_evenPass(true),
+      m_numParticles(5000),
       m_angleX(-0.5f), m_angleY(0.5f), m_zoom(4.f)
 {
-    m_numParticles = 5000;
 
     ResourceLoader2::initializeGlew();
     glEnable(GL_DEPTH_TEST);
@@ -34,14 +34,6 @@ ParticleSys::ParticleSys(int priority)
                 ":/shaders/quad.vert", ":/shaders/particles_update.frag");
     m_particleDrawProgram = ResourceLoader2::createShaderProgram(
                 ":/shaders/particles_draw.vert", ":/shaders/particles_draw.frag");
-
-    // Initialize sphere OpenGLShape.
-//    std::vector<GLfloat> sphereData = SPHERE_VERTEX_POSITIONS;
-//    m_sphere = std::make_shared<OpenGLShape>();
-//    m_sphere->setVertexData(&sphereData[0], sphereData.size(), VBO::GEOMETRY_LAYOUT::LAYOUT_TRIANGLES, NUM_SPHERE_VERTICES);
-//    m_sphere->setAttribute(ShaderAttrib::POSITION, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
-//    m_sphere->setAttribute(ShaderAttrib::NORMAL, 3, 0, VBOAttribMarker::DATA_TYPE::FLOAT, false);
-//    m_sphere->buildVAO();
 
     // TODO: [Task 6] Fill in the positions and UV coordinates to draw a fullscreen quad
     // We've already set the vertex attributes for you, so be sure to follow those specifications

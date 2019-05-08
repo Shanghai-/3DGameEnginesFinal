@@ -23,6 +23,8 @@
 #include "engine/ui/UIDrawer.h"
 #include "engine/ui/TextDrawer.h"
 #include "engine/ui/UIText.h"
+#include "engine/ui/UIScriptComp.h"
+#include "engine/ui/scripts/UISpriteAnimator.h"
 
 // ENGINE MISC.
 #include "engine/components/volumes/CollCylinder.h"
@@ -36,17 +38,19 @@
 #include "vulpecula/systems/PlayerMovementSys.h"
 #include "vulpecula/systems/ProgressTracker.h"
 #include "vulpecula/systems/particlesys.h"
+#include "vulpecula/systems/StarSpinner.h"
 
 // CUSTOM COMPONENTS
 #include "vulpecula/components/RandomAudioSource.h"
 #include "warmup1/CustomComponents/CPhysics.h"
-#include "vulpecula/responders/waterresponse.h"
+#include "vulpecula/components/CStar.h"
 
-// CUSTOM MISC.
+// CUSTOM RESPONDERS
 #include "vulpecula/responders/GuitarZoneResp.h"
 #include "vulpecula/responders/GuitarStarResp.h"
 #include "vulpecula/responders/Standable.h"
 #include "vulpecula/responders/LowpassResp.h"
+#include "vulpecula/responders/waterresponse.h"
 
 #include <glm/gtx/rotate_vector.hpp>
 #include <assert.h>
@@ -65,11 +69,25 @@ MainScreen::~MainScreen()
 
 void MainScreen::initializeGame()
 {
+    /* m_gw->registerForDraw(std::make_shared<RenderSystem>(100));
+    m_gw->registerForTick(std::make_shared<ThirdPersonCamSys>(401, 3.0f, 50.0f, 4.0f));
+
+    Material bah;
+    bah.useLighting = false;
+    bah.color = glm::vec3(0.95f);
+    Graphics::getGlobalInstance()->addMaterial("White", bah);
+
+    std::shared_ptr<GameObject> obj = std::make_shared<GameObject>("TestMesh", m_gw->getNewObjID());
+    obj->addComponent(std::make_shared<CTransform>(obj, true, glm::vec3(0.0f)));
+    obj->addComponent(std::make_shared<CRenderable>(obj, "/course/cs1950u/.archive/2019/student/vulpecula/terrain/Terrain33.obj", "White"));
+    obj->addComponent(std::make_shared<CCamera>(obj, glm::vec3(0.0f)));
+    m_gw->addGameObject(obj); */
+
     auto netSys = std::make_shared<NetworkSystem>(400, m_gw.get(), m_isServer);
     auto collSys = std::make_shared<CollisionSystem>(300);
     auto animSys = std::make_shared<AnimationSystem>(500);
     auto renderSys = std::make_shared<RenderSystem>(200);
-    auto partSys = std::make_shared<ParticleSys>(100);
+
 
     TextureCube::Cubemap skyMap = {"front.png", "back.png", "left.png", "right.png", "up.png", "down.png"};
     auto skybox = std::make_shared<TextureCube>("/course/cs1950u/.archive/2019/student/vulpecula/skybox/",
@@ -82,11 +100,10 @@ void MainScreen::initializeGame()
 
     // This displays wireframes around all colliders
     //m_gw->registerForDraw(collSys);
-    m_gw->registerForDraw(partSys);
-    m_gw->registerForTick(partSys);
+
 
     // 3rd person camera system
-    m_gw->registerForTick(std::make_shared<ThirdPersonCamSys>(401, 3.0f, 100.0f, 4.0f));
+    m_gw->registerForTick(std::make_shared<ThirdPersonCamSys>(401, 3.0f, 50.0f, 4.0f));
 
     // Non-environment collisions
     m_gw->registerForTick(collSys);
@@ -102,6 +119,9 @@ void MainScreen::initializeGame()
     // Networking
     m_gw->registerForTick(netSys);
 
+    // Star position spinner
+    m_gw->registerForTick(std::make_shared<StarSpinner>(1000));
+
     // UI Systems
     m_gw->registerUISystem(std::make_shared<UIScriptSys>(100));
     m_gw->registerUISystem(std::make_shared<UIDrawer>(200));
@@ -113,7 +133,8 @@ void MainScreen::initializeGame()
     // Load in the map
     loadMap(playSys);
 
-    setupUI();
+    // Set up the UI
+    auto starCounter = setupUI();
 
     // Player setup
     std::shared_ptr<GameObject> player = std::make_shared<GameObject>("Player", m_gw->getNewObjID());
@@ -134,8 +155,12 @@ void MainScreen::initializeGame()
     // Load the ambient audio, set up channels, etc.
     AudioSystem *audioSys = initializeAudio(player);
 
-    auto progressTracker = std::make_shared<ProgressTracker>(905, audioSys);
+    auto progressTracker = std::make_shared<ProgressTracker>(905, audioSys, starCounter);
     m_gw->registerForTick(progressTracker);
+
+//    auto partSys = std::make_shared<ParticleSys>(100);
+//    m_gw->registerForDraw(partSys);
+//    m_gw->registerForTick(partSys);
 }
 
 void MainScreen::loadGraphics()
@@ -173,6 +198,7 @@ void MainScreen::loadGraphics()
     Material star;
     star.useLighting = true;
     star.color = glm::vec3(0.9f, 0.9f, 0.52549f);
+    star.emissive = 0.6f;
     g->addMaterial("Star", star);
 
     Material water;
@@ -315,32 +341,57 @@ AudioSystem *MainScreen::initializeAudio(std::shared_ptr<GameObject> player)
     return audioSys.get();
 }
 
-void MainScreen::setupUI()
+StarCountScript *MainScreen::setupUI()
 {
     Graphics *g = Graphics::getGlobalInstance();
     g->addUIQuad(); // Required because of fuckiness
 
     std::string baseFile = "/course/cs1950u/.archive/2019/student/vulpecula/ui/";
     g->addTexture("Star1", baseFile + "star1.png");
+    g->addTexture("Star2", baseFile + "star2.png");
+    g->addTexture("Star3", baseFile + "star3.png");
+    g->addTexture("Star4", baseFile + "star4.png");
+    g->addTexture("Star5", baseFile + "star5.png");
+
     g->addTexture("StarX", baseFile + "x.png");
-    g->addTexture("Count0", baseFile + "1.png");
+
+    g->addTexture("Count0", baseFile + "0.png");
+    g->addTexture("Count1", baseFile + "1.png");
+    g->addTexture("Count2", baseFile + "2.png");
+    g->addTexture("Count3", baseFile + "3.png");
+    g->addTexture("Count4", baseFile + "4.png");
+    g->addTexture("Count5", baseFile + "5.png");
+    g->addTexture("Count6", baseFile + "6.png");
+
     Material ui;
     ui.useLighting = false;
     ui.textureName = "Star1";
-    g->addMaterial("Star1", ui);
+    g->addMaterial("StarCounter", ui);
     ui.textureName = "StarX";
     g->addMaterial("StarX", ui);
     ui.textureName = "Count0";
     g->addMaterial("Count0", ui);
 
+    QStringList starTexNames = {"Star1", "Star2", "Star3", "Star4", "Star5"};
+
     std::shared_ptr<UIObject> starCounter = std::make_shared<UIObject>("StarCount", m_gw->getNewObjID(), TOP_RIGHT);
     UITransform t = UITransform(TOP_LEFT, glm::vec2(-215, -10), glm::vec2(100));
-    starCounter->addComponent(std::make_shared<UIRenderable>(starCounter, t, "uiquad", "Star1"));
+    auto starDrawing = std::make_shared<UIRenderable>(starCounter, t, "uiquad", "StarCounter");
+    starCounter->addComponent(starDrawing);
+    auto anim = std::make_shared<UISpriteAnimator>(starDrawing.get(), starTexNames, 0.2f);
+    starCounter->addComponent(std::make_shared<UIScriptComp>(starCounter, anim));
+
     t = UITransform(TOP_LEFT, glm::vec2(-115, -10), glm::vec2(45, 100));
     starCounter->addComponent(std::make_shared<UIRenderable>(starCounter, t, "uiquad", "StarX"));
+
     t = UITransform(TOP_RIGHT, glm::vec2(-10, -10), glm::vec2(55, 100));
-    starCounter->addComponent(std::make_shared<UIRenderable>(starCounter, t, "uiquad", "Count0"));
+    auto counter = std::make_shared<UIRenderable>(starCounter, t, "uiquad", "Count0");
+    starCounter->addComponent(counter);
+    auto starCountScript = std::make_shared<StarCountScript>(counter.get());
+    starCounter->addComponent(std::make_shared<UIScriptComp>(starCounter, starCountScript));
     m_gw->addUIObject(starCounter);
+
+    return starCountScript.get();
 }
 
 void MainScreen::loadTerrain(std::shared_ptr<PlayerMovementSys> playSys)
@@ -524,11 +575,27 @@ void MainScreen::loadDecorations(std::shared_ptr<PlayerMovementSys> playSys)
     createPrefab(LONE_PINE, glm::vec3(-24.9716, 9.90567, 63.9324), glm::vec3(0, -27.3, 0), glm::vec3(2.146));
     createPrefab(LONE_PINE, glm::vec3(78.7954, 12.678, -82.5545), glm::vec3(0), glm::vec3(4.198));
 
-    createPrefab(DEAD_TREES_1, glm::vec3(66.1866, -12.0862, 31.6698), glm::vec3(0, 188, -1.22), glm::vec3(1.295));
-    createPrefab(DEAD_TREES_1, glm::vec3(86.3694, -11.9013, 12.1939), glm::vec3(0, 18.8, -9.41), glm::vec3(1));
-    createPrefab(DEAD_TREES_1, glm::vec3(84.781, -11.9367, 26.4879), glm::vec3(0, 0, -1.53), glm::vec3(1.113));
-    createPrefab(DEAD_TREES_1, glm::vec3(74.3494, -8.62159, 47.7303), glm::vec3(14, 138, 12.6), glm::vec3(1));
-    createPrefab(DEAD_TREES_1, glm::vec3(76.9788, 3.40437, 58.9934), glm::vec3(0, -230, 22.6), glm::vec3(1));
+    createPrefab(DEAD_TREES_1, glm::vec3(88.4183, -4.04966, 53.8448), glm::vec3(-25.5, 0, 0), glm::vec3(1.261));
+    createPrefab(DEAD_TREES_1, glm::vec3(77.006, -3.75088, 57.6439), glm::vec3(-7.7, -66.7, 18.4), glm::vec3(1.1));
+    createPrefab(DEAD_TREES_1, glm::vec3(57.9374, -5.34054, 52.8681), glm::vec3(-15.7, 42.5, -14.9), glm::vec3(0.98));
+    createPrefab(DEAD_TREES_1, glm::vec3(51.5558, -1.63182, 56.4387), glm::vec3(-2.7, -59.9, -4.75), glm::vec3(1.2));
+    createPrefab(DEAD_TREES_1, glm::vec3(43.4493, -2.69992, 47.1991), glm::vec3(17, 128, -7.44), glm::vec3(1.16));
+    createPrefab(DEAD_TREES_1, glm::vec3(87.1872, -10.4645, 33.5724), glm::vec3(-13, -7.95, 5.73), glm::vec3(1.261));
+    createPrefab(DEAD_TREES_1, glm::vec3(69.9521, -11.4493, 38.7758), glm::vec3(-14.6, 0, 0), glm::vec3(1.271));
+    createPrefab(DEAD_TREES_1, glm::vec3(37.2099, 2.36112, 11.0312), glm::vec3(10, -23.6, -6.97), glm::vec3(1.16));
+    createPrefab(DEAD_TREES_1, glm::vec3(51.8655, -6.61485, 19.401), glm::vec3(-26.9, -78.9, -5.72), glm::vec3(1.2));
+    createPrefab(DEAD_TREES_1, glm::vec3(78.0359, -13.4987, 23.9568), glm::vec3(0,0,0), glm::vec3(1.175));
+    createPrefab(DEAD_TREES_1, glm::vec3(58.1012, -14.1818, 1.2628), glm::vec3(0.7, 24.4, -16.4), glm::vec3(1.363));
+    createPrefab(DEAD_TREES_1, glm::vec3(53.9496, -7.6545, 29.4375), glm::vec3(-19.5, -68.8, 7.91), glm::vec3(0.993));
+    createPrefab(DEAD_TREES_1, glm::vec3(66.0117, -14.1466, 18.7571), glm::vec3(0, 0, 0), glm::vec3(1.153));
+    createPrefab(DEAD_TREES_1, glm::vec3(85.327, -12.1395, 21.5324), glm::vec3(7.5, -149, -12.5), glm::vec3(1.924));
+    createPrefab(DEAD_TREES_1, glm::vec3(69.7109, -15.7368, 6.11101), glm::vec3(8.8, -173, 3.38), glm::vec3(1.153));
+    createPrefab(DEAD_TREES_1, glm::vec3(85.6776, -12.1474, -11.6125), glm::vec3(-7.5, 22.7, 15.5), glm::vec3(1.084));
+    createPrefab(DEAD_TREES_1, glm::vec3(82.6738, -13.8942, -27.6141), glm::vec3(-7.8, 36.6, -14), glm::vec3(1.178));
+    createPrefab(DEAD_TREES_1, glm::vec3(57.3699, -16.2439, -18.2736), glm::vec3(5.2, 31.5, 16), glm::vec3(1.54));
+    createPrefab(DEAD_TREES_1, glm::vec3(70.1346, -14.3803, -34.911), glm::vec3(14, 0, 0), glm::vec3(1.306));
+    createPrefab(DEAD_TREES_1, glm::vec3(72.9787, -12.0343, -43.9335), glm::vec3(12, 51.2, 15), glm::vec3(1.031));
+    createPrefab(DEAD_TREES_1, glm::vec3(54.4941, -15.3149, -25.5019), glm::vec3(0, 175, 0), glm::vec3(1.187));
 
     // Campfire pit thing
     std::shared_ptr<GameObject> pit = std::make_shared<GameObject>("FirePit", m_gw->getNewObjID());
@@ -624,7 +691,7 @@ void MainScreen::loadObjectives()
 
     std::shared_ptr<GameObject> malletStar = std::make_shared<GameObject>("MalletStar", m_gw->getNewObjID());
     malletStar->addComponent(std::make_shared<CTransform>(malletStar, true, glm::vec3(71.6727, 5.96499, -74.1226),
-                                                        glm::vec3(0.0f), glm::vec3(0.5f)));
+                                                        glm::vec3(0, 1.92f, 0), glm::vec3(0.5f)));
     createStar(malletStar, ":/sounds/mus_mallet.ogg", malletZone);
 
     // Violin stuff
@@ -683,6 +750,7 @@ void MainScreen::createStar(std::shared_ptr<GameObject> starObj, QString file, s
     g->addLight(l);
 
     starObj->addComponent(std::make_shared<CRenderable>(starObj, ":/models/star.obj", "Star"));
+    starObj->addComponent(std::make_shared<CStar>(starObj, glm::vec3(starObj->getComponent<CTransform>()->pos)));
 
     auto music = std::make_shared<CAudioSource>(starObj, file, false, "Music");
     music->setAmbient(true);
@@ -691,7 +759,7 @@ void MainScreen::createStar(std::shared_ptr<GameObject> starObj, QString file, s
     music->playLooping();
     starObj->addComponent(music);
 
-    auto collider = std::make_shared<CollCylinder>(glm::vec3(0.f, -1.0f, 0.f), 2.0f, 1.0f);
+    auto collider = std::make_shared<CollCylinder>(glm::vec3(0.f, -2.0f, 0.f), 4.0f, 1.0f);
     auto response = std::make_shared<GuitarStarResp>(starObj, zone, m_gw.get());
     auto component = std::make_shared<CCollider>(starObj, collider, true, response, CCollider::WORLD);
     component->ignoreLayer(CCollider::WORLD);
@@ -737,10 +805,10 @@ void MainScreen::createPrefab(MainScreen::PrefabType type, glm::vec3 position, g
         break;
     }
     case DEAD_TREES_1:
-    {
         prefab->addComponent(std::make_shared<CRenderable>(prefab, basePath.append("DeadTrees1.obj"), "DeadTrees"));
         break;
-    }
+    case BIG_DEAD_TREE:
+        prefab->addComponent(std::make_shared<CRenderable>(prefab, basePath.append("BigDeadTree.obj"), "DeadTrees"));
     case POWER_LINE:
         prefab->addComponent(std::make_shared<CRenderable>(prefab, basePath.append("wire.obj"), "PowerLine"));
         break;
