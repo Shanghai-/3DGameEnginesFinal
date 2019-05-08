@@ -582,19 +582,19 @@ void MainScreen::loadDecorations(std::shared_ptr<PlayerMovementSys> playSys)
     createPrefab(DEAD_TREES_1, glm::vec3(43.4493, -2.69992, 47.1991), glm::vec3(17, 128, -7.44), glm::vec3(1.16));
     createPrefab(DEAD_TREES_1, glm::vec3(87.1872, -10.4645, 33.5724), glm::vec3(-13, -7.95, 5.73), glm::vec3(1.261));
     createPrefab(DEAD_TREES_1, glm::vec3(69.9521, -11.4493, 38.7758), glm::vec3(-14.6, 0, 0), glm::vec3(1.271));
-    createPrefab(DEAD_TREES_1, glm::vec3(37.2099, 2.36112, 11.0312), glm::vec3(10, -23.6, -6.97), glm::vec3(1.16));
-    createPrefab(DEAD_TREES_1, glm::vec3(51.8655, -6.61485, 19.401), glm::vec3(-26.9, -78.9, -5.72), glm::vec3(1.2));
+    createPrefab(DEAD_TREES_1, glm::vec3(37.2099, 1.36112, 11.0312), glm::vec3(10, -23.6, -6.97), glm::vec3(1.16));
+    createPrefab(DEAD_TREES_1, glm::vec3(51.8655, -7.61485, 19.401), glm::vec3(-26.9, -78.9, -5.72), glm::vec3(1.2));
     createPrefab(DEAD_TREES_1, glm::vec3(78.0359, -13.4987, 23.9568), glm::vec3(0,0,0), glm::vec3(1.175));
     createPrefab(DEAD_TREES_1, glm::vec3(58.1012, -14.1818, 1.2628), glm::vec3(0.7, 24.4, -16.4), glm::vec3(1.363));
     createPrefab(DEAD_TREES_1, glm::vec3(53.9496, -7.6545, 29.4375), glm::vec3(-19.5, -68.8, 7.91), glm::vec3(0.993));
     createPrefab(DEAD_TREES_1, glm::vec3(66.0117, -14.1466, 18.7571), glm::vec3(0, 0, 0), glm::vec3(1.153));
-    createPrefab(DEAD_TREES_1, glm::vec3(85.327, -12.1395, 21.5324), glm::vec3(7.5, -149, -12.5), glm::vec3(1.924));
+    createPrefab(DEAD_TREES_1, glm::vec3(85.327, -12.1395, 21.5324), glm::vec3(7.5, -149, 12.5), glm::vec3(1.924));
     createPrefab(DEAD_TREES_1, glm::vec3(69.7109, -15.7368, 6.11101), glm::vec3(8.8, -173, 3.38), glm::vec3(1.153));
-    createPrefab(DEAD_TREES_1, glm::vec3(85.6776, -12.1474, -11.6125), glm::vec3(-7.5, 22.7, 15.5), glm::vec3(1.084));
-    createPrefab(DEAD_TREES_1, glm::vec3(82.6738, -13.8942, -27.6141), glm::vec3(-7.8, 36.6, -14), glm::vec3(1.178));
-    createPrefab(DEAD_TREES_1, glm::vec3(57.3699, -16.2439, -18.2736), glm::vec3(5.2, 31.5, 16), glm::vec3(1.54));
+    createPrefab(DEAD_TREES_1, glm::vec3(85.6776, -13.1474, -11.6125), glm::vec3(-7.5, 22.7, 15.5), glm::vec3(1.084));
+    createPrefab(DEAD_TREES_1, glm::vec3(82.6738, -14.8942, -27.6141), glm::vec3(-7.8, 36.6, 14), glm::vec3(1.178));
+    createPrefab(DEAD_TREES_1, glm::vec3(57.3699, -16.2439, -18.2736), glm::vec3(5.2, 31.5, -16), glm::vec3(1.54));
     createPrefab(DEAD_TREES_1, glm::vec3(70.1346, -14.3803, -34.911), glm::vec3(14, 0, 0), glm::vec3(1.306));
-    createPrefab(DEAD_TREES_1, glm::vec3(72.9787, -12.0343, -43.9335), glm::vec3(12, 51.2, 15), glm::vec3(1.031));
+    createPrefab(DEAD_TREES_1, glm::vec3(72.9787, -14.0343, -43.9335), glm::vec3(12, 51.2, 15), glm::vec3(1.031));
     createPrefab(DEAD_TREES_1, glm::vec3(54.4941, -15.3149, -25.5019), glm::vec3(0, 175, 0), glm::vec3(1.187));
 
     // Campfire pit thing
