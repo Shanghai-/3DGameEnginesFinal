@@ -92,7 +92,6 @@ public:
 
     bool printDebug();
 
-protected:
     virtual void build();
 
 private:

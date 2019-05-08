@@ -11,6 +11,8 @@
 #include <iostream>
 #include <math.h>
 
+#define PLAYER_SPEED 3.0f
+
 PlayerMovementSys::PlayerMovementSys(int priority) :
     System(priority)
 {
@@ -18,6 +20,7 @@ PlayerMovementSys::PlayerMovementSys(int priority) :
     m_graphics = Graphics::getGlobalInstance();
     m_grounded = false;
     m_curPos = glm::ivec2(4, 2);
+    m_vel = glm::vec3(0.f);
 }
 
 PlayerMovementSys::~PlayerMovementSys()
@@ -87,9 +90,10 @@ void PlayerMovementSys::removeMesh(glm::ivec2 coord)
 {
     auto res = m_meshMap.find(glmToStd(coord));
     if (res != m_meshMap.end()) {
+        //m_globalMeshMap[glmToStd(coord)]->getSibling<CRenderable>()->setMaterialName("Ground");
         m_meshMap.erase(res);
         //std::shared_ptr<CMeshCol> coll = m_globalMeshMap[glmToStd(coord)];
-        //coll->getSibling<CRenderable>()->setMaterialName("Ground");
+
     }
 
 }
@@ -115,11 +119,11 @@ void PlayerMovementSys::tick(float seconds)
 
     glm::vec3 forward = graphicsCam->getLook();
     forward.y = 0;
-    forward = glm::normalize(forward) * 3.0f * 2.f;
+    forward = glm::normalize(forward) * PLAYER_SPEED;
 
     glm::vec3 left = glm::cross(graphicsCam->getUp(), graphicsCam->getLook());
     left.y = 0;
-    left = glm::normalize(left) * 3.0f * 2.f;
+    left = glm::normalize(left) * PLAYER_SPEED;
 
     QSetIterator<std::shared_ptr<CTransform>> it(m_transforms);
 
@@ -140,7 +144,8 @@ void PlayerMovementSys::tick(float seconds)
             dir -= left * seconds;
         }
         if(m_grounded && m_input->isPressed(Qt::Key_Space)) {
-            dir += glm::vec3(0.f, 2.f, 0.f);
+            std::shared_ptr<CPhysics> phys = transform->getSibling<CPhysics>();
+            phys->vel += glm::vec3(0.f, .1f, 0.f);
             m_grounded = false;
         }
 
@@ -165,7 +170,6 @@ void PlayerMovementSys::tick(float seconds)
         for(int i = 0; i < repetitions; i++) {
             returnType values = checkCollision(transform->pos, transform->pos + dir, transform->getSibling<ColEllipsoid>()->getRadii());
             glm::vec3 hit = transform->pos + (dir * values.time);
-            //std::cout << glm::to_string(values.normal) << std::endl;
             transform->pos = hit + (0.01f * values.normal);
 
             if(values.time < 1.f) {
@@ -176,12 +180,16 @@ void PlayerMovementSys::tick(float seconds)
             }
             else {
                 phys->vel += (phys->acc * seconds);
-                m_grounded = false;
             }
             timeTraveled += values.time;
             if(timeTraveled >= 1.f) {
                 break;
             }
+        }
+
+        if (transform->pos.y < -35.0f) {
+            transform->pos = glm::vec3(transform->pos.x, 22.0f, transform->pos.z);
+            phys->vel.y = 0.0f;
         }
 
         //UNCOMMENT THIS ONCE WE ACTUALLY HAVE THE MESH CHUNKS IN
@@ -348,6 +356,33 @@ PlayerMovementSys::returnType PlayerMovementSys::checkCollision(glm::vec3 start,
     values.contactPoint = glm::vec3(model * glm::vec4(values.contactPoint, 1.f));
 
     return values;
+}
+
+void PlayerMovementSys::updateWater()
+{
+    for(std::map<std::vector<int>, std::shared_ptr<CMeshCol>>::iterator it = m_meshMap.begin(); it != m_meshMap.end(); ++it) {
+        if(it->first[0] >= 0) {
+            removeMesh(stdToGlm(it->first));
+        }
+    }
+
+    glm::vec2 pos2D = glm::vec2(-15.6f, -28.5f);
+    glm::ivec2 posCoords;
+    posCoords[0] = glm::clamp((int)glm::floor((pos2D[0] - 8.f) / 16.f) + 5, 0, 9);
+    posCoords[1] = 9 - glm::clamp((int)glm::floor((pos2D[1] + 8.f) / 16.f) + 5, 0, 9);
+
+    addMesh(glm::ivec2(posCoords.x - 1, posCoords.y - 1));
+    addMesh(glm::ivec2(posCoords.x, posCoords.y - 1));
+    addMesh(glm::ivec2(posCoords.x + 1, posCoords.y - 1));
+
+    addMesh(glm::ivec2(posCoords.x - 1, posCoords.y));
+    addMesh(posCoords);
+    addMesh(glm::ivec2(posCoords.x + 1, posCoords.y));
+
+    addMesh(glm::ivec2(posCoords.x - 1, posCoords.y + 1));
+    addMesh(glm::ivec2(posCoords.x, posCoords.y + 1));
+    addMesh(glm::ivec2(posCoords.x + 1, posCoords.y + 1));
+
 }
 
 void PlayerMovementSys::draw()

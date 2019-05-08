@@ -256,7 +256,9 @@ SOURCES += \
     src/vulpecula/responders/WinResp.cpp \
     src/engine/ui/scripts/TimedFade.cpp \
     src/engine/ui/scripts/FullScreenQuadScript.cpp \
-    src/vulpecula/responders/Standable.cpp
+    src/vulpecula/responders/Standable.cpp \
+    src/vulpecula/responders/LowpassResp.cpp \
+    src/vulpecula/responders/waterresponse.cpp
 
 HEADERS += \
     libs/glew-1.10.0/include/GL/glew.h \
@@ -557,7 +559,9 @@ HEADERS += \
     src/engine/ui/scripts/TimedFade.h \
     src/engine/ui/scripts/FullScreenQuadScript.h \
     src/engine/ui/scripts/Script.h \
-    src/vulpecula/responders/Standable.h
+    src/vulpecula/responders/Standable.h \
+    src/vulpecula/responders/LowpassResp.h \
+    src/vulpecula/responders/waterresponse.h
 
 FORMS += src/mainwindow.ui
 

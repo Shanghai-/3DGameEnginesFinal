@@ -20,8 +20,10 @@ RenderSystem::~RenderSystem()
 
 void RenderSystem::draw()
 {
+
     m_graphics->setShader("default");
     std::shared_ptr<CCamera> cam = m_graphics->getActiveCamera();
+
 
     QSetIterator<std::shared_ptr<CRenderable>> it(m_renderComponents);
     while (it.hasNext()) {
@@ -31,9 +33,9 @@ void RenderSystem::draw()
 
         m_graphics->clearTransform();
         m_graphics->translate(trans->pos);
-        m_graphics->rotate(trans->rot.x, glm::vec3(1,0,0));
-        m_graphics->rotate(trans->rot.y, glm::vec3(0,1,0));
         m_graphics->rotate(trans->rot.z, glm::vec3(0,0,1));
+        m_graphics->rotate(trans->rot.y, glm::vec3(0,1,0));
+        m_graphics->rotate(trans->rot.x, glm::vec3(1,0,0));
         m_graphics->scale(trans->scale);
 
         AABB bounds = r->getShape()->getBounds();
@@ -59,6 +61,7 @@ void RenderSystem::draw()
         m_graphics->getActiveShader()->setUniform("time", m_gameWorld->getElapsedTime());
         m_graphics->drawShape(r->getShapeName().toStdString());
     }
+
 
     if (m_skyboxTex) {
         GLint oldCullingMode, oldDepthMode;

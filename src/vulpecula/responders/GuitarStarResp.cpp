@@ -4,6 +4,7 @@
 #include "engine/components/CRenderable.h"
 #include "engine/components/CAudioSource.h"
 #include "engine/objectManagement/GameWorld.h"
+#include "engine/graphics/Graphics.h"
 
 GuitarStarResp::GuitarStarResp(std::shared_ptr<GameObject> star,
                                std::shared_ptr<GameObject> zone,
@@ -20,13 +21,15 @@ GuitarStarResp::~GuitarStarResp()
 
 void GuitarStarResp::onCollide(std::shared_ptr<GameObject> other)
 {
-    auto audio = m_star->getComponent<CAudioSource>();
-    audio->setMuted(false);
+    if (other->getName() == "Player") {
+        auto audio = m_star->getComponent<CAudioSource>();
+        audio->setMuted(false);
 
-    m_gw->removeGameObject(m_zone);
+        m_gw->removeGameObject(m_zone);
 
-    m_star->removeComponent<CRenderable>();
-    m_star->removeComponent<CCollider>();
+        m_star->removeComponent<CRenderable>();
+        m_star->removeComponent<CCollider>();
+    }
 }
 
 void GuitarStarResp::onCollisionEnd(std::shared_ptr<GameObject> other)

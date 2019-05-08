@@ -1,6 +1,6 @@
 #include "RandomAudioManager.h"
 
-RandomAudioManager::RandomAudioManager(int priority, const std::shared_ptr<AudioSystem> &as) :
+RandomAudioManager::RandomAudioManager(int priority, AudioSystem *as) :
     System(priority),
     m_as(as)
 {

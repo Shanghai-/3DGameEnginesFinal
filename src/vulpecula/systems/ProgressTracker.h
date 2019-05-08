@@ -6,7 +6,7 @@
 class ProgressTracker : public System
 {
 public:
-    ProgressTracker(int priority, std::shared_ptr<AudioSystem> audioSys);
+    ProgressTracker(int priority, AudioSystem *audioSys);
     ~ProgressTracker();
 
     QString getComponentType() const;
@@ -15,7 +15,7 @@ public:
     void tick(float seconds);
 
 private:
-    std::shared_ptr<AudioSystem> m_audioSys;
+    AudioSystem *m_audioSys;
 
     int m_totalStars;
     int m_curStars;

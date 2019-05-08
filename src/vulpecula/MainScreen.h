@@ -5,6 +5,7 @@
 #include "engine/objectManagement/GameWorld.h"
 #include "engine/components/volumes/CollisionVolume.h"
 #include "systems/PlayerMovementSys.h"
+#include "engine/systems/AudioSystem.h"
 
 class Application;
 
@@ -33,16 +34,19 @@ private:
         PINE_CLUSTER_1,
         PINE_CLUSTER_2,
         PINE_CLUSTER_3,
-        LONE_PINE
+        LONE_PINE,
+        DEAD_TREES_1,
+        POWER_LINE
     };
 
     void initializeGame();
     void loadGraphics();
     void loadMap(std::shared_ptr<PlayerMovementSys> playSys);
-    void initializeAudio(std::shared_ptr<GameObject> player);
+    AudioSystem *initializeAudio(std::shared_ptr<GameObject> player);
+    void setupUI();
 
     void loadTerrain(std::shared_ptr<PlayerMovementSys> playSys);
-    void loadDecorations();
+    void loadDecorations(std::shared_ptr<PlayerMovementSys> playSys);
     void loadObjectives();
 
     void createAudioZone(std::shared_ptr<GameObject> zoneObj, QStringList files,

@@ -62,7 +62,7 @@ VAO& VAO::operator=(VAO &&that) {
 
 VAO::~VAO()
 {
-    glDeleteVertexArrays(1, &m_handle);
+    //glDeleteVertexArrays(1, &m_handle);
 }
 
 void VAO::draw() {

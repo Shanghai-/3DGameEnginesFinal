@@ -6,7 +6,7 @@ layout(location = 2) in vec3 normal;   // Normal of the vertex
 layout(location = 3) in ivec4 boneIDs; // IDs of all bones influencing this vert
 layout(location = 4) in vec4 weights; // Weights of those influences
 
-const int MAX_BONES = 100;
+const int MAX_BONES = 30;
 
 uniform mat4 m;
 uniform mat4 v;

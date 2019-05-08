@@ -7,7 +7,9 @@
 class GuitarStarResp : public CollisionResponse
 {
 public:
-    GuitarStarResp(std::shared_ptr<GameObject> star, std::shared_ptr<GameObject> zone, GameWorld *gw);
+    GuitarStarResp(std::shared_ptr<GameObject> star,
+                   std::shared_ptr<GameObject> zone,
+                   GameWorld *gw);
     ~GuitarStarResp();
 
     void onCollide(std::shared_ptr<GameObject> other);

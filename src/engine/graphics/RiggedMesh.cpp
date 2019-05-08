@@ -43,13 +43,6 @@ RiggedMesh::RiggedMesh(const std::string &model) :
         m_buffers[i] = 0;
     }
 
-    // Create the VAO
-    glGenVertexArrays(1, &m_VAO);
-    glBindVertexArray(m_VAO);
-
-    // Create the buffers for the vertices attributes
-    glGenBuffers(NUM_VBs, m_buffers);
-
     // get aiScene
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(model, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
@@ -59,10 +52,17 @@ RiggedMesh::RiggedMesh(const std::string &model) :
         std::cerr << "The offending file path was '" << model << "'" << std::endl;
     } else {
         m_armature = Armature(glm::inverse(convertMatrix(scene->mRootNode->mTransformation)));
+
+        glGenVertexArrays(1, &m_VAO);
+        glBindVertexArray(m_VAO);
+        glGenBuffers(NUM_VBs, m_buffers);
+
         initFromScene(scene);
+
+        glBindVertexArray(0);
     }
 
-    glBindVertexArray(0);
+
 }
 
 RiggedMesh::~RiggedMesh()
@@ -90,10 +90,55 @@ Armature RiggedMesh::getArmature()
 void RiggedMesh::draw()
 {
     glBindVertexArray(m_VAO);
+    /*
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_buffers[INDEX_BUFFER]);
+
+    // Bind and enable POSITION
+    glBindBuffer(GL_ARRAY_BUFFER, m_buffers[POS_VB]);
+    glEnableVertexAttribArray(POSITION_LOCATION);
+    glVertexAttribPointer(POSITION_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    // Bind and enable UVs
+    glBindBuffer(GL_ARRAY_BUFFER, m_buffers[TEXCOORD_VB]);
+    glEnableVertexAttribArray(TEX_COORD_LOCATION);
+    glVertexAttribPointer(TEX_COORD_LOCATION, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+    // Bind and enable NORMALS
+    glBindBuffer(GL_ARRAY_BUFFER, m_buffers[NORMAL_VB]);
+    glEnableVertexAttribArray(NORMAL_LOCATION);
+    glVertexAttribPointer(NORMAL_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    // Bind and enable BONES
+    glBindBuffer(GL_ARRAY_BUFFER, m_buffers[BONE_VB]);
+    glEnableVertexAttribArray(BONE_ID_LOCATION);
+    glVertexAttribIPointer(BONE_ID_LOCATION, BONES_PER_VERTEX, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
+    glEnableVertexAttribArray(BONE_WEIGHT_LOCATION);
+    glVertexAttribPointer(BONE_WEIGHT_LOCATION, BONES_PER_VERTEX, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)16);
+    */
 
     for (uint i = 0; i < m_entries.size(); i++) {
         // TODO: Material setting
         const uint materialIndex = m_entries[i].materialIndex;
+
+        /* std::cout << m_entries[i].numIndices << std::endl;
+        std::cout << m_entries[i].baseVertex << std::endl;
+        std::cout << m_entries[i].baseIndex << std::endl;
+        std::cout << m_entries[i].materialIndex << std::endl; */
+//        glDrawArrays(GL_TRIANGLES, 0, m_entries[i].numIndices);
+//        std::vector<GLuint> datums;
+//        datums.resize(m_entries[i].numIndices);
+//        glGetBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_entries[i].numIndices * sizeof(GLuint), datums.data());
+//        bool nonzeroFound = false;
+//        for (int i = 0; i < datums.size(); i++) {
+//            if (datums[i] != 0) {
+//                nonzeroFound = true;
+//                break;
+//            }
+//        }
+//        if (!nonzeroFound) {
+//            glBindVertexArray(0);
+//            return;
+//        }
 
         glDrawElementsBaseVertex(GL_TRIANGLES,              // Mode
                                  m_entries[i].numIndices,   // Count
@@ -103,6 +148,8 @@ void RiggedMesh::draw()
     }
 
     glBindVertexArray(0);
+    //glBindBuffer(GL_ARRAY_BUFFER, 0);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 bool RiggedMesh::initFromScene(const aiScene *scene)
@@ -158,30 +205,46 @@ bool RiggedMesh::initFromScene(const aiScene *scene)
     if (scene->HasAnimations()) loadAnimations(scene);
 
     // We don't use the VBO object here, but we probably could
-
-    // Position buffer
     glBindBuffer(GL_ARRAY_BUFFER, m_buffers[POS_VB]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(positions[0]) * positions.size(), &positions[0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(POSITION_LOCATION);
     glVertexAttribPointer(POSITION_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    //glEnableVertexAttribArray(ShaderAttrib::POSITION);
-    //glVertexAttribPointer(ShaderAttrib::POSITION, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-    // Texture/UVs buffer
     glBindBuffer(GL_ARRAY_BUFFER, m_buffers[TEXCOORD_VB]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords[0]) * texCoords.size(), &texCoords[0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(TEX_COORD_LOCATION);
     glVertexAttribPointer(TEX_COORD_LOCATION, 2, GL_FLOAT, GL_FALSE, 0, 0);
-    //glEnableVertexAttribArray(ShaderAttrib::TEXCOORD0);
-    //glVertexAttribPointer(ShaderAttrib::TEXCOORD0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-    // Normals buffer
     glBindBuffer(GL_ARRAY_BUFFER, m_buffers[NORMAL_VB]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(normals[0]) * normals.size(), &normals[0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(NORMAL_LOCATION);
     glVertexAttribPointer(NORMAL_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    //glEnableVertexAttribArray(ShaderAttrib::NORMAL);
-    //glVertexAttribPointer(ShaderAttrib::NORMAL, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_buffers[BONE_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(bones[0]) * bones.size(), &bones[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(BONE_ID_LOCATION);
+    glVertexAttribIPointer(BONE_ID_LOCATION, BONES_PER_VERTEX, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
+    glEnableVertexAttribArray(BONE_WEIGHT_LOCATION);
+    glVertexAttribPointer(BONE_WEIGHT_LOCATION, BONES_PER_VERTEX, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)16);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_buffers[INDEX_BUFFER]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), &indices[0], GL_STATIC_DRAW);
+
+    /*
+    // Create the buffers for the vertices attributes
+    glGenBuffers(NUM_VBs, m_buffers);
+
+    // Position buffer
+    glBindBuffer(GL_ARRAY_BUFFER, m_buffers[POS_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(positions[0]) * positions.size(), &positions[0], GL_STATIC_DRAW);
+
+    // Texture/UVs buffer
+    glBindBuffer(GL_ARRAY_BUFFER, m_buffers[TEXCOORD_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords[0]) * texCoords.size(), &texCoords[0], GL_STATIC_DRAW);
+
+    // Normals buffer
+    glBindBuffer(GL_ARRAY_BUFFER, m_buffers[NORMAL_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(normals[0]) * normals.size(), &normals[0], GL_STATIC_DRAW);
 
     // Bones buffer
     glBindBuffer(GL_ARRAY_BUFFER, m_buffers[BONE_VB]);
@@ -189,14 +252,49 @@ bool RiggedMesh::initFromScene(const aiScene *scene)
     std::cout << "bone size: " << sizeof(bones[0]) << std::endl;
     std::cout << "boneData size: " << sizeof(VertexBoneData) << std::endl;
     glBufferData(GL_ARRAY_BUFFER, sizeof(bones[0]) * bones.size(), &bones[0], GL_STATIC_DRAW);
+    // TODO: make 16 in the call above into a variable dependent on BONES_PER_VERTEX and sizeof(VertexBoneData)
+
+    // Index buffer
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_buffers[INDEX_BUFFER]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), &indices[0], GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // Create the VAO
+    glGenVertexArrays(1, &m_VAO);
+    glBindVertexArray(m_VAO);
+
+    // Bind and enable POSITION
+    glBindBuffer(GL_ARRAY_BUFFER, m_buffers[POS_VB]);
+    glEnableVertexAttribArray(POSITION_LOCATION);
+    glVertexAttribPointer(POSITION_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    // Bind and enable UVs
+    glBindBuffer(GL_ARRAY_BUFFER, m_buffers[TEXCOORD_VB]);
+    glEnableVertexAttribArray(TEX_COORD_LOCATION);
+    glVertexAttribPointer(TEX_COORD_LOCATION, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+    // Bind and enable NORMALS
+    glBindBuffer(GL_ARRAY_BUFFER, m_buffers[NORMAL_VB]);
+    glEnableVertexAttribArray(NORMAL_LOCATION);
+    glVertexAttribPointer(NORMAL_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    // Bind and enable BONES
+    glBindBuffer(GL_ARRAY_BUFFER, m_buffers[BONE_VB]);
     glEnableVertexAttribArray(BONE_ID_LOCATION);
     glVertexAttribIPointer(BONE_ID_LOCATION, BONES_PER_VERTEX, GL_INT, sizeof(VertexBoneData), (const GLvoid*)0);
     glEnableVertexAttribArray(BONE_WEIGHT_LOCATION);
     glVertexAttribPointer(BONE_WEIGHT_LOCATION, BONES_PER_VERTEX, GL_FLOAT, GL_FALSE, sizeof(VertexBoneData), (const GLvoid*)16);
-    // TODO: make 16 in the call above into a variable dependent on BONES_PER_VERTEX and sizeof(VertexBoneData)
 
+    // Bind index buffer
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_buffers[INDEX_BUFFER]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), &indices[0], GL_STATIC_DRAW);
+
+    // Clean up
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    */
 
     return true; // TODO: error check
 }
