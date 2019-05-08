@@ -58,12 +58,7 @@ CMeshCol::CMeshCol(std::shared_ptr<GameObject> parent, QString primitiveName) :
             shapeVertices[ind + 7] = 1.f;
         }
         m_shape = std::make_shared<Shape>(shapeVertices, shapeFaces);
-        for(int i = 0; i < m_normals.size(); i++) {
-            if(m_normals[i].x == 0.f) {
-                std::cout << glm::to_string(m_normals[i]) << std::endl;
-            }
-        }
-        //m_graphics->addShape(m_primitive.toStdString(), obj);
+
     } else {
         std::cerr << "WARNING: Could not find model or shape '";
         std::cerr << m_primitive.toStdString() << "'." << std::endl;

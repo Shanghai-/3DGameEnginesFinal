@@ -48,7 +48,7 @@ private:
     StarCountScript *setupUI();
 
     void loadTerrain(std::shared_ptr<PlayerMovementSys> playSys);
-    void loadDecorations();
+    void loadDecorations(std::shared_ptr<PlayerMovementSys> playSys);
     void loadObjectives();
 
     void createAudioZone(std::shared_ptr<GameObject> zoneObj, QStringList files,

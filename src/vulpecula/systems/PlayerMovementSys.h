@@ -22,6 +22,8 @@ public:
     void addGlobalMesh(std::shared_ptr<CMeshCol> mesh, glm::ivec2 coord);
     void addMesh(glm::ivec2 coord);
 
+    void updateWater();
+
 
 private:
     InputManager *m_input;

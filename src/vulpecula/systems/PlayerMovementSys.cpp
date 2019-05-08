@@ -358,6 +358,33 @@ PlayerMovementSys::returnType PlayerMovementSys::checkCollision(glm::vec3 start,
     return values;
 }
 
+void PlayerMovementSys::updateWater()
+{
+    for(std::map<std::vector<int>, std::shared_ptr<CMeshCol>>::iterator it = m_meshMap.begin(); it != m_meshMap.end(); ++it) {
+        if(it->first[0] >= 0) {
+            removeMesh(stdToGlm(it->first));
+        }
+    }
+
+    glm::vec2 pos2D = glm::vec2(-15.6f, -28.5f);
+    glm::ivec2 posCoords;
+    posCoords[0] = glm::clamp((int)glm::floor((pos2D[0] - 8.f) / 16.f) + 5, 0, 9);
+    posCoords[1] = 9 - glm::clamp((int)glm::floor((pos2D[1] + 8.f) / 16.f) + 5, 0, 9);
+
+    addMesh(glm::ivec2(posCoords.x - 1, posCoords.y - 1));
+    addMesh(glm::ivec2(posCoords.x, posCoords.y - 1));
+    addMesh(glm::ivec2(posCoords.x + 1, posCoords.y - 1));
+
+    addMesh(glm::ivec2(posCoords.x - 1, posCoords.y));
+    addMesh(posCoords);
+    addMesh(glm::ivec2(posCoords.x + 1, posCoords.y));
+
+    addMesh(glm::ivec2(posCoords.x - 1, posCoords.y + 1));
+    addMesh(glm::ivec2(posCoords.x, posCoords.y + 1));
+    addMesh(glm::ivec2(posCoords.x + 1, posCoords.y + 1));
+
+}
+
 void PlayerMovementSys::draw()
 {
     QSetIterator<std::shared_ptr<CTransform>> it(m_transforms);

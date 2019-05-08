@@ -2,7 +2,6 @@
 #define NETWORKSYSTEM_H
 
 #include "System.h"
-#include "raknet/RakPeerInterface.h"
 #include "raknet/NetworkIDObject.h"
 #include "raknet/NetworkIDManager.h"
 #include "engine/components/networkcomponent.h"
@@ -11,7 +10,10 @@ class GameWorld;
 
 using namespace RakNet;
 
-class PlayerObject : public NetworkIDObject {};
+class PlayerObject : public NetworkIDObject {
+public:
+    std::shared_ptr<NetworkComponent> networkComponent;
+};
 
 class NetworkSystem : public System
 {
@@ -24,14 +26,18 @@ public:
     void removeComponent(const std::shared_ptr<Component> &c);
 
     void tick(float seconds);
-    void SetPlayer(std::shared_ptr<NetworkComponent> comp);
+    void setPlayer(std::shared_ptr<NetworkComponent> comp);
 private:
     RakPeerInterface *m_peer;
     bool m_isServer;
     NetworkIDManager m_networkIDManager;
-    QSet<std::shared_ptr<NetworkComponent>> m_network;
+    QSet<std::shared_ptr<NetworkComponent>> m_networkObjects;
     GameWorld *m_gw;
+    SystemAddress m_serverAddress;
     std::shared_ptr<NetworkComponent> m_player;
+    void addPlayer(PlayerObject* playerObject, QString name, NetworkID netID);
+    QSet<NetworkID> m_activeNetworkIDs;
+    bool m_isInitialized;
 };
 
 #endif // NETWORKSYSTEM_H

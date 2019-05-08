@@ -133,7 +133,7 @@ void ParticleSys::rebuildMatrices() {
 }
 
 void ParticleSys::draw() {
-//    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
     drawParticles();
     glViewport(0, 0, m_screenWidth, m_screenHeight);
 //    update();
