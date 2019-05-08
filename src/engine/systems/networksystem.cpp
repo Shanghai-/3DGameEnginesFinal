@@ -19,7 +19,8 @@ enum GameMessages
     ID_CLIENT_TRANSFORM = ID_USER_PACKET_ENUM+3,
     // server transform is the aggregation of all client transforms in a span of time
     ID_SERVER_TRANSFORM = ID_USER_PACKET_ENUM+4,
-    ID_NETWORKID_INITIALIZED = ID_USER_PACKET_ENUM+5
+    ID_NETWORKID_INITIALIZED = ID_USER_PACKET_ENUM+5,
+    ID_REMOVE_PLAYER = ID_USER_PACKET_ENUM+6
 };
 
 NetworkSystem::NetworkSystem(int priority, GameWorld *gameworld, bool isServer) : System(priority),
@@ -101,6 +102,7 @@ void NetworkSystem::tick(float seconds)
             case ID_DISCONNECTION_NOTIFICATION:
                 if (m_isServer) {
                     std::cout<<"A client has disconnected"<<std::endl;
+                    removePlayer(packet->systemAddress);
                 } else {
                     std::cout<<"We have been disconnected"<<std::endl;
                 }
@@ -108,6 +110,7 @@ void NetworkSystem::tick(float seconds)
             case ID_CONNECTION_LOST:
                 if (m_isServer) {
                     std::cout<<"A client lost the connection"<<std::endl;
+                    removePlayer(packet->systemAddress);
                 } else {
                     std::cout<<"Connection lost"<<std::endl;
                 }
@@ -137,7 +140,8 @@ void NetworkSystem::tick(float seconds)
                         bsOut.Write(player->GetNetworkID());
                         bsOut.Write(packet->guid);
                         m_peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, true);
-                        addPlayer(player, "Player" + QString::number(m_networkObjects.size()), player->GetNetworkID());
+                        addPlayer(player, "Player" + QString::number(player->GetNetworkID()), player->GetNetworkID());
+                        m_playerAddresses.insert(packet->systemAddress, player->GetNetworkID());
                         //note: calling addPlayer changes the size of m_networkObjects
                         bsOut.Write(m_activeNetworkIDs.size());
                         for (auto id : m_activeNetworkIDs) {
@@ -167,7 +171,7 @@ void NetworkSystem::tick(float seconds)
                         for (int i = 0; i < len; i++) {
                             NetworkID netID;
                             bsIn.Read(netID);
-                            QString name = "Player" + QString::number(i);
+                            QString name = "Player" + QString::number(netID);
                             PlayerObject *oldPlayerObject = new PlayerObject;
                             oldPlayerObject->SetNetworkIDManager(&m_networkIDManager);
                             oldPlayerObject->SetNetworkID(netID);
@@ -286,6 +290,24 @@ void NetworkSystem::tick(float seconds)
                     }
                 }
                 break;
+            case ID_REMOVE_PLAYER:
+                {
+                    BitStream bsIn(packet->data, packet->length, false);
+                    bsIn.IgnoreBytes(sizeof(MessageID));
+                    NetworkID netID;
+
+                    bsIn.Read(netID);
+                    auto playerObj = m_networkIDManager.GET_OBJECT_FROM_ID<PlayerObject*>(netID);
+                    auto netComp = playerObj->networkComponent;
+                    auto gameObj = netComp->getParent();
+
+
+                    m_activeNetworkIDs.remove(netID);
+                    m_networkObjects.remove(netComp);
+                    m_gw->removeGameObject(gameObj);
+                    delete playerObj;
+
+                }
             default:
                 std::cout<<"Message with identifier "<<packet->data[0]<<" has arrived"<<std::endl;
                 break;
@@ -333,3 +355,23 @@ void NetworkSystem::addPlayer(PlayerObject *playerObject, QString name, NetworkI
     m_gw->addGameObject(player);
 }
 
+void NetworkSystem::removePlayer(RakNet::SystemAddress address) {
+    if (m_isServer) {
+        auto netID = m_playerAddresses[address];
+        auto playerObj = m_networkIDManager.GET_OBJECT_FROM_ID<PlayerObject*>(netID);
+        auto netComp = playerObj->networkComponent;
+        auto gameObj = netComp->getParent();
+
+
+        m_activeNetworkIDs.remove(netID);
+        m_playerAddresses.remove(address);
+        m_networkObjects.remove(netComp);
+        m_gw->removeGameObject(gameObj);
+        delete playerObj;
+
+        BitStream bsOut;
+        bsOut.Write((MessageID)ID_REMOVE_PLAYER);
+        bsOut.Write(netID);
+        m_peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, UNASSIGNED_SYSTEM_ADDRESS, true);
+    }
+}

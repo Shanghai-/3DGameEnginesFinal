@@ -5,6 +5,7 @@
 #include "raknet/NetworkIDObject.h"
 #include "raknet/NetworkIDManager.h"
 #include "engine/components/networkcomponent.h"
+#include <QMap>
 
 class GameWorld;
 
@@ -38,6 +39,9 @@ private:
     void addPlayer(PlayerObject* playerObject, QString name, NetworkID netID);
     QSet<NetworkID> m_activeNetworkIDs;
     bool m_isInitialized;
+    QMap<RakNet::SystemAddress, RakNet::NetworkID> m_playerAddresses;
+
+    void removePlayer(RakNet::SystemAddress address);
 };
 
 #endif // NETWORKSYSTEM_H
