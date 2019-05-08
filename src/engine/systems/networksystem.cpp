@@ -221,7 +221,7 @@ void NetworkSystem::tick(float seconds)
                             auto netObj = m_networkIDManager.GET_OBJECT_FROM_ID<PlayerObject*>(id)->networkComponent;
                             std::shared_ptr<CTransform> trans = netObj->getSibling<CTransform>();
                             bsOut.WriteVector(trans->pos.x, trans->pos.y, trans->pos.z);
-                            bsOut.WriteVector(trans->rot.x, trans->pos.y, trans->pos.z);
+                            bsOut.WriteVector(trans->rot.x, trans->rot.y, trans->rot.z);
                             m_peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet->systemAddress, false);
                     }
                 }
