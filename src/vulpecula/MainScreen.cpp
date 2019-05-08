@@ -111,6 +111,8 @@ void MainScreen::initializeGame()
     player->addComponent(std::make_shared<CInputReceiver>(player));
     player->addComponent(std::make_shared<ColEllipsoid>(player, glm::vec3(.75f, .5f, 1.25f)));
     player->addComponent(std::make_shared<CPhysics>(player, glm::vec3(0.f, -.2f, 0.f)));
+    auto net = std::make_shared<NetworkComponent>(player, NULL);
+    netSys->setPlayer(net);
     m_gw->addGameObject(player);
 
     // Load the ambient audio, set up channels, etc.
