@@ -28,6 +28,8 @@ void AABB::encapsulate(glm::vec3 point)
 
 void AABB::encapsulate(float x, float y, float z)
 {
+    //std::cout << m_min.x << ", " << m_min.y << ", " << m_min.z << std::endl;
+    //std::cout << m_max.x << ", " << m_max.y << ", " << m_max.z << std::endl;
     if (x < m_min.x) m_min.x = x;
     if (y < m_min.y) m_min.y = y;
     if (z < m_min.z) m_min.z = z;

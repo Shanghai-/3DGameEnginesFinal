@@ -258,7 +258,11 @@ SOURCES += \
     src/engine/ui/scripts/FullScreenQuadScript.cpp \
     src/vulpecula/responders/Standable.cpp \
     src/vulpecula/responders/LowpassResp.cpp \
-    src/vulpecula/responders/waterresponse.cpp
+    src/vulpecula/responders/waterresponse.cpp \
+    src/vulpecula/scripts/StarCountScript.cpp \
+    src/engine/ui/scripts/UISpriteAnimator.cpp \
+    src/vulpecula/systems/StarSpinner.cpp \
+    src/vulpecula/components/CStar.cpp
 
 HEADERS += \
     libs/glew-1.10.0/include/GL/glew.h \
@@ -561,7 +565,11 @@ HEADERS += \
     src/engine/ui/scripts/Script.h \
     src/vulpecula/responders/Standable.h \
     src/vulpecula/responders/LowpassResp.h \
-    src/vulpecula/responders/waterresponse.h
+    src/vulpecula/responders/waterresponse.h \
+    src/vulpecula/scripts/StarCountScript.h \
+    src/engine/ui/scripts/UISpriteAnimator.h \
+    src/vulpecula/systems/StarSpinner.h \
+    src/vulpecula/components/CStar.h
 
 FORMS += src/mainwindow.ui
 

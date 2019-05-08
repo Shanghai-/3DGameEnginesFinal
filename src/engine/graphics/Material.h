@@ -36,25 +36,29 @@ public:
              std::string textureName="", glm::vec2 textureRepeat=glm::vec2(1),
              glm::vec2 textureStart=glm::vec2(0), glm::vec2 textureEnd=glm::vec2(1),
              int useLighting=1, glm::vec3 color=glm::vec3(1), float alpha=1,
-             glm::vec3 specularColor=glm::vec3(0), float shininess=1);
+             glm::vec3 specularColor=glm::vec3(0), float shininess=1,
+             float emissive=0);
 
     Material(const std::shared_ptr<Shader>& shader,
              const std::shared_ptr<Texture2D>& texture, glm::vec2 textureRepeat=glm::vec2(1),
              glm::vec2 textureStart=glm::vec2(0), glm::vec2 textureEnd=glm::vec2(1),
              int useLighting=1, glm::vec3 color=glm::vec3(1), float alpha=1,
-             glm::vec3 specularColor=glm::vec3(0), float shininess=1);
+             glm::vec3 specularColor=glm::vec3(0), float shininess=1,
+             float emissive=0);
 
     Material(std::string shaderName="",
              std::string textureName="", glm::vec2 textureRepeat=glm::vec2(1),
              glm::vec2 textureStart=glm::vec2(0), glm::vec2 textureEnd=glm::vec2(1),
              int useLighting=1, glm::vec3 color=glm::vec3(1), float alpha=1,
-             glm::vec3 specularColor=glm::vec3(0), float shininess=1);
+             glm::vec3 specularColor=glm::vec3(0), float shininess=1,
+             float emissive=0);
 
     Material(std::string shaderName,
              const std::shared_ptr<Texture2D>& texture, glm::vec2 textureRepeat=glm::vec2(1),
              glm::vec2 textureStart=glm::vec2(0), glm::vec2 textureEnd=glm::vec2(1),
              int useLighting=1, glm::vec3 color=glm::vec3(1), float alpha=1,
-             glm::vec3 specularColor=glm::vec3(0), float shininess=1);
+             glm::vec3 specularColor=glm::vec3(0), float shininess=1,
+             float emissive=0);
 
     Material(std::string materialName);
 
@@ -73,6 +77,7 @@ public:
     float alpha;
     glm::vec3 specularColor;
     float shininess;
+    float emissive;
 
     std::string textureName;
     std::shared_ptr<Texture2D> texture;

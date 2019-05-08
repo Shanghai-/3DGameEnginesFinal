@@ -270,7 +270,11 @@ SOURCES       = libs/glew-1.10.0/src/glew.c \
 		src/engine/ui/scripts/FullScreenQuadScript.cpp \
 		src/vulpecula/responders/Standable.cpp \
 		src/vulpecula/responders/LowpassResp.cpp \
-		src/vulpecula/responders/waterresponse.cpp qrc_shaders.cpp \
+		src/vulpecula/responders/waterresponse.cpp \
+		src/vulpecula/scripts/StarCountScript.cpp \
+		src/engine/ui/scripts/UISpriteAnimator.cpp \
+		src/vulpecula/systems/StarSpinner.cpp \
+		src/vulpecula/components/CStar.cpp qrc_shaders.cpp \
 		qrc_fonts.cpp \
 		qrc_images.cpp \
 		qrc_models.cpp \
@@ -503,6 +507,10 @@ OBJECTS       = glew.o \
 		Standable.o \
 		LowpassResp.o \
 		waterresponse.o \
+		StarCountScript.o \
+		UISpriteAnimator.o \
+		StarSpinner.o \
+		CStar.o \
 		qrc_shaders.o \
 		qrc_fonts.o \
 		qrc_images.o \
@@ -895,7 +903,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/cs195u_engine1.0.0 || mkdir -p .tmp/cs195u_engine1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents res/shaders/shaders.qrc res/fonts/fonts.qrc res/images/images.qrc res/models/models.qrc res/sounds/sounds.qrc .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents libs/glew-1.10.0/include/GL/glew.h libs/stb/stb_rect_pack.h libs/stb/stb_truetype.h src/mainwindow.h src/view.h src/viewformat.h src/engine/util/CommonIncludes.h src/engine/graphics/ResourceLoader.h src/engine/graphics/CylinderData.h src/engine/graphics/SphereData.h src/engine/graphics/FBO.h src/engine/graphics/IBO.h src/engine/graphics/Texture.h src/engine/graphics/Texture1D.h src/engine/graphics/Texture2D.h src/engine/graphics/Texture3D.h src/engine/graphics/VAO.h src/engine/graphics/VBO.h src/engine/graphics/VBOAttribMarker.h src/engine/graphics/CubeData.h src/engine/graphics/Font.h src/engine/graphics/DepthBuffer.h src/engine/graphics/RenderBuffer.h src/engine/graphics/GraphicsDebug.h src/engine/graphics/Shader.h src/engine/graphics/ShaderAttribLocations.h src/engine/graphics/Camera.h src/engine/graphics/Graphics.h src/engine/graphics/Shape.h src/engine/graphics/Material.h src/engine/graphics/Light.h src/engine/graphics/Constants.h src/engine/frame/Application.h src/engine/frame/Screen.h src/warmup1/WarmupApp.h src/engine/input/InputManager.h src/engine/objectManagement/GameWorld.h src/engine/objectManagement/GameObject.h src/engine/components/Component.h src/engine/components/CCollider.h src/engine/systems/System.h src/engine/systems/CollisionSystem.h src/engine/components/CTransform.h src/warmup1/CustomComponents/CPhysics.h src/engine/systems/RenderSystem.h src/warmup1/CustomSystems/PhysicsSystem.h src/engine/gen/SpacePartMap.h src/dungeon_crawler/DungeonCrawlerApp.h src/dungeon_crawler/GameplayScreen.h src/dungeon_crawler/ChunkFactory.h src/dungeon_crawler/ChunkLoader.h src/engine/graphics/AABB.h src/engine/components/volumes/CollisionVolume.h src/engine/components/volumes/CollBox.h src/engine/components/volumes/CollSphere.h src/engine/components/volumes/CollCylinder.h src/engine/components/responders/CollisionResponse.h src/engine/components/CRenderable.h src/engine/systems/CameraSystem.h src/engine/components/CCamera.h src/engine/systems/FPSCameraSystem.h src/warmup1/CustomSystems/InputSystem.h src/dungeon_crawler/MovementSys.h src/engine/components/CInputReceiver.h src/engine/components/volumes/CollComposite.h src/engine/systems/RaycastSystem.h src/engine/systems/AISystem.h src/engine/components/AIComponent.h src/engine/ai/BTNode.h src/engine/ai/CompositeNode.h src/engine/ai/Condition.h src/engine/ai/Action.h src/engine/ai/Sequence.h src/engine/ai/Selector.h src/engine/ai/AStarSearch.h src/engine/ai/AStarNode.h src/engine/components/CNavMesh.h src/dungeon_crawler/NavmeshDrawer.h src/dungeon_crawler/ai/RadiusCondition.h src/engine/ai/Blackboard.h src/dungeon_crawler/ai/MoveToPlayer.h src/dungeon_crawler/ai/EnemyAISystem.h src/dungeon_crawler/CChunkInfo.h src/dungeon_crawler/ai/BackAway.h src/dungeon_crawler/ai/Strafe.h src/dungeon_crawler/ai/FaceAndShoot.h src/dungeon_crawler/CHealth.h src/dungeon_crawler/CooldownSys.h src/dungeon_crawler/CCooldown.h src/dungeon_crawler/ShootSystem.h src/dungeon_crawler/CBullet.h src/dungeon_crawler/PlayerCollision.h src/engine/ai/RandomSelector.h src/engine/ai/Inverter.h src/engine/ai/RepeatUntilDone.h src/engine/ui/UIObject.h src/engine/ui/UIComponent.h src/engine/ui/UIDrawer.h src/engine/ui/UIRenderable.h src/engine/ui/UITransform.h src/engine/ui/UIText.h src/engine/ui/UISystem.h src/engine/ui/TextDrawer.h src/engine/ui/UIScriptComp.h src/dungeon_crawler/HealthScript.h src/engine/ui/UIScriptSys.h src/dungeon_crawler/LandingScreen.h src/engine/ui/UIHitbox.h src/engine/ui/ClickResponse.h src/engine/ui/UIClickSystem.h src/dungeon_crawler/StartButtonResp.h src/dungeon_crawler/PauseScreen.h src/engine/components/CAudioSource.h src/engine/systems/AudioSystem.h src/vulpecula/MainScreen.h src/engine/systems/ThirdPersonCamSys.h src/vulpecula/VulpeculaApp.h src/warmup1/WarmupScreen.h src/vulpecula/components/RandomAudioSource.h src/vulpecula/systems/RandomAudioManager.h src/vulpecula/systems/PlayerMovementSys.h src/vulpecula/responders/GuitarZoneResp.h src/vulpecula/responders/GuitarStarResp.h src/engine/graphics/RiggedMesh.h src/engine/systems/AnimationSystem.h src/engine/components/CAnimatedMesh.h src/engine/graphics/Animation.h src/engine/graphics/Armature.h src/engine/graphics/TextureCube.h src/engine/components/cmeshcol.h src/engine/components/ColEllipsoid.h libs/raknet/XBox360Includes.h libs/raknet/WSAStartupSingleton.h libs/raknet/WindowsIncludes.h libs/raknet/VitaIncludes.h libs/raknet/VariadicSQLParser.h libs/raknet/VariableListDeltaTracker.h libs/raknet/VariableDeltaSerializer.h libs/raknet/UDPProxyServer.h libs/raknet/UDPProxyCoordinator.h libs/raknet/UDPProxyCommon.h libs/raknet/UDPProxyClient.h libs/raknet/UDPForwarder.h libs/raknet/TwoWayAuthentication.h libs/raknet/TransportInterface.h libs/raknet/ThreadsafePacketLogger.h libs/raknet/ThreadPool.h libs/raknet/TelnetTransport.h libs/raknet/TeamManager.h libs/raknet/TeamBalancer.h libs/raknet/TCPInterface.h libs/raknet/TableSerializer.h libs/raknet/SuperFastHash.h libs/raknet/StringTable.h libs/raknet/StringCompressor.h libs/raknet/StatisticsHistory.h libs/raknet/SocketLayer.h libs/raknet/SocketIncludes.h libs/raknet/SocketDefines.h libs/raknet/SingleProducerConsumer.h libs/raknet/SimpleTCPServer.h libs/raknet/SimpleMutex.h libs/raknet/SignaledEvent.h libs/raknet/SendToThread.h libs/raknet/SecureHandshake.h libs/raknet/RPC4Plugin.h libs/raknet/Router2.h libs/raknet/ReplicaManager3.h libs/raknet/ReplicaEnums.h libs/raknet/ReliabilityLayer.h libs/raknet/RelayPlugin.h libs/raknet/RefCountedObj.h libs/raknet/ReadyEvent.h libs/raknet/RandSync.h libs/raknet/Rand.h libs/raknet/RakWString.h libs/raknet/RakThread.h libs/raknet/RakString.h libs/raknet/RakSleep.h libs/raknet/RakPeerInterface.h libs/raknet/RakPeer.h libs/raknet/RakNetVersion.h libs/raknet/RakNetTypes.h libs/raknet/RakNetTransport2.h libs/raknet/RakNetTime.h libs/raknet/RakNetStatistics.h libs/raknet/RakNetSocket2.h libs/raknet/RakNetSocket.h libs/raknet/RakNetSmartPtr.h libs/raknet/RakNetDefinesOverrides.h libs/raknet/RakNetDefines.h libs/raknet/RakNetCommandParser.h libs/raknet/RakMemoryOverride.h libs/raknet/RakAssert.h libs/raknet/RakAlloca.h libs/raknet/Rackspace.h libs/raknet/PS4Includes.h libs/raknet/PS3Includes.h libs/raknet/PluginInterface2.h libs/raknet/PacketPriority.h libs/raknet/PacketPool.h libs/raknet/PacketOutputWindowLogger.h libs/raknet/PacketLogger.h libs/raknet/PacketizedTCP.h libs/raknet/PacketFileLogger.h libs/raknet/PacketConsoleLogger.h libs/raknet/NetworkIDObject.h libs/raknet/NetworkIDManager.h libs/raknet/NatTypeDetectionServer.h libs/raknet/NatTypeDetectionCommon.h libs/raknet/NatTypeDetectionClient.h libs/raknet/NatPunchthroughServer.h libs/raknet/NatPunchthroughClient.h libs/raknet/NativeTypes.h libs/raknet/NativeFeatureIncludesOverrides.h libs/raknet/NativeFeatureIncludes.h libs/raknet/MTUSize.h libs/raknet/MessageIdentifiers.h libs/raknet/MessageFilter.h libs/raknet/LogCommandParser.h libs/raknet/LocklessTypes.h libs/raknet/LinuxStrings.h libs/raknet/Kbhit.h libs/raknet/Itoa.h libs/raknet/InternalPacket.h libs/raknet/IncrementalReadInterface.h libs/raknet/HTTPConnection2.h libs/raknet/HTTPConnection.h libs/raknet/GridSectorizer.h libs/raknet/gettimeofday.h libs/raknet/GetTime.h libs/raknet/Gets.h libs/raknet/Getche.h libs/raknet/FullyConnectedMesh2.h libs/raknet/FormatString.h libs/raknet/FileOperations.h libs/raknet/FileListTransferCBInterface.h libs/raknet/FileListTransfer.h libs/raknet/FileListNodeContext.h libs/raknet/FileList.h libs/raknet/Export.h libs/raknet/EpochTimeToString.h libs/raknet/EmptyHeader.h libs/raknet/EmailSender.h libs/raknet/DynDNS.h libs/raknet/DS_WeightedGraph.h libs/raknet/DS_Tree.h libs/raknet/DS_ThreadsafeAllocatingQueue.h libs/raknet/DS_Table.h libs/raknet/DS_RangeList.h libs/raknet/DS_QueueLinkedList.h libs/raknet/DS_Queue.h libs/raknet/DS_OrderedList.h libs/raknet/DS_OrderedChannelHeap.h libs/raknet/DS_Multilist.h libs/raknet/DS_MemoryPool.h libs/raknet/DS_Map.h libs/raknet/DS_List.h libs/raknet/DS_LinkedList.h libs/raknet/DS_HuffmanEncodingTreeNode.h libs/raknet/DS_HuffmanEncodingTreeFactory.h libs/raknet/DS_HuffmanEncodingTree.h libs/raknet/DS_Heap.h libs/raknet/DS_Hash.h libs/raknet/DS_ByteQueue.h libs/raknet/DS_BytePool.h libs/raknet/DS_BPlusTree.h libs/raknet/DS_BinarySearchTree.h libs/raknet/DR_SHA1.h libs/raknet/DirectoryDeltaTransfer.h libs/raknet/DataCompressor.h libs/raknet/ConsoleServer.h libs/raknet/ConnectionGraph2.h libs/raknet/CommandParserInterface.h libs/raknet/CloudServer.h libs/raknet/CloudCommon.h libs/raknet/CloudClient.h libs/raknet/CheckSum.h libs/raknet/CCRakNetUDT.h libs/raknet/CCRakNetSlidingWindow.h libs/raknet/BitStream.h libs/raknet/Base64Encoder.h libs/raknet/AutopatcherRepositoryInterface.h libs/raknet/AutopatcherPatchContext.h libs/raknet/_FindFirst.h src/engine/systems/networksystem.h src/vulpecula/menuscreen.h src/vulpecula/responders/clientresponse.h src/vulpecula/responders/serverresponse.h src/engine/components/networkcomponent.h src/vulpecula/systems/ProgressTracker.h src/vulpecula/systems/particlesys.h src/Particles/OpenGLShape.h src/Particles/ResourceLoader2.h src/vulpecula/responders/WinResp.h src/engine/ui/scripts/TimedFade.h src/engine/ui/scripts/FullScreenQuadScript.h src/engine/ui/scripts/Script.h src/vulpecula/responders/Standable.h src/vulpecula/responders/LowpassResp.h src/vulpecula/responders/waterresponse.h .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents libs/glew-1.10.0/src/glew.c src/main.cpp src/mainwindow.cpp src/view.cpp src/viewformat.cpp src/engine/graphics/ResourceLoader.cpp src/engine/graphics/FBO.cpp src/engine/graphics/IBO.cpp src/engine/graphics/Texture.cpp src/engine/graphics/Texture1D.cpp src/engine/graphics/Texture2D.cpp src/engine/graphics/Texture3D.cpp src/engine/graphics/VAO.cpp src/engine/graphics/VBO.cpp src/engine/graphics/VBOAttribMarker.cpp src/engine/graphics/Font.cpp src/engine/graphics/DepthBuffer.cpp src/engine/graphics/RenderBuffer.cpp src/engine/graphics/GraphicsDebug.cpp src/engine/graphics/Shader.cpp src/engine/graphics/Camera.cpp src/engine/graphics/Shape.cpp src/engine/graphics/Graphics.cpp src/engine/graphics/Material.cpp src/engine/graphics/Light.cpp src/engine/frame/Application.cpp src/engine/frame/Screen.cpp src/warmup1/WarmupApp.cpp src/engine/input/InputManager.cpp src/engine/objectManagement/GameWorld.cpp src/engine/objectManagement/GameObject.cpp src/engine/components/Component.cpp src/engine/components/CCollider.cpp src/engine/systems/CollisionSystem.cpp src/engine/components/CTransform.cpp src/warmup1/CustomComponents/CPhysics.cpp src/engine/systems/RenderSystem.cpp src/warmup1/CustomSystems/PhysicsSystem.cpp src/engine/gen/SpacePartMap.cpp src/dungeon_crawler/DungeonCrawlerApp.cpp src/dungeon_crawler/GameplayScreen.cpp src/dungeon_crawler/ChunkFactory.cpp src/dungeon_crawler/ChunkLoader.cpp src/engine/graphics/AABB.cpp src/engine/components/volumes/CollBox.cpp src/engine/components/volumes/CollSphere.cpp src/engine/components/volumes/CollCylinder.cpp src/engine/components/CRenderable.cpp src/engine/systems/CameraSystem.cpp src/engine/components/CCamera.cpp src/engine/systems/FPSCameraSystem.cpp src/warmup1/CustomSystems/InputSystem.cpp src/dungeon_crawler/MovementSys.cpp src/engine/components/CInputReceiver.cpp src/engine/components/volumes/CollComposite.cpp src/engine/systems/RaycastSystem.cpp src/engine/systems/AISystem.cpp src/engine/components/AIComponent.cpp src/engine/ai/Sequence.cpp src/engine/ai/Selector.cpp src/engine/ai/AStarNode.cpp src/dungeon_crawler/NavmeshDrawer.cpp src/engine/components/CNavMesh.cpp src/dungeon_crawler/ai/RadiusCondition.cpp src/engine/ai/Blackboard.cpp src/dungeon_crawler/ai/MoveToPlayer.cpp src/dungeon_crawler/ai/EnemyAISystem.cpp src/dungeon_crawler/CChunkInfo.cpp src/dungeon_crawler/ai/BackAway.cpp src/dungeon_crawler/ai/Strafe.cpp src/dungeon_crawler/ai/FaceAndShoot.cpp src/dungeon_crawler/CHealth.cpp src/dungeon_crawler/CooldownSys.cpp src/dungeon_crawler/CCooldown.cpp src/dungeon_crawler/ShootSystem.cpp src/dungeon_crawler/CBullet.cpp src/dungeon_crawler/PlayerCollision.cpp src/engine/ai/RandomSelector.cpp src/engine/ai/Inverter.cpp src/engine/ai/RepeatUntilDone.cpp src/engine/ui/UIObject.cpp src/engine/ui/UIDrawer.cpp src/engine/ui/UIRenderable.cpp src/engine/ui/UITransform.cpp src/engine/ui/UIText.cpp src/engine/ui/TextDrawer.cpp src/dungeon_crawler/HealthScript.cpp src/engine/ui/UIScriptSys.cpp src/dungeon_crawler/LandingScreen.cpp src/engine/ui/UIClickSystem.cpp src/dungeon_crawler/StartButtonResp.cpp src/dungeon_crawler/PauseScreen.cpp src/engine/components/CAudioSource.cpp src/engine/systems/AudioSystem.cpp src/vulpecula/MainScreen.cpp src/engine/systems/ThirdPersonCamSys.cpp src/vulpecula/VulpeculaApp.cpp src/warmup1/WarmupScreen.cpp src/vulpecula/components/RandomAudioSource.cpp src/vulpecula/systems/RandomAudioManager.cpp src/vulpecula/systems/PlayerMovementSys.cpp src/vulpecula/responders/GuitarZoneResp.cpp src/vulpecula/responders/GuitarStarResp.cpp src/engine/graphics/RiggedMesh.cpp src/engine/systems/AnimationSystem.cpp src/engine/components/CAnimatedMesh.cpp src/engine/graphics/Animation.cpp src/engine/graphics/Armature.cpp src/engine/graphics/TextureCube.cpp src/engine/components/cmeshcol.cpp src/engine/components/ColEllipsoid.cpp libs/raknet/WSAStartupSingleton.cpp libs/raknet/VitaIncludes.cpp libs/raknet/VariadicSQLParser.cpp libs/raknet/VariableListDeltaTracker.cpp libs/raknet/VariableDeltaSerializer.cpp libs/raknet/UDPProxyServer.cpp libs/raknet/UDPProxyCoordinator.cpp libs/raknet/UDPProxyClient.cpp libs/raknet/UDPForwarder.cpp libs/raknet/TwoWayAuthentication.cpp libs/raknet/ThreadsafePacketLogger.cpp libs/raknet/TelnetTransport.cpp libs/raknet/TeamManager.cpp libs/raknet/TeamBalancer.cpp libs/raknet/TCPInterface.cpp libs/raknet/TableSerializer.cpp libs/raknet/SuperFastHash.cpp libs/raknet/StringTable.cpp libs/raknet/StringCompressor.cpp libs/raknet/StatisticsHistory.cpp libs/raknet/SocketLayer.cpp libs/raknet/SimpleMutex.cpp libs/raknet/SignaledEvent.cpp libs/raknet/SendToThread.cpp libs/raknet/SecureHandshake.cpp libs/raknet/RPC4Plugin.cpp libs/raknet/Router2.cpp libs/raknet/ReplicaManager3.cpp libs/raknet/ReliabilityLayer.cpp libs/raknet/RelayPlugin.cpp libs/raknet/ReadyEvent.cpp libs/raknet/RandSync.cpp libs/raknet/Rand.cpp libs/raknet/RakWString.cpp libs/raknet/RakThread.cpp libs/raknet/RakString.cpp libs/raknet/RakSleep.cpp libs/raknet/RakPeer.cpp libs/raknet/RakNetTypes.cpp libs/raknet/RakNetTransport2.cpp libs/raknet/RakNetStatistics.cpp libs/raknet/RakNetSocket2.cpp libs/raknet/RakNetSocket.cpp libs/raknet/RakNetCommandParser.cpp libs/raknet/RakMemoryOverride.cpp libs/raknet/Rackspace.cpp libs/raknet/PS4Includes.cpp libs/raknet/PluginInterface2.cpp libs/raknet/PacketOutputWindowLogger.cpp libs/raknet/PacketLogger.cpp libs/raknet/PacketizedTCP.cpp libs/raknet/PacketFileLogger.cpp libs/raknet/PacketConsoleLogger.cpp libs/raknet/NetworkIDObject.cpp libs/raknet/NetworkIDManager.cpp libs/raknet/NatTypeDetectionServer.cpp libs/raknet/NatTypeDetectionCommon.cpp libs/raknet/NatTypeDetectionClient.cpp libs/raknet/NatPunchthroughServer.cpp libs/raknet/NatPunchthroughClient.cpp libs/raknet/MessageFilter.cpp libs/raknet/LogCommandParser.cpp libs/raknet/LocklessTypes.cpp libs/raknet/LinuxStrings.cpp libs/raknet/Itoa.cpp libs/raknet/IncrementalReadInterface.cpp libs/raknet/HTTPConnection2.cpp libs/raknet/HTTPConnection.cpp libs/raknet/GridSectorizer.cpp libs/raknet/gettimeofday.cpp libs/raknet/GetTime.cpp libs/raknet/Gets.cpp libs/raknet/Getche.cpp libs/raknet/FullyConnectedMesh2.cpp libs/raknet/FormatString.cpp libs/raknet/FileOperations.cpp libs/raknet/FileListTransfer.cpp libs/raknet/FileList.cpp libs/raknet/EpochTimeToString.cpp libs/raknet/EmailSender.cpp libs/raknet/DynDNS.cpp libs/raknet/DS_Table.cpp libs/raknet/DS_HuffmanEncodingTree.cpp libs/raknet/DS_ByteQueue.cpp libs/raknet/DS_BytePool.cpp libs/raknet/DR_SHA1.cpp libs/raknet/DirectoryDeltaTransfer.cpp libs/raknet/DataCompressor.cpp libs/raknet/ConsoleServer.cpp libs/raknet/ConnectionGraph2.cpp libs/raknet/CommandParserInterface.cpp libs/raknet/CloudServer.cpp libs/raknet/CloudCommon.cpp libs/raknet/CloudClient.cpp libs/raknet/CheckSum.cpp libs/raknet/CCRakNetUDT.cpp libs/raknet/CCRakNetSlidingWindow.cpp libs/raknet/BitStream.cpp libs/raknet/Base64Encoder.cpp libs/raknet/_FindFirst.cpp src/engine/systems/networksystem.cpp src/vulpecula/menuscreen.cpp src/vulpecula/responders/clientresponse.cpp src/vulpecula/responders/serverresponse.cpp src/engine/components/networkcomponent.cpp src/vulpecula/systems/ProgressTracker.cpp src/vulpecula/systems/particlesys.cpp src/Particles/OpenGLShape.cpp src/Particles/ResourceLoader2.cpp src/vulpecula/responders/WinResp.cpp src/engine/ui/scripts/TimedFade.cpp src/engine/ui/scripts/FullScreenQuadScript.cpp src/vulpecula/responders/Standable.cpp src/vulpecula/responders/LowpassResp.cpp src/vulpecula/responders/waterresponse.cpp .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents src/mainwindow.ui .tmp/cs195u_engine1.0.0/ && (cd `dirname .tmp/cs195u_engine1.0.0` && $(TAR) cs195u_engine1.0.0.tar cs195u_engine1.0.0 && $(COMPRESS) cs195u_engine1.0.0.tar) && $(MOVE) `dirname .tmp/cs195u_engine1.0.0`/cs195u_engine1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/cs195u_engine1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents res/shaders/shaders.qrc res/fonts/fonts.qrc res/images/images.qrc res/models/models.qrc res/sounds/sounds.qrc .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents libs/glew-1.10.0/include/GL/glew.h libs/stb/stb_rect_pack.h libs/stb/stb_truetype.h src/mainwindow.h src/view.h src/viewformat.h src/engine/util/CommonIncludes.h src/engine/graphics/ResourceLoader.h src/engine/graphics/CylinderData.h src/engine/graphics/SphereData.h src/engine/graphics/FBO.h src/engine/graphics/IBO.h src/engine/graphics/Texture.h src/engine/graphics/Texture1D.h src/engine/graphics/Texture2D.h src/engine/graphics/Texture3D.h src/engine/graphics/VAO.h src/engine/graphics/VBO.h src/engine/graphics/VBOAttribMarker.h src/engine/graphics/CubeData.h src/engine/graphics/Font.h src/engine/graphics/DepthBuffer.h src/engine/graphics/RenderBuffer.h src/engine/graphics/GraphicsDebug.h src/engine/graphics/Shader.h src/engine/graphics/ShaderAttribLocations.h src/engine/graphics/Camera.h src/engine/graphics/Graphics.h src/engine/graphics/Shape.h src/engine/graphics/Material.h src/engine/graphics/Light.h src/engine/graphics/Constants.h src/engine/frame/Application.h src/engine/frame/Screen.h src/warmup1/WarmupApp.h src/engine/input/InputManager.h src/engine/objectManagement/GameWorld.h src/engine/objectManagement/GameObject.h src/engine/components/Component.h src/engine/components/CCollider.h src/engine/systems/System.h src/engine/systems/CollisionSystem.h src/engine/components/CTransform.h src/warmup1/CustomComponents/CPhysics.h src/engine/systems/RenderSystem.h src/warmup1/CustomSystems/PhysicsSystem.h src/engine/gen/SpacePartMap.h src/dungeon_crawler/DungeonCrawlerApp.h src/dungeon_crawler/GameplayScreen.h src/dungeon_crawler/ChunkFactory.h src/dungeon_crawler/ChunkLoader.h src/engine/graphics/AABB.h src/engine/components/volumes/CollisionVolume.h src/engine/components/volumes/CollBox.h src/engine/components/volumes/CollSphere.h src/engine/components/volumes/CollCylinder.h src/engine/components/responders/CollisionResponse.h src/engine/components/CRenderable.h src/engine/systems/CameraSystem.h src/engine/components/CCamera.h src/engine/systems/FPSCameraSystem.h src/warmup1/CustomSystems/InputSystem.h src/dungeon_crawler/MovementSys.h src/engine/components/CInputReceiver.h src/engine/components/volumes/CollComposite.h src/engine/systems/RaycastSystem.h src/engine/systems/AISystem.h src/engine/components/AIComponent.h src/engine/ai/BTNode.h src/engine/ai/CompositeNode.h src/engine/ai/Condition.h src/engine/ai/Action.h src/engine/ai/Sequence.h src/engine/ai/Selector.h src/engine/ai/AStarSearch.h src/engine/ai/AStarNode.h src/engine/components/CNavMesh.h src/dungeon_crawler/NavmeshDrawer.h src/dungeon_crawler/ai/RadiusCondition.h src/engine/ai/Blackboard.h src/dungeon_crawler/ai/MoveToPlayer.h src/dungeon_crawler/ai/EnemyAISystem.h src/dungeon_crawler/CChunkInfo.h src/dungeon_crawler/ai/BackAway.h src/dungeon_crawler/ai/Strafe.h src/dungeon_crawler/ai/FaceAndShoot.h src/dungeon_crawler/CHealth.h src/dungeon_crawler/CooldownSys.h src/dungeon_crawler/CCooldown.h src/dungeon_crawler/ShootSystem.h src/dungeon_crawler/CBullet.h src/dungeon_crawler/PlayerCollision.h src/engine/ai/RandomSelector.h src/engine/ai/Inverter.h src/engine/ai/RepeatUntilDone.h src/engine/ui/UIObject.h src/engine/ui/UIComponent.h src/engine/ui/UIDrawer.h src/engine/ui/UIRenderable.h src/engine/ui/UITransform.h src/engine/ui/UIText.h src/engine/ui/UISystem.h src/engine/ui/TextDrawer.h src/engine/ui/UIScriptComp.h src/dungeon_crawler/HealthScript.h src/engine/ui/UIScriptSys.h src/dungeon_crawler/LandingScreen.h src/engine/ui/UIHitbox.h src/engine/ui/ClickResponse.h src/engine/ui/UIClickSystem.h src/dungeon_crawler/StartButtonResp.h src/dungeon_crawler/PauseScreen.h src/engine/components/CAudioSource.h src/engine/systems/AudioSystem.h src/vulpecula/MainScreen.h src/engine/systems/ThirdPersonCamSys.h src/vulpecula/VulpeculaApp.h src/warmup1/WarmupScreen.h src/vulpecula/components/RandomAudioSource.h src/vulpecula/systems/RandomAudioManager.h src/vulpecula/systems/PlayerMovementSys.h src/vulpecula/responders/GuitarZoneResp.h src/vulpecula/responders/GuitarStarResp.h src/engine/graphics/RiggedMesh.h src/engine/systems/AnimationSystem.h src/engine/components/CAnimatedMesh.h src/engine/graphics/Animation.h src/engine/graphics/Armature.h src/engine/graphics/TextureCube.h src/engine/components/cmeshcol.h src/engine/components/ColEllipsoid.h libs/raknet/XBox360Includes.h libs/raknet/WSAStartupSingleton.h libs/raknet/WindowsIncludes.h libs/raknet/VitaIncludes.h libs/raknet/VariadicSQLParser.h libs/raknet/VariableListDeltaTracker.h libs/raknet/VariableDeltaSerializer.h libs/raknet/UDPProxyServer.h libs/raknet/UDPProxyCoordinator.h libs/raknet/UDPProxyCommon.h libs/raknet/UDPProxyClient.h libs/raknet/UDPForwarder.h libs/raknet/TwoWayAuthentication.h libs/raknet/TransportInterface.h libs/raknet/ThreadsafePacketLogger.h libs/raknet/ThreadPool.h libs/raknet/TelnetTransport.h libs/raknet/TeamManager.h libs/raknet/TeamBalancer.h libs/raknet/TCPInterface.h libs/raknet/TableSerializer.h libs/raknet/SuperFastHash.h libs/raknet/StringTable.h libs/raknet/StringCompressor.h libs/raknet/StatisticsHistory.h libs/raknet/SocketLayer.h libs/raknet/SocketIncludes.h libs/raknet/SocketDefines.h libs/raknet/SingleProducerConsumer.h libs/raknet/SimpleTCPServer.h libs/raknet/SimpleMutex.h libs/raknet/SignaledEvent.h libs/raknet/SendToThread.h libs/raknet/SecureHandshake.h libs/raknet/RPC4Plugin.h libs/raknet/Router2.h libs/raknet/ReplicaManager3.h libs/raknet/ReplicaEnums.h libs/raknet/ReliabilityLayer.h libs/raknet/RelayPlugin.h libs/raknet/RefCountedObj.h libs/raknet/ReadyEvent.h libs/raknet/RandSync.h libs/raknet/Rand.h libs/raknet/RakWString.h libs/raknet/RakThread.h libs/raknet/RakString.h libs/raknet/RakSleep.h libs/raknet/RakPeerInterface.h libs/raknet/RakPeer.h libs/raknet/RakNetVersion.h libs/raknet/RakNetTypes.h libs/raknet/RakNetTransport2.h libs/raknet/RakNetTime.h libs/raknet/RakNetStatistics.h libs/raknet/RakNetSocket2.h libs/raknet/RakNetSocket.h libs/raknet/RakNetSmartPtr.h libs/raknet/RakNetDefinesOverrides.h libs/raknet/RakNetDefines.h libs/raknet/RakNetCommandParser.h libs/raknet/RakMemoryOverride.h libs/raknet/RakAssert.h libs/raknet/RakAlloca.h libs/raknet/Rackspace.h libs/raknet/PS4Includes.h libs/raknet/PS3Includes.h libs/raknet/PluginInterface2.h libs/raknet/PacketPriority.h libs/raknet/PacketPool.h libs/raknet/PacketOutputWindowLogger.h libs/raknet/PacketLogger.h libs/raknet/PacketizedTCP.h libs/raknet/PacketFileLogger.h libs/raknet/PacketConsoleLogger.h libs/raknet/NetworkIDObject.h libs/raknet/NetworkIDManager.h libs/raknet/NatTypeDetectionServer.h libs/raknet/NatTypeDetectionCommon.h libs/raknet/NatTypeDetectionClient.h libs/raknet/NatPunchthroughServer.h libs/raknet/NatPunchthroughClient.h libs/raknet/NativeTypes.h libs/raknet/NativeFeatureIncludesOverrides.h libs/raknet/NativeFeatureIncludes.h libs/raknet/MTUSize.h libs/raknet/MessageIdentifiers.h libs/raknet/MessageFilter.h libs/raknet/LogCommandParser.h libs/raknet/LocklessTypes.h libs/raknet/LinuxStrings.h libs/raknet/Kbhit.h libs/raknet/Itoa.h libs/raknet/InternalPacket.h libs/raknet/IncrementalReadInterface.h libs/raknet/HTTPConnection2.h libs/raknet/HTTPConnection.h libs/raknet/GridSectorizer.h libs/raknet/gettimeofday.h libs/raknet/GetTime.h libs/raknet/Gets.h libs/raknet/Getche.h libs/raknet/FullyConnectedMesh2.h libs/raknet/FormatString.h libs/raknet/FileOperations.h libs/raknet/FileListTransferCBInterface.h libs/raknet/FileListTransfer.h libs/raknet/FileListNodeContext.h libs/raknet/FileList.h libs/raknet/Export.h libs/raknet/EpochTimeToString.h libs/raknet/EmptyHeader.h libs/raknet/EmailSender.h libs/raknet/DynDNS.h libs/raknet/DS_WeightedGraph.h libs/raknet/DS_Tree.h libs/raknet/DS_ThreadsafeAllocatingQueue.h libs/raknet/DS_Table.h libs/raknet/DS_RangeList.h libs/raknet/DS_QueueLinkedList.h libs/raknet/DS_Queue.h libs/raknet/DS_OrderedList.h libs/raknet/DS_OrderedChannelHeap.h libs/raknet/DS_Multilist.h libs/raknet/DS_MemoryPool.h libs/raknet/DS_Map.h libs/raknet/DS_List.h libs/raknet/DS_LinkedList.h libs/raknet/DS_HuffmanEncodingTreeNode.h libs/raknet/DS_HuffmanEncodingTreeFactory.h libs/raknet/DS_HuffmanEncodingTree.h libs/raknet/DS_Heap.h libs/raknet/DS_Hash.h libs/raknet/DS_ByteQueue.h libs/raknet/DS_BytePool.h libs/raknet/DS_BPlusTree.h libs/raknet/DS_BinarySearchTree.h libs/raknet/DR_SHA1.h libs/raknet/DirectoryDeltaTransfer.h libs/raknet/DataCompressor.h libs/raknet/ConsoleServer.h libs/raknet/ConnectionGraph2.h libs/raknet/CommandParserInterface.h libs/raknet/CloudServer.h libs/raknet/CloudCommon.h libs/raknet/CloudClient.h libs/raknet/CheckSum.h libs/raknet/CCRakNetUDT.h libs/raknet/CCRakNetSlidingWindow.h libs/raknet/BitStream.h libs/raknet/Base64Encoder.h libs/raknet/AutopatcherRepositoryInterface.h libs/raknet/AutopatcherPatchContext.h libs/raknet/_FindFirst.h src/engine/systems/networksystem.h src/vulpecula/menuscreen.h src/vulpecula/responders/clientresponse.h src/vulpecula/responders/serverresponse.h src/engine/components/networkcomponent.h src/vulpecula/systems/ProgressTracker.h src/vulpecula/systems/particlesys.h src/Particles/OpenGLShape.h src/Particles/ResourceLoader2.h src/vulpecula/responders/WinResp.h src/engine/ui/scripts/TimedFade.h src/engine/ui/scripts/FullScreenQuadScript.h src/engine/ui/scripts/Script.h src/vulpecula/responders/Standable.h src/vulpecula/responders/LowpassResp.h src/vulpecula/responders/waterresponse.h src/vulpecula/scripts/StarCountScript.h src/engine/ui/scripts/UISpriteAnimator.h src/vulpecula/systems/StarSpinner.h src/vulpecula/components/CStar.h .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents libs/glew-1.10.0/src/glew.c src/main.cpp src/mainwindow.cpp src/view.cpp src/viewformat.cpp src/engine/graphics/ResourceLoader.cpp src/engine/graphics/FBO.cpp src/engine/graphics/IBO.cpp src/engine/graphics/Texture.cpp src/engine/graphics/Texture1D.cpp src/engine/graphics/Texture2D.cpp src/engine/graphics/Texture3D.cpp src/engine/graphics/VAO.cpp src/engine/graphics/VBO.cpp src/engine/graphics/VBOAttribMarker.cpp src/engine/graphics/Font.cpp src/engine/graphics/DepthBuffer.cpp src/engine/graphics/RenderBuffer.cpp src/engine/graphics/GraphicsDebug.cpp src/engine/graphics/Shader.cpp src/engine/graphics/Camera.cpp src/engine/graphics/Shape.cpp src/engine/graphics/Graphics.cpp src/engine/graphics/Material.cpp src/engine/graphics/Light.cpp src/engine/frame/Application.cpp src/engine/frame/Screen.cpp src/warmup1/WarmupApp.cpp src/engine/input/InputManager.cpp src/engine/objectManagement/GameWorld.cpp src/engine/objectManagement/GameObject.cpp src/engine/components/Component.cpp src/engine/components/CCollider.cpp src/engine/systems/CollisionSystem.cpp src/engine/components/CTransform.cpp src/warmup1/CustomComponents/CPhysics.cpp src/engine/systems/RenderSystem.cpp src/warmup1/CustomSystems/PhysicsSystem.cpp src/engine/gen/SpacePartMap.cpp src/dungeon_crawler/DungeonCrawlerApp.cpp src/dungeon_crawler/GameplayScreen.cpp src/dungeon_crawler/ChunkFactory.cpp src/dungeon_crawler/ChunkLoader.cpp src/engine/graphics/AABB.cpp src/engine/components/volumes/CollBox.cpp src/engine/components/volumes/CollSphere.cpp src/engine/components/volumes/CollCylinder.cpp src/engine/components/CRenderable.cpp src/engine/systems/CameraSystem.cpp src/engine/components/CCamera.cpp src/engine/systems/FPSCameraSystem.cpp src/warmup1/CustomSystems/InputSystem.cpp src/dungeon_crawler/MovementSys.cpp src/engine/components/CInputReceiver.cpp src/engine/components/volumes/CollComposite.cpp src/engine/systems/RaycastSystem.cpp src/engine/systems/AISystem.cpp src/engine/components/AIComponent.cpp src/engine/ai/Sequence.cpp src/engine/ai/Selector.cpp src/engine/ai/AStarNode.cpp src/dungeon_crawler/NavmeshDrawer.cpp src/engine/components/CNavMesh.cpp src/dungeon_crawler/ai/RadiusCondition.cpp src/engine/ai/Blackboard.cpp src/dungeon_crawler/ai/MoveToPlayer.cpp src/dungeon_crawler/ai/EnemyAISystem.cpp src/dungeon_crawler/CChunkInfo.cpp src/dungeon_crawler/ai/BackAway.cpp src/dungeon_crawler/ai/Strafe.cpp src/dungeon_crawler/ai/FaceAndShoot.cpp src/dungeon_crawler/CHealth.cpp src/dungeon_crawler/CooldownSys.cpp src/dungeon_crawler/CCooldown.cpp src/dungeon_crawler/ShootSystem.cpp src/dungeon_crawler/CBullet.cpp src/dungeon_crawler/PlayerCollision.cpp src/engine/ai/RandomSelector.cpp src/engine/ai/Inverter.cpp src/engine/ai/RepeatUntilDone.cpp src/engine/ui/UIObject.cpp src/engine/ui/UIDrawer.cpp src/engine/ui/UIRenderable.cpp src/engine/ui/UITransform.cpp src/engine/ui/UIText.cpp src/engine/ui/TextDrawer.cpp src/dungeon_crawler/HealthScript.cpp src/engine/ui/UIScriptSys.cpp src/dungeon_crawler/LandingScreen.cpp src/engine/ui/UIClickSystem.cpp src/dungeon_crawler/StartButtonResp.cpp src/dungeon_crawler/PauseScreen.cpp src/engine/components/CAudioSource.cpp src/engine/systems/AudioSystem.cpp src/vulpecula/MainScreen.cpp src/engine/systems/ThirdPersonCamSys.cpp src/vulpecula/VulpeculaApp.cpp src/warmup1/WarmupScreen.cpp src/vulpecula/components/RandomAudioSource.cpp src/vulpecula/systems/RandomAudioManager.cpp src/vulpecula/systems/PlayerMovementSys.cpp src/vulpecula/responders/GuitarZoneResp.cpp src/vulpecula/responders/GuitarStarResp.cpp src/engine/graphics/RiggedMesh.cpp src/engine/systems/AnimationSystem.cpp src/engine/components/CAnimatedMesh.cpp src/engine/graphics/Animation.cpp src/engine/graphics/Armature.cpp src/engine/graphics/TextureCube.cpp src/engine/components/cmeshcol.cpp src/engine/components/ColEllipsoid.cpp libs/raknet/WSAStartupSingleton.cpp libs/raknet/VitaIncludes.cpp libs/raknet/VariadicSQLParser.cpp libs/raknet/VariableListDeltaTracker.cpp libs/raknet/VariableDeltaSerializer.cpp libs/raknet/UDPProxyServer.cpp libs/raknet/UDPProxyCoordinator.cpp libs/raknet/UDPProxyClient.cpp libs/raknet/UDPForwarder.cpp libs/raknet/TwoWayAuthentication.cpp libs/raknet/ThreadsafePacketLogger.cpp libs/raknet/TelnetTransport.cpp libs/raknet/TeamManager.cpp libs/raknet/TeamBalancer.cpp libs/raknet/TCPInterface.cpp libs/raknet/TableSerializer.cpp libs/raknet/SuperFastHash.cpp libs/raknet/StringTable.cpp libs/raknet/StringCompressor.cpp libs/raknet/StatisticsHistory.cpp libs/raknet/SocketLayer.cpp libs/raknet/SimpleMutex.cpp libs/raknet/SignaledEvent.cpp libs/raknet/SendToThread.cpp libs/raknet/SecureHandshake.cpp libs/raknet/RPC4Plugin.cpp libs/raknet/Router2.cpp libs/raknet/ReplicaManager3.cpp libs/raknet/ReliabilityLayer.cpp libs/raknet/RelayPlugin.cpp libs/raknet/ReadyEvent.cpp libs/raknet/RandSync.cpp libs/raknet/Rand.cpp libs/raknet/RakWString.cpp libs/raknet/RakThread.cpp libs/raknet/RakString.cpp libs/raknet/RakSleep.cpp libs/raknet/RakPeer.cpp libs/raknet/RakNetTypes.cpp libs/raknet/RakNetTransport2.cpp libs/raknet/RakNetStatistics.cpp libs/raknet/RakNetSocket2.cpp libs/raknet/RakNetSocket.cpp libs/raknet/RakNetCommandParser.cpp libs/raknet/RakMemoryOverride.cpp libs/raknet/Rackspace.cpp libs/raknet/PS4Includes.cpp libs/raknet/PluginInterface2.cpp libs/raknet/PacketOutputWindowLogger.cpp libs/raknet/PacketLogger.cpp libs/raknet/PacketizedTCP.cpp libs/raknet/PacketFileLogger.cpp libs/raknet/PacketConsoleLogger.cpp libs/raknet/NetworkIDObject.cpp libs/raknet/NetworkIDManager.cpp libs/raknet/NatTypeDetectionServer.cpp libs/raknet/NatTypeDetectionCommon.cpp libs/raknet/NatTypeDetectionClient.cpp libs/raknet/NatPunchthroughServer.cpp libs/raknet/NatPunchthroughClient.cpp libs/raknet/MessageFilter.cpp libs/raknet/LogCommandParser.cpp libs/raknet/LocklessTypes.cpp libs/raknet/LinuxStrings.cpp libs/raknet/Itoa.cpp libs/raknet/IncrementalReadInterface.cpp libs/raknet/HTTPConnection2.cpp libs/raknet/HTTPConnection.cpp libs/raknet/GridSectorizer.cpp libs/raknet/gettimeofday.cpp libs/raknet/GetTime.cpp libs/raknet/Gets.cpp libs/raknet/Getche.cpp libs/raknet/FullyConnectedMesh2.cpp libs/raknet/FormatString.cpp libs/raknet/FileOperations.cpp libs/raknet/FileListTransfer.cpp libs/raknet/FileList.cpp libs/raknet/EpochTimeToString.cpp libs/raknet/EmailSender.cpp libs/raknet/DynDNS.cpp libs/raknet/DS_Table.cpp libs/raknet/DS_HuffmanEncodingTree.cpp libs/raknet/DS_ByteQueue.cpp libs/raknet/DS_BytePool.cpp libs/raknet/DR_SHA1.cpp libs/raknet/DirectoryDeltaTransfer.cpp libs/raknet/DataCompressor.cpp libs/raknet/ConsoleServer.cpp libs/raknet/ConnectionGraph2.cpp libs/raknet/CommandParserInterface.cpp libs/raknet/CloudServer.cpp libs/raknet/CloudCommon.cpp libs/raknet/CloudClient.cpp libs/raknet/CheckSum.cpp libs/raknet/CCRakNetUDT.cpp libs/raknet/CCRakNetSlidingWindow.cpp libs/raknet/BitStream.cpp libs/raknet/Base64Encoder.cpp libs/raknet/_FindFirst.cpp src/engine/systems/networksystem.cpp src/vulpecula/menuscreen.cpp src/vulpecula/responders/clientresponse.cpp src/vulpecula/responders/serverresponse.cpp src/engine/components/networkcomponent.cpp src/vulpecula/systems/ProgressTracker.cpp src/vulpecula/systems/particlesys.cpp src/Particles/OpenGLShape.cpp src/Particles/ResourceLoader2.cpp src/vulpecula/responders/WinResp.cpp src/engine/ui/scripts/TimedFade.cpp src/engine/ui/scripts/FullScreenQuadScript.cpp src/vulpecula/responders/Standable.cpp src/vulpecula/responders/LowpassResp.cpp src/vulpecula/responders/waterresponse.cpp src/vulpecula/scripts/StarCountScript.cpp src/engine/ui/scripts/UISpriteAnimator.cpp src/vulpecula/systems/StarSpinner.cpp src/vulpecula/components/CStar.cpp .tmp/cs195u_engine1.0.0/ && $(COPY_FILE) --parents src/mainwindow.ui .tmp/cs195u_engine1.0.0/ && (cd `dirname .tmp/cs195u_engine1.0.0` && $(TAR) cs195u_engine1.0.0.tar cs195u_engine1.0.0 && $(COMPRESS) cs195u_engine1.0.0.tar) && $(MOVE) `dirname .tmp/cs195u_engine1.0.0`/cs195u_engine1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/cs195u_engine1.0.0
 
 
 clean:compiler_clean 
@@ -920,16 +928,16 @@ compiler_rcc_make_all: qrc_shaders.cpp qrc_fonts.cpp qrc_images.cpp qrc_models.c
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_shaders.cpp qrc_fonts.cpp qrc_images.cpp qrc_models.cpp qrc_sounds.cpp
 qrc_shaders.cpp: res/shaders/shaders.qrc \
+		res/shaders/skybox.frag \
 		res/shaders/shader.vert \
-		res/shaders/animated.vert \
-		res/shaders/water.vert \
-		res/shaders/particles_update.frag \
-		res/shaders/particles_draw.vert \
-		res/shaders/skybox.vert \
-		res/shaders/shader.frag \
 		res/shaders/water.frag \
 		res/shaders/particles_draw.frag \
-		res/shaders/skybox.frag
+		res/shaders/particles_update.frag \
+		res/shaders/skybox.vert \
+		res/shaders/shader.frag \
+		res/shaders/water.vert \
+		res/shaders/animated.vert \
+		res/shaders/particles_draw.vert
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name shaders res/shaders/shaders.qrc -o qrc_shaders.cpp
 
 qrc_fonts.cpp: res/fonts/fonts.qrc \
@@ -937,14 +945,14 @@ qrc_fonts.cpp: res/fonts/fonts.qrc \
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name fonts res/fonts/fonts.qrc -o qrc_fonts.cpp
 
 qrc_images.cpp: res/images/images.qrc \
+		res/images/gold.png \
+		res/images/dungeontex.png \
+		res/images/chainlink.png \
+		res/images/grass.png \
+		res/images/pylon.png \
 		res/images/title.png \
 		res/images/heart.png \
-		res/images/gold.png \
-		res/images/heart_empty.png \
-		res/images/grass.png \
-		res/images/dungeontex.png \
-		res/images/pylon.png \
-		res/images/chainlink.png
+		res/images/heart_empty.png
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name images res/images/images.qrc -o qrc_images.cpp
 
 qrc_models.cpp: res/models/models.qrc \
@@ -953,75 +961,75 @@ qrc_models.cpp: res/models/models.qrc \
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name models res/models/models.qrc -o qrc_models.cpp
 
 qrc_sounds.cpp: res/sounds/sounds.qrc \
-		res/sounds/chm_hi_03.ogg \
-		res/sounds/chm_md_01.ogg \
-		res/sounds/piano_03.ogg \
+		res/sounds/woodwind_05.ogg \
+		res/sounds/piano_06.ogg \
 		res/sounds/guitar_08.ogg \
+		res/sounds/chm_md_06.ogg \
+		res/sounds/bell_01.ogg \
+		res/sounds/star_swell.ogg \
+		res/sounds/mallet_07.ogg \
+		res/sounds/violin_06.ogg \
+		res/sounds/mus_woodwind.ogg \
+		res/sounds/chm_hi_03.ogg \
+		res/sounds/piano_01.ogg \
+		res/sounds/guitar_03.ogg \
+		res/sounds/chm_md_01.ogg \
+		res/sounds/bell_05.ogg \
 		res/sounds/mallet_02.ogg \
 		res/sounds/violin_01.ogg \
-		res/sounds/bell_06.ogg \
-		res/sounds/mus_violin.ogg \
-		res/sounds/mus_guitar.ogg \
-		res/sounds/guitar_03.ogg \
-		res/sounds/piano_07.ogg \
-		res/sounds/woodwind_03.ogg \
+		res/sounds/woodwind_04.ogg \
+		res/sounds/piano_05.ogg \
+		res/sounds/guitar_07.ogg \
 		res/sounds/chm_md_05.ogg \
 		res/sounds/mallet_06.ogg \
+		res/sounds/bell_09.ogg \
 		res/sounds/violin_05.ogg \
-		res/sounds/bell_01.ogg \
+		res/sounds/wind.ogg \
 		res/sounds/chm_hi_02.ogg \
-		res/sounds/piano_02.ogg \
-		res/sounds/guitar_07.ogg \
-		res/sounds/mallet_01.ogg \
-		res/sounds/bell_05.ogg \
-		res/sounds/chm_hi_06.ogg \
 		res/sounds/guitar_02.ogg \
-		res/sounds/piano_06.ogg \
-		res/sounds/woodwind_02.ogg \
+		res/sounds/mus_mallet.ogg \
+		res/sounds/bell_04.ogg \
+		res/sounds/mallet_01.ogg \
+		res/sounds/woodwind_03.ogg \
+		res/sounds/chm_hi_06.ogg \
 		res/sounds/chm_md_04.ogg \
+		res/sounds/piano_04.ogg \
+		res/sounds/guitar_06.ogg \
 		res/sounds/mallet_05.ogg \
+		res/sounds/bell_08.ogg \
 		res/sounds/violin_04.ogg \
 		res/sounds/mallet_11.ogg \
-		res/sounds/bell_09.ogg \
+		res/sounds/mus_bell.ogg \
 		res/sounds/mus_piano.ogg \
 		res/sounds/chm_hi_01.ogg \
-		res/sounds/star_swell.ogg \
-		res/sounds/guitar_06.ogg \
-		res/sounds/piano_01.ogg \
-		res/sounds/woodwind_06.ogg \
-		res/sounds/mallet_09.ogg \
-		res/sounds/bell_04.ogg \
-		res/sounds/chm_hi_05.ogg \
 		res/sounds/guitar_01.ogg \
-		res/sounds/piano_05.ogg \
-		res/sounds/woodwind_01.ogg \
+		res/sounds/bell_03.ogg \
+		res/sounds/mallet_09.ogg \
+		res/sounds/woodwind_02.ogg \
+		res/sounds/chm_hi_05.ogg \
 		res/sounds/chm_md_03.ogg \
+		res/sounds/piano_03.ogg \
+		res/sounds/guitar_05.ogg \
+		res/sounds/bell_07.ogg \
+		res/sounds/mus_guitar.ogg \
 		res/sounds/mallet_04.ogg \
 		res/sounds/violin_03.ogg \
 		res/sounds/mallet_10.ogg \
-		res/sounds/bell_08.ogg \
-		res/sounds/guitar_05.ogg \
-		res/sounds/woodwind_05.ogg \
-		res/sounds/wind.ogg \
+		res/sounds/mus_violin.ogg \
+		res/sounds/woodwind_06.ogg \
+		res/sounds/piano_07.ogg \
+		res/sounds/guitar_09.ogg \
+		res/sounds/bell_02.ogg \
 		res/sounds/mallet_08.ogg \
 		res/sounds/violin_07.ogg \
-		res/sounds/bell_03.ogg \
-		res/sounds/mus_woodwind.ogg \
-		res/sounds/mus_mallet.ogg \
+		res/sounds/woodwind_01.ogg \
 		res/sounds/chm_hi_04.ogg \
-		res/sounds/piano_04.ogg \
-		res/sounds/guitar_09.ogg \
 		res/sounds/chm_md_02.ogg \
-		res/sounds/mallet_03.ogg \
-		res/sounds/violin_02.ogg \
-		res/sounds/mus_bell.ogg \
-		res/sounds/bell_07.ogg \
+		res/sounds/piano_02.ogg \
 		res/sounds/guitar_04.ogg \
-		res/sounds/woodwind_04.ogg \
-		res/sounds/chm_md_06.ogg \
-		res/sounds/mallet_07.ogg \
-		res/sounds/violin_06.ogg \
-		res/sounds/bell_02.ogg
+		res/sounds/bell_06.ogg \
+		res/sounds/mallet_03.ogg \
+		res/sounds/violin_02.ogg
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name sounds res/sounds/sounds.qrc -o qrc_sounds.cpp
 
 compiler_moc_header_make_all: moc_mainwindow.cpp moc_view.cpp
@@ -14320,14 +14328,6 @@ MainScreen.o: src/vulpecula/MainScreen.cpp src/vulpecula/MainScreen.h \
 		src/engine/graphics/Material.h \
 		src/engine/graphics/Light.h \
 		src/engine/components/cmeshcol.h \
-		src/engine/systems/RenderSystem.h \
-		src/engine/graphics/TextureCube.h \
-		src/engine/graphics/Texture.h \
-		src/engine/components/CRenderable.h \
-		src/engine/systems/ThirdPersonCamSys.h \
-		src/engine/systems/CameraSystem.h \
-		src/engine/components/CCamera.h \
-		src/engine/graphics/Camera.h \
 		src/engine/systems/AudioSystem.h \
 		src/engine/components/CAudioSource.h \
 		libs/fmod/fmod.hpp \
@@ -14337,6 +14337,21 @@ MainScreen.o: src/vulpecula/MainScreen.cpp src/vulpecula/MainScreen.h \
 		libs/fmod/fmod_dsp_effects.h \
 		libs/fmod/fmod_output.h \
 		libs/fmod/fmod.h \
+		src/engine/components/CCamera.h \
+		src/engine/graphics/Camera.h \
+		src/vulpecula/scripts/StarCountScript.h \
+		src/engine/ui/scripts/Script.h \
+		src/engine/ui/UIRenderable.h \
+		src/engine/ui/UIComponent.h \
+		src/engine/ui/UIObject.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QVector \
+		src/engine/ui/UITransform.h \
+		src/engine/systems/RenderSystem.h \
+		src/engine/graphics/TextureCube.h \
+		src/engine/graphics/Texture.h \
+		src/engine/components/CRenderable.h \
+		src/engine/systems/ThirdPersonCamSys.h \
+		src/engine/systems/CameraSystem.h \
 		src/engine/systems/CollisionSystem.h \
 		src/engine/components/CCollider.h \
 		src/engine/components/responders/CollisionResponse.h \
@@ -14379,12 +14394,12 @@ MainScreen.o: src/vulpecula/MainScreen.cpp src/vulpecula/MainScreen.h \
 		src/engine/components/ColEllipsoid.h \
 		src/engine/ui/UIScriptSys.h \
 		src/engine/ui/UISystem.h \
-		src/engine/ui/UIComponent.h \
-		src/engine/ui/UIObject.h \
-		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QVector \
 		src/engine/ui/UIDrawer.h \
-		src/engine/ui/UIRenderable.h \
-		src/engine/ui/UITransform.h \
+		src/engine/ui/TextDrawer.h \
+		src/engine/ui/UIText.h \
+		src/engine/ui/UIScriptComp.h \
+		src/engine/ui/scripts/UISpriteAnimator.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QStringList \
 		src/engine/components/volumes/CollCylinder.h \
 		src/engine/components/volumes/CollBox.h \
 		src/engine/components/volumes/CollSphere.h \
@@ -14439,16 +14454,16 @@ MainScreen.o: src/vulpecula/MainScreen.cpp src/vulpecula/MainScreen.h \
 		src/vulpecula/VulpeculaApp.h \
 		src/vulpecula/systems/RandomAudioManager.h \
 		src/vulpecula/components/RandomAudioSource.h \
-		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QStringList \
 		src/vulpecula/systems/ProgressTracker.h \
 		src/vulpecula/systems/particlesys.h \
 		src/engine/graphics/FBO.h \
 		src/warmup1/CustomComponents/CPhysics.h \
-		src/vulpecula/responders/waterresponse.h \
+		src/vulpecula/components/CStar.h \
 		src/vulpecula/responders/GuitarZoneResp.h \
 		src/vulpecula/responders/GuitarStarResp.h \
 		src/vulpecula/responders/Standable.h \
 		src/vulpecula/responders/LowpassResp.h \
+		src/vulpecula/responders/waterresponse.h \
 		libs/glm/gtx/rotate_vector.hpp \
 		libs/glm/gtx/rotate_vector.inl
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o MainScreen.o src/vulpecula/MainScreen.cpp
@@ -14872,6 +14887,23 @@ VulpeculaApp.o: src/vulpecula/VulpeculaApp.cpp src/vulpecula/VulpeculaApp.h \
 		src/engine/graphics/Material.h \
 		src/engine/graphics/Light.h \
 		src/engine/components/cmeshcol.h \
+		src/engine/systems/AudioSystem.h \
+		src/engine/components/CAudioSource.h \
+		libs/fmod/fmod.hpp \
+		libs/fmod/fmod_common.h \
+		libs/fmod/fmod_codec.h \
+		libs/fmod/fmod_dsp.h \
+		libs/fmod/fmod_dsp_effects.h \
+		libs/fmod/fmod_output.h \
+		libs/fmod/fmod.h \
+		src/engine/components/CCamera.h \
+		src/vulpecula/scripts/StarCountScript.h \
+		src/engine/ui/scripts/Script.h \
+		src/engine/ui/UIRenderable.h \
+		src/engine/ui/UIComponent.h \
+		src/engine/ui/UIObject.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QVector \
+		src/engine/ui/UITransform.h \
 		src/vulpecula/menuscreen.h \
 		src/view.h \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtOpenGL/QGLWidget \
@@ -16043,7 +16075,8 @@ GuitarStarResp.o: src/vulpecula/responders/GuitarStarResp.cpp src/vulpecula/resp
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QMultiHash \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QLinkedList \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qlinkedlist.h \
-		src/engine/systems/System.h
+		src/engine/systems/System.h \
+		src/vulpecula/components/CStar.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o GuitarStarResp.o src/vulpecula/responders/GuitarStarResp.cpp
 
 RiggedMesh.o: src/engine/graphics/RiggedMesh.cpp src/engine/graphics/RiggedMesh.h \
@@ -20379,10 +20412,27 @@ clientresponse.o: src/vulpecula/responders/clientresponse.cpp src/vulpecula/resp
 		src/engine/graphics/Material.h \
 		src/engine/graphics/Light.h \
 		src/engine/components/cmeshcol.h \
+		src/engine/systems/AudioSystem.h \
+		src/engine/components/CAudioSource.h \
+		libs/fmod/fmod.hpp \
+		libs/fmod/fmod_common.h \
+		libs/fmod/fmod_codec.h \
+		libs/fmod/fmod_dsp.h \
+		libs/fmod/fmod_dsp_effects.h \
+		libs/fmod/fmod_output.h \
+		libs/fmod/fmod.h \
+		src/engine/components/CCamera.h \
+		src/engine/graphics/Camera.h \
+		src/vulpecula/scripts/StarCountScript.h \
+		src/engine/ui/scripts/Script.h \
+		src/engine/ui/UIRenderable.h \
+		src/engine/ui/UIComponent.h \
+		src/engine/ui/UIObject.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QVector \
+		src/engine/ui/UITransform.h \
 		src/engine/frame/Application.h \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QStack \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstack.h \
-		src/engine/graphics/Camera.h \
 		src/view.h \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtOpenGL/QGLWidget \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtOpenGL/qgl.h \
@@ -20642,10 +20692,27 @@ serverresponse.o: src/vulpecula/responders/serverresponse.cpp src/vulpecula/resp
 		src/engine/graphics/Material.h \
 		src/engine/graphics/Light.h \
 		src/engine/components/cmeshcol.h \
+		src/engine/systems/AudioSystem.h \
+		src/engine/components/CAudioSource.h \
+		libs/fmod/fmod.hpp \
+		libs/fmod/fmod_common.h \
+		libs/fmod/fmod_codec.h \
+		libs/fmod/fmod_dsp.h \
+		libs/fmod/fmod_dsp_effects.h \
+		libs/fmod/fmod_output.h \
+		libs/fmod/fmod.h \
+		src/engine/components/CCamera.h \
+		src/engine/graphics/Camera.h \
+		src/vulpecula/scripts/StarCountScript.h \
+		src/engine/ui/scripts/Script.h \
+		src/engine/ui/UIRenderable.h \
+		src/engine/ui/UIComponent.h \
+		src/engine/ui/UIObject.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QVector \
+		src/engine/ui/UITransform.h \
 		src/engine/frame/Application.h \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QStack \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstack.h \
-		src/engine/graphics/Camera.h \
 		src/view.h \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtOpenGL/QGLWidget \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtOpenGL/qgl.h \
@@ -20912,17 +20979,31 @@ ProgressTracker.o: src/vulpecula/systems/ProgressTracker.cpp src/vulpecula/syste
 		libs/glm/gtx/transform.inl \
 		libs/glm/gtc/type_ptr.hpp \
 		libs/glm/gtc/type_ptr.inl \
+		src/vulpecula/scripts/StarCountScript.h \
+		src/engine/ui/scripts/Script.h \
+		src/engine/ui/UIRenderable.h \
+		src/engine/ui/UIComponent.h \
+		src/engine/ui/UIObject.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QVector \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qvector.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qpoint.h \
+		src/engine/ui/UITransform.h \
 		src/engine/components/CTransform.h \
 		src/engine/components/CCollider.h \
 		src/engine/components/volumes/CollisionVolume.h \
 		src/engine/components/responders/CollisionResponse.h \
+		src/engine/components/CRenderable.h \
+		src/engine/graphics/Graphics.h \
+		src/engine/graphics/Shader.h \
+		src/engine/graphics/VBO.h \
+		src/engine/graphics/GraphicsDebug.h \
+		src/engine/graphics/Constants.h \
+		src/engine/graphics/Material.h \
+		src/engine/graphics/Light.h \
 		src/engine/components/volumes/CollCylinder.h \
 		src/engine/components/volumes/CollBox.h \
 		src/engine/components/volumes/CollSphere.h \
 		src/engine/components/volumes/CollComposite.h \
-		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QVector \
-		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qvector.h \
-		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qpoint.h \
 		src/engine/objectManagement/GameWorld.h \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QSet \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QQueue \
@@ -20931,7 +21012,8 @@ ProgressTracker.o: src/vulpecula/systems/ProgressTracker.cpp src/vulpecula/syste
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QMultiHash \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QLinkedList \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qlinkedlist.h \
-		src/vulpecula/responders/WinResp.h
+		src/vulpecula/responders/WinResp.h \
+		src/vulpecula/components/CStar.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ProgressTracker.o src/vulpecula/systems/ProgressTracker.cpp
 
 particlesys.o: src/vulpecula/systems/particlesys.cpp src/vulpecula/systems/particlesys.h \
@@ -22253,6 +22335,620 @@ waterresponse.o: src/vulpecula/responders/waterresponse.cpp src/vulpecula/respon
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qlinkedlist.h \
 		src/engine/systems/System.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o waterresponse.o src/vulpecula/responders/waterresponse.cpp
+
+StarCountScript.o: src/vulpecula/scripts/StarCountScript.cpp src/vulpecula/scripts/StarCountScript.h \
+		src/engine/ui/scripts/Script.h \
+		src/engine/ui/UIRenderable.h \
+		src/engine/ui/UIComponent.h \
+		src/engine/ui/UIObject.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QString \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstring.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qchar.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qglobal.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qconfig.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qfeatures.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_integrity.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qoldbasicatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_vxworks.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_power.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_alpha.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_bfin.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_s390.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_sh4a.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_sparc.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qmutex.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qlogging.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qflags.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qtypetraits.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qsysinfo.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qbytearray.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qrefcount.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qnamespace.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qarraydata.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QVector \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qvector.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qalgorithms.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qiterator.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qlist.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qpoint.h \
+		libs/glm/glm.hpp \
+		libs/glm/detail/_fixes.hpp \
+		libs/glm/fwd.hpp \
+		libs/glm/detail/type_int.hpp \
+		libs/glm/detail/setup.hpp \
+		libs/glm/detail/type_float.hpp \
+		libs/glm/detail/type_vec.hpp \
+		libs/glm/detail/precision.hpp \
+		libs/glm/detail/type_mat.hpp \
+		libs/glm/vec2.hpp \
+		libs/glm/detail/type_vec2.hpp \
+		libs/glm/detail/_swizzle.hpp \
+		libs/glm/detail/_swizzle_func.hpp \
+		libs/glm/detail/type_vec2.inl \
+		libs/glm/vec3.hpp \
+		libs/glm/detail/type_vec3.hpp \
+		libs/glm/detail/type_vec3.inl \
+		libs/glm/vec4.hpp \
+		libs/glm/detail/type_vec4.hpp \
+		libs/glm/detail/type_vec4.inl \
+		libs/glm/mat2x2.hpp \
+		libs/glm/detail/type_mat2x2.hpp \
+		libs/glm/detail/type_mat2x2.inl \
+		libs/glm/mat2x3.hpp \
+		libs/glm/detail/type_mat2x3.hpp \
+		libs/glm/detail/type_mat2x3.inl \
+		libs/glm/mat2x4.hpp \
+		libs/glm/detail/type_mat2x4.hpp \
+		libs/glm/detail/type_mat2x4.inl \
+		libs/glm/mat3x2.hpp \
+		libs/glm/detail/type_mat3x2.hpp \
+		libs/glm/detail/type_mat3x2.inl \
+		libs/glm/mat3x3.hpp \
+		libs/glm/detail/type_mat3x3.hpp \
+		libs/glm/detail/type_mat3x3.inl \
+		libs/glm/mat3x4.hpp \
+		libs/glm/detail/type_mat3x4.hpp \
+		libs/glm/detail/type_mat3x4.inl \
+		libs/glm/mat4x2.hpp \
+		libs/glm/detail/type_mat4x2.hpp \
+		libs/glm/detail/type_mat4x2.inl \
+		libs/glm/mat4x3.hpp \
+		libs/glm/detail/type_mat4x3.hpp \
+		libs/glm/detail/type_mat4x3.inl \
+		libs/glm/mat4x4.hpp \
+		libs/glm/detail/type_mat4x4.hpp \
+		libs/glm/detail/type_mat4x4.inl \
+		libs/glm/trigonometric.hpp \
+		libs/glm/detail/func_trigonometric.hpp \
+		libs/glm/detail/func_trigonometric.inl \
+		libs/glm/detail/_vectorize.hpp \
+		libs/glm/detail/type_vec1.hpp \
+		libs/glm/detail/type_vec1.inl \
+		libs/glm/exponential.hpp \
+		libs/glm/detail/func_exponential.hpp \
+		libs/glm/detail/func_exponential.inl \
+		libs/glm/detail/func_vector_relational.hpp \
+		libs/glm/detail/func_vector_relational.inl \
+		libs/glm/common.hpp \
+		libs/glm/detail/func_common.hpp \
+		libs/glm/detail/func_common.inl \
+		libs/glm/packing.hpp \
+		libs/glm/detail/func_packing.hpp \
+		libs/glm/detail/func_packing.inl \
+		libs/glm/detail/type_half.hpp \
+		libs/glm/detail/type_half.inl \
+		libs/glm/geometric.hpp \
+		libs/glm/detail/func_geometric.hpp \
+		libs/glm/detail/func_geometric.inl \
+		libs/glm/matrix.hpp \
+		libs/glm/detail/func_matrix.hpp \
+		libs/glm/detail/func_matrix.inl \
+		libs/glm/vector_relational.hpp \
+		libs/glm/integer.hpp \
+		libs/glm/detail/func_integer.hpp \
+		libs/glm/detail/func_integer.inl \
+		src/engine/ui/UITransform.h \
+		src/engine/graphics/Graphics.h \
+		src/engine/util/CommonIncludes.h \
+		libs/glew-1.10.0/include/GL/glew.h \
+		libs/glm/gtx/string_cast.hpp \
+		libs/glm/gtx/integer.hpp \
+		libs/glm/gtx/integer.inl \
+		libs/glm/gtx/quaternion.hpp \
+		libs/glm/gtc/constants.hpp \
+		libs/glm/gtc/constants.inl \
+		libs/glm/gtc/quaternion.hpp \
+		libs/glm/gtx/quaternion.inl \
+		libs/glm/gtx/norm.hpp \
+		libs/glm/gtx/norm.inl \
+		libs/glm/gtx/string_cast.inl \
+		libs/glm/gtx/transform.hpp \
+		libs/glm/gtc/matrix_transform.hpp \
+		libs/glm/gtc/matrix_transform.inl \
+		libs/glm/gtx/transform.inl \
+		libs/glm/gtc/type_ptr.hpp \
+		libs/glm/gtc/type_ptr.inl \
+		src/engine/graphics/Shader.h \
+		src/engine/graphics/VBO.h \
+		src/engine/graphics/GraphicsDebug.h \
+		src/engine/graphics/Constants.h \
+		src/engine/graphics/Material.h \
+		src/engine/graphics/Light.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o StarCountScript.o src/vulpecula/scripts/StarCountScript.cpp
+
+UISpriteAnimator.o: src/engine/ui/scripts/UISpriteAnimator.cpp src/engine/ui/scripts/UISpriteAnimator.h \
+		src/engine/ui/scripts/Script.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QStringList \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstringlist.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qalgorithms.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qglobal.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qconfig.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qfeatures.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_integrity.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qoldbasicatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_vxworks.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_power.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_alpha.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_bfin.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_s390.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_sh4a.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_sparc.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qmutex.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qlogging.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qflags.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qtypetraits.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qsysinfo.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qdatastream.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qiodevice.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qobject.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qnamespace.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstring.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qchar.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qbytearray.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qrefcount.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qarraydata.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstringbuilder.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qlist.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qiterator.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qcoreevent.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qmetatype.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qisenum.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qobject_impl.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qpair.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qregexp.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstringmatcher.h \
+		src/engine/ui/UIRenderable.h \
+		src/engine/ui/UIComponent.h \
+		src/engine/ui/UIObject.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QString \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QVector \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qvector.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qpoint.h \
+		libs/glm/glm.hpp \
+		libs/glm/detail/_fixes.hpp \
+		libs/glm/fwd.hpp \
+		libs/glm/detail/type_int.hpp \
+		libs/glm/detail/setup.hpp \
+		libs/glm/detail/type_float.hpp \
+		libs/glm/detail/type_vec.hpp \
+		libs/glm/detail/precision.hpp \
+		libs/glm/detail/type_mat.hpp \
+		libs/glm/vec2.hpp \
+		libs/glm/detail/type_vec2.hpp \
+		libs/glm/detail/_swizzle.hpp \
+		libs/glm/detail/_swizzle_func.hpp \
+		libs/glm/detail/type_vec2.inl \
+		libs/glm/vec3.hpp \
+		libs/glm/detail/type_vec3.hpp \
+		libs/glm/detail/type_vec3.inl \
+		libs/glm/vec4.hpp \
+		libs/glm/detail/type_vec4.hpp \
+		libs/glm/detail/type_vec4.inl \
+		libs/glm/mat2x2.hpp \
+		libs/glm/detail/type_mat2x2.hpp \
+		libs/glm/detail/type_mat2x2.inl \
+		libs/glm/mat2x3.hpp \
+		libs/glm/detail/type_mat2x3.hpp \
+		libs/glm/detail/type_mat2x3.inl \
+		libs/glm/mat2x4.hpp \
+		libs/glm/detail/type_mat2x4.hpp \
+		libs/glm/detail/type_mat2x4.inl \
+		libs/glm/mat3x2.hpp \
+		libs/glm/detail/type_mat3x2.hpp \
+		libs/glm/detail/type_mat3x2.inl \
+		libs/glm/mat3x3.hpp \
+		libs/glm/detail/type_mat3x3.hpp \
+		libs/glm/detail/type_mat3x3.inl \
+		libs/glm/mat3x4.hpp \
+		libs/glm/detail/type_mat3x4.hpp \
+		libs/glm/detail/type_mat3x4.inl \
+		libs/glm/mat4x2.hpp \
+		libs/glm/detail/type_mat4x2.hpp \
+		libs/glm/detail/type_mat4x2.inl \
+		libs/glm/mat4x3.hpp \
+		libs/glm/detail/type_mat4x3.hpp \
+		libs/glm/detail/type_mat4x3.inl \
+		libs/glm/mat4x4.hpp \
+		libs/glm/detail/type_mat4x4.hpp \
+		libs/glm/detail/type_mat4x4.inl \
+		libs/glm/trigonometric.hpp \
+		libs/glm/detail/func_trigonometric.hpp \
+		libs/glm/detail/func_trigonometric.inl \
+		libs/glm/detail/_vectorize.hpp \
+		libs/glm/detail/type_vec1.hpp \
+		libs/glm/detail/type_vec1.inl \
+		libs/glm/exponential.hpp \
+		libs/glm/detail/func_exponential.hpp \
+		libs/glm/detail/func_exponential.inl \
+		libs/glm/detail/func_vector_relational.hpp \
+		libs/glm/detail/func_vector_relational.inl \
+		libs/glm/common.hpp \
+		libs/glm/detail/func_common.hpp \
+		libs/glm/detail/func_common.inl \
+		libs/glm/packing.hpp \
+		libs/glm/detail/func_packing.hpp \
+		libs/glm/detail/func_packing.inl \
+		libs/glm/detail/type_half.hpp \
+		libs/glm/detail/type_half.inl \
+		libs/glm/geometric.hpp \
+		libs/glm/detail/func_geometric.hpp \
+		libs/glm/detail/func_geometric.inl \
+		libs/glm/matrix.hpp \
+		libs/glm/detail/func_matrix.hpp \
+		libs/glm/detail/func_matrix.inl \
+		libs/glm/vector_relational.hpp \
+		libs/glm/integer.hpp \
+		libs/glm/detail/func_integer.hpp \
+		libs/glm/detail/func_integer.inl \
+		src/engine/ui/UITransform.h \
+		src/engine/graphics/Graphics.h \
+		src/engine/util/CommonIncludes.h \
+		libs/glew-1.10.0/include/GL/glew.h \
+		libs/glm/gtx/string_cast.hpp \
+		libs/glm/gtx/integer.hpp \
+		libs/glm/gtx/integer.inl \
+		libs/glm/gtx/quaternion.hpp \
+		libs/glm/gtc/constants.hpp \
+		libs/glm/gtc/constants.inl \
+		libs/glm/gtc/quaternion.hpp \
+		libs/glm/gtx/quaternion.inl \
+		libs/glm/gtx/norm.hpp \
+		libs/glm/gtx/norm.inl \
+		libs/glm/gtx/string_cast.inl \
+		libs/glm/gtx/transform.hpp \
+		libs/glm/gtc/matrix_transform.hpp \
+		libs/glm/gtc/matrix_transform.inl \
+		libs/glm/gtx/transform.inl \
+		libs/glm/gtc/type_ptr.hpp \
+		libs/glm/gtc/type_ptr.inl \
+		src/engine/graphics/Shader.h \
+		src/engine/graphics/VBO.h \
+		src/engine/graphics/GraphicsDebug.h \
+		src/engine/graphics/Constants.h \
+		src/engine/graphics/Material.h \
+		src/engine/graphics/Light.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o UISpriteAnimator.o src/engine/ui/scripts/UISpriteAnimator.cpp
+
+StarSpinner.o: src/vulpecula/systems/StarSpinner.cpp src/vulpecula/systems/StarSpinner.h \
+		src/engine/systems/System.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QString \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstring.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qchar.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qglobal.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qconfig.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qfeatures.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_integrity.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qoldbasicatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_vxworks.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_power.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_alpha.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_bfin.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_s390.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_sh4a.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_sparc.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qmutex.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qlogging.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qflags.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qtypetraits.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qsysinfo.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qbytearray.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qrefcount.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qnamespace.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qarraydata.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstringbuilder.h \
+		src/vulpecula/components/CStar.h \
+		src/engine/components/Component.h \
+		src/engine/objectManagement/GameObject.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QHash \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qhash.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qiterator.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qlist.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qalgorithms.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qpair.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QSetIterator \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qset.h \
+		libs/glm/glm.hpp \
+		libs/glm/detail/_fixes.hpp \
+		libs/glm/fwd.hpp \
+		libs/glm/detail/type_int.hpp \
+		libs/glm/detail/setup.hpp \
+		libs/glm/detail/type_float.hpp \
+		libs/glm/detail/type_vec.hpp \
+		libs/glm/detail/precision.hpp \
+		libs/glm/detail/type_mat.hpp \
+		libs/glm/vec2.hpp \
+		libs/glm/detail/type_vec2.hpp \
+		libs/glm/detail/_swizzle.hpp \
+		libs/glm/detail/_swizzle_func.hpp \
+		libs/glm/detail/type_vec2.inl \
+		libs/glm/vec3.hpp \
+		libs/glm/detail/type_vec3.hpp \
+		libs/glm/detail/type_vec3.inl \
+		libs/glm/vec4.hpp \
+		libs/glm/detail/type_vec4.hpp \
+		libs/glm/detail/type_vec4.inl \
+		libs/glm/mat2x2.hpp \
+		libs/glm/detail/type_mat2x2.hpp \
+		libs/glm/detail/type_mat2x2.inl \
+		libs/glm/mat2x3.hpp \
+		libs/glm/detail/type_mat2x3.hpp \
+		libs/glm/detail/type_mat2x3.inl \
+		libs/glm/mat2x4.hpp \
+		libs/glm/detail/type_mat2x4.hpp \
+		libs/glm/detail/type_mat2x4.inl \
+		libs/glm/mat3x2.hpp \
+		libs/glm/detail/type_mat3x2.hpp \
+		libs/glm/detail/type_mat3x2.inl \
+		libs/glm/mat3x3.hpp \
+		libs/glm/detail/type_mat3x3.hpp \
+		libs/glm/detail/type_mat3x3.inl \
+		libs/glm/mat3x4.hpp \
+		libs/glm/detail/type_mat3x4.hpp \
+		libs/glm/detail/type_mat3x4.inl \
+		libs/glm/mat4x2.hpp \
+		libs/glm/detail/type_mat4x2.hpp \
+		libs/glm/detail/type_mat4x2.inl \
+		libs/glm/mat4x3.hpp \
+		libs/glm/detail/type_mat4x3.hpp \
+		libs/glm/detail/type_mat4x3.inl \
+		libs/glm/mat4x4.hpp \
+		libs/glm/detail/type_mat4x4.hpp \
+		libs/glm/detail/type_mat4x4.inl \
+		libs/glm/trigonometric.hpp \
+		libs/glm/detail/func_trigonometric.hpp \
+		libs/glm/detail/func_trigonometric.inl \
+		libs/glm/detail/_vectorize.hpp \
+		libs/glm/detail/type_vec1.hpp \
+		libs/glm/detail/type_vec1.inl \
+		libs/glm/exponential.hpp \
+		libs/glm/detail/func_exponential.hpp \
+		libs/glm/detail/func_exponential.inl \
+		libs/glm/detail/func_vector_relational.hpp \
+		libs/glm/detail/func_vector_relational.inl \
+		libs/glm/common.hpp \
+		libs/glm/detail/func_common.hpp \
+		libs/glm/detail/func_common.inl \
+		libs/glm/packing.hpp \
+		libs/glm/detail/func_packing.hpp \
+		libs/glm/detail/func_packing.inl \
+		libs/glm/detail/type_half.hpp \
+		libs/glm/detail/type_half.inl \
+		libs/glm/geometric.hpp \
+		libs/glm/detail/func_geometric.hpp \
+		libs/glm/detail/func_geometric.inl \
+		libs/glm/matrix.hpp \
+		libs/glm/detail/func_matrix.hpp \
+		libs/glm/detail/func_matrix.inl \
+		libs/glm/vector_relational.hpp \
+		libs/glm/integer.hpp \
+		libs/glm/detail/func_integer.hpp \
+		libs/glm/detail/func_integer.inl \
+		src/engine/objectManagement/GameWorld.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QSet \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QQueue \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qqueue.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QMutex \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QMultiHash \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QLinkedList \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qlinkedlist.h \
+		src/engine/components/CTransform.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o StarSpinner.o src/vulpecula/systems/StarSpinner.cpp
+
+CStar.o: src/vulpecula/components/CStar.cpp src/vulpecula/components/CStar.h \
+		src/engine/components/Component.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QString \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstring.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qchar.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qglobal.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qconfig.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qfeatures.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qsystemdetection.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qprocessordetection.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qcompilerdetection.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qglobalstatic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qbasicatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qgenericatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_msvc.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_integrity.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qoldbasicatomic.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_vxworks.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_power.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_alpha.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv7.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv6.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_armv5.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_bfin.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_ia64.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_mips.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_s390.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_sh4a.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_sparc.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_x86.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_cxx11.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_gcc.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qatomic_unix.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qmutex.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qlogging.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qflags.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qtypeinfo.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qtypetraits.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qsysinfo.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qbytearray.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qrefcount.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qnamespace.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qarraydata.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstringbuilder.h \
+		src/engine/objectManagement/GameObject.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QHash \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qhash.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qiterator.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qlist.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qalgorithms.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qpair.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QSetIterator \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qset.h \
+		libs/glm/glm.hpp \
+		libs/glm/detail/_fixes.hpp \
+		libs/glm/fwd.hpp \
+		libs/glm/detail/type_int.hpp \
+		libs/glm/detail/setup.hpp \
+		libs/glm/detail/type_float.hpp \
+		libs/glm/detail/type_vec.hpp \
+		libs/glm/detail/precision.hpp \
+		libs/glm/detail/type_mat.hpp \
+		libs/glm/vec2.hpp \
+		libs/glm/detail/type_vec2.hpp \
+		libs/glm/detail/_swizzle.hpp \
+		libs/glm/detail/_swizzle_func.hpp \
+		libs/glm/detail/type_vec2.inl \
+		libs/glm/vec3.hpp \
+		libs/glm/detail/type_vec3.hpp \
+		libs/glm/detail/type_vec3.inl \
+		libs/glm/vec4.hpp \
+		libs/glm/detail/type_vec4.hpp \
+		libs/glm/detail/type_vec4.inl \
+		libs/glm/mat2x2.hpp \
+		libs/glm/detail/type_mat2x2.hpp \
+		libs/glm/detail/type_mat2x2.inl \
+		libs/glm/mat2x3.hpp \
+		libs/glm/detail/type_mat2x3.hpp \
+		libs/glm/detail/type_mat2x3.inl \
+		libs/glm/mat2x4.hpp \
+		libs/glm/detail/type_mat2x4.hpp \
+		libs/glm/detail/type_mat2x4.inl \
+		libs/glm/mat3x2.hpp \
+		libs/glm/detail/type_mat3x2.hpp \
+		libs/glm/detail/type_mat3x2.inl \
+		libs/glm/mat3x3.hpp \
+		libs/glm/detail/type_mat3x3.hpp \
+		libs/glm/detail/type_mat3x3.inl \
+		libs/glm/mat3x4.hpp \
+		libs/glm/detail/type_mat3x4.hpp \
+		libs/glm/detail/type_mat3x4.inl \
+		libs/glm/mat4x2.hpp \
+		libs/glm/detail/type_mat4x2.hpp \
+		libs/glm/detail/type_mat4x2.inl \
+		libs/glm/mat4x3.hpp \
+		libs/glm/detail/type_mat4x3.hpp \
+		libs/glm/detail/type_mat4x3.inl \
+		libs/glm/mat4x4.hpp \
+		libs/glm/detail/type_mat4x4.hpp \
+		libs/glm/detail/type_mat4x4.inl \
+		libs/glm/trigonometric.hpp \
+		libs/glm/detail/func_trigonometric.hpp \
+		libs/glm/detail/func_trigonometric.inl \
+		libs/glm/detail/_vectorize.hpp \
+		libs/glm/detail/type_vec1.hpp \
+		libs/glm/detail/type_vec1.inl \
+		libs/glm/exponential.hpp \
+		libs/glm/detail/func_exponential.hpp \
+		libs/glm/detail/func_exponential.inl \
+		libs/glm/detail/func_vector_relational.hpp \
+		libs/glm/detail/func_vector_relational.inl \
+		libs/glm/common.hpp \
+		libs/glm/detail/func_common.hpp \
+		libs/glm/detail/func_common.inl \
+		libs/glm/packing.hpp \
+		libs/glm/detail/func_packing.hpp \
+		libs/glm/detail/func_packing.inl \
+		libs/glm/detail/type_half.hpp \
+		libs/glm/detail/type_half.inl \
+		libs/glm/geometric.hpp \
+		libs/glm/detail/func_geometric.hpp \
+		libs/glm/detail/func_geometric.inl \
+		libs/glm/matrix.hpp \
+		libs/glm/detail/func_matrix.hpp \
+		libs/glm/detail/func_matrix.inl \
+		libs/glm/vector_relational.hpp \
+		libs/glm/integer.hpp \
+		libs/glm/detail/func_integer.hpp \
+		libs/glm/detail/func_integer.inl
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CStar.o src/vulpecula/components/CStar.cpp
 
 qrc_shaders.o: qrc_shaders.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_shaders.o qrc_shaders.cpp

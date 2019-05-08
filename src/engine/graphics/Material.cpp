@@ -7,7 +7,8 @@ Material::Material(const std::shared_ptr<Shader>& shader,
                    std::string textureName, glm::vec2 textureRepeat,
                    glm::vec2 textureStart, glm::vec2 textureEnd,
                    int useLighting, glm::vec3 color, float alpha,
-                   glm::vec3 specularColor, float shininess) :
+                   glm::vec3 specularColor, float shininess,
+                   float emissive) :
     shaderName(""),
     shader(shader),
     useLighting(useLighting),
@@ -15,6 +16,7 @@ Material::Material(const std::shared_ptr<Shader>& shader,
     alpha(alpha),
     specularColor(specularColor),
     shininess(shininess),
+    emissive(emissive),
     textureName(textureName),
     texture(nullptr),
     textureRepeat(textureRepeat),
@@ -28,7 +30,8 @@ Material::Material(const std::shared_ptr<Shader>& shader,
                    const std::shared_ptr<Texture2D>& texture, glm::vec2 textureRepeat,
                    glm::vec2 textureStart, glm::vec2 textureEnd,
                    int useLighting, glm::vec3 color, float alpha,
-                   glm::vec3 specularColor, float shininess) :
+                   glm::vec3 specularColor, float shininess,
+                   float emissive) :
     shaderName(""),
     shader(shader),
     useLighting(useLighting),
@@ -36,6 +39,7 @@ Material::Material(const std::shared_ptr<Shader>& shader,
     alpha(alpha),
     specularColor(specularColor),
     shininess(shininess),
+    emissive(emissive),
     textureName(""),
     texture(texture),
     textureRepeat(textureRepeat),
@@ -49,7 +53,8 @@ Material::Material(std::string shaderName,
                    std::string textureName, glm::vec2 textureRepeat,
                    glm::vec2 textureStart, glm::vec2 textureEnd,
                    int useLighting, glm::vec3 color, float alpha,
-                   glm::vec3 specularColor, float shininess) :
+                   glm::vec3 specularColor, float shininess,
+                   float emissive) :
     shaderName(shaderName),
     shader(nullptr),
     useLighting(useLighting),
@@ -57,6 +62,7 @@ Material::Material(std::string shaderName,
     alpha(alpha),
     specularColor(specularColor),
     shininess(shininess),
+    emissive(emissive),
     textureName(textureName),
     texture(nullptr),
     textureRepeat(textureRepeat),
@@ -70,7 +76,8 @@ Material::Material(std::string shaderName,
                    const std::shared_ptr<Texture2D>& texture, glm::vec2 textureRepeat,
                    glm::vec2 textureStart, glm::vec2 textureEnd,
                    int useLighting, glm::vec3 color, float alpha,
-                   glm::vec3 specularColor, float shininess) :
+                   glm::vec3 specularColor, float shininess,
+                   float emissive) :
     shaderName(shaderName),
     shader(nullptr),
     useLighting(useLighting),
@@ -78,6 +85,7 @@ Material::Material(std::string shaderName,
     alpha(alpha),
     specularColor(specularColor),
     shininess(shininess),
+    emissive(emissive),
     textureName(""),
     texture(texture),
     textureRepeat(textureRepeat),
@@ -95,6 +103,7 @@ Material::Material(const Material& m) :
     alpha(m.alpha),
     specularColor(m.specularColor),
     shininess(m.shininess),
+    emissive(m.emissive),
     textureName(m.textureName),
     texture(m.texture),
     textureRepeat(m.textureRepeat),
@@ -118,6 +127,7 @@ Material& Material::operator=(const Material& m) {
     alpha = m.alpha;
     specularColor = m.specularColor;
     shininess = m.shininess;
+    emissive = m.emissive;
     textureName = m.textureName;
     texture = m.texture;
     textureRepeat = m.textureRepeat;
@@ -135,6 +145,7 @@ bool Material::operator==(const Material& m) {
     alpha == m.alpha &&
     specularColor == m.specularColor &&
     shininess == m.shininess &&
+    emissive == m.emissive &&
     textureName == m.textureName &&
     texture == m.texture &&
     textureRepeat == m.textureRepeat &&

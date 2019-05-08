@@ -20,6 +20,8 @@ public:
     QVector<glm::vec4> *getPoints();
     void updateBounds(glm::mat4 transform);
 
+    void calculatePoints();
+
     glm::vec4 getMin();
     glm::vec4 getMax();
 
@@ -30,8 +32,6 @@ public:
     void draw(Graphics *g);
 
 private:
-    void calculatePoints();
-
     QVector<glm::vec4> m_points;
     glm::vec4 m_min, m_max;
 };

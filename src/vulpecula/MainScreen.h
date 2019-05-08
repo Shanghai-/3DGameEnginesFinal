@@ -6,6 +6,7 @@
 #include "engine/components/volumes/CollisionVolume.h"
 #include "systems/PlayerMovementSys.h"
 #include "engine/systems/AudioSystem.h"
+#include "vulpecula/scripts/StarCountScript.h"
 
 class Application;
 
@@ -36,6 +37,7 @@ private:
         PINE_CLUSTER_3,
         LONE_PINE,
         DEAD_TREES_1,
+        BIG_DEAD_TREE,
         POWER_LINE
     };
 
@@ -43,7 +45,7 @@ private:
     void loadGraphics();
     void loadMap(std::shared_ptr<PlayerMovementSys> playSys);
     AudioSystem *initializeAudio(std::shared_ptr<GameObject> player);
-    void setupUI();
+    StarCountScript *setupUI();
 
     void loadTerrain(std::shared_ptr<PlayerMovementSys> playSys);
     void loadDecorations();
