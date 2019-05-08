@@ -19,7 +19,7 @@ ParticleSys::ParticleSys(int priority)
       m_blurFBO1(nullptr), m_blurFBO2(nullptr),
       m_particlesFBO1(nullptr), m_particlesFBO2(nullptr),
       m_firstPass(true), m_evenPass(true),
-      m_numParticles(50),
+      m_numParticles(10),
       m_angleX(-0.5f), m_angleY(0.5f), m_zoom(4.f)
 {
 

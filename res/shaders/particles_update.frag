@@ -13,7 +13,6 @@ layout(location = 0) out vec4 pos;
 layout(location = 1) out vec4 vel;
 const float PI = 3.14159;
 const float dt = 0.0167; // 1 sec/60 fps
-vec3 dir = vec3(0, 1, 0);
 
 /*
     A particle has the following properties:
@@ -43,13 +42,13 @@ vec2 calculateInitialVelocity(int index) {
 
 vec4 initPosition(int index) {
     return vec4(uv.x, uv.x, 0, 1);
-    vec3 spawn = vec3(1, 0, 0);
+    const vec3 spawn = vec3(0);
     return vec4(spawn, calculateLifetime(index));
 }
 
 vec4 initVelocity(int index) {
-    return vec4(0, 1, 0, 1);
-    return vec4(calculateInitialVelocity(index), 0, 0);
+    return vec4(0, 0, 0, 0);
+    return vec4(calculateInitialVelocity(index), 0, 1);
 }
 
 vec4 updatePosition(int index) {
@@ -57,7 +56,6 @@ vec4 updatePosition(int index) {
     // - sample prevPos and prevVel at uv
     // - xyz: pos + vel * dt
     // - w component is lifetime, so keep it from the previous position
-
     vec3 p = texture(prevPos, uv).xyz;
     vec3 v = texture(prevVel, uv).xyz;
     vec3 xyz = p + v * dt;
@@ -70,9 +68,8 @@ vec4 updateVelocity(int index) {
     // - sample prevVel at uv
     // - only force is gravity in y direction.  Add G * dt.
     // - w component is age, so add dt
-
     vec3 v = texture(prevVel, uv).xyz;
-    //v.y = v.y + G * dt;
+    v.y = v.y + G * dt;
     return vec4(v, texture(prevVel, uv).w);
 }
 
