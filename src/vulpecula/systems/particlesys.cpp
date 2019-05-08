@@ -19,9 +19,14 @@ ParticleSys::ParticleSys(int priority)
       m_blurFBO1(nullptr), m_blurFBO2(nullptr),
       m_particlesFBO1(nullptr), m_particlesFBO2(nullptr),
       m_firstPass(true), m_evenPass(true),
-      m_numParticles(5000),
+      m_numParticles(50),
       m_angleX(-0.5f), m_angleY(0.5f), m_zoom(4.f)
 {
+
+    m_screenWidth = 800;
+    m_screenHeight = 600;
+
+
 
     ResourceLoader2::initializeGlew();
     glEnable(GL_DEPTH_TEST);
@@ -59,6 +64,7 @@ ParticleSys::ParticleSys(int priority)
     GLint maxRenderBufferSize;
     glGetIntegerv(GL_MAX_RENDERBUFFER_SIZE_EXT, &maxRenderBufferSize);
     std::cout << "Max FBO size: " << maxRenderBufferSize << std::endl;
+
 }
 
 ParticleSys::~ParticleSys()
@@ -67,6 +73,7 @@ ParticleSys::~ParticleSys()
 }
 
 void ParticleSys::drawParticles() {
+
     auto prevFBO = m_evenPass ? m_particlesFBO1 : m_particlesFBO2;
     auto nextFBO = m_evenPass ? m_particlesFBO2 : m_particlesFBO1;
     float firstPass = m_firstPass ? 1.0f : 0.0f;
@@ -108,9 +115,9 @@ void ParticleSys::drawParticles() {
 // Sets the viewport to ensure that {0,0} is always in the center of the viewport
 // in clip space, and to ensure that the aspect ratio is 1:1
 void ParticleSys::setParticleViewport() {
-    int maxDim = std::max(m_width, m_height);
-    int x = (m_width - maxDim) / 2.0f;
-    int y = (m_height - maxDim) / 2.0f;
+    int maxDim = std::max(m_screenWidth, m_screenHeight);
+    int x = (m_screenWidth - maxDim) / 2.0f;
+    int y = (m_screenHeight - maxDim) / 2.0f;
     glViewport(x, y, maxDim, maxDim);
 }
 

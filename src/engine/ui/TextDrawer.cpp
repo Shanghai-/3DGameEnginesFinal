@@ -96,7 +96,9 @@ void TextDrawer::draw()
         //m_graphics->drawText(text->getFontName(), text->getText(), text->getSize());
     }
 
-    if (oldCam != nullptr) m_graphics->setCamera(oldCam);
+    if (oldCam != nullptr){
+        m_graphics->setCamera(oldCam);
+    }
 }
 
 void TextDrawer::resize(int w, int h)
