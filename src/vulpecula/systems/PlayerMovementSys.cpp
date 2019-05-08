@@ -11,7 +11,8 @@
 #include <iostream>
 #include <math.h>
 
-#define PLAYER_SPEED 3.0f
+#define PLAYER_SPEED 3.3f
+#define PLAYER_SPRINT_SPEED 4.5f
 
 PlayerMovementSys::PlayerMovementSys(int priority) :
     System(priority)
@@ -116,14 +117,15 @@ void PlayerMovementSys::tick(float seconds)
     std::shared_ptr<CCamera> cam = m_graphics->getActiveCamera();
     std::shared_ptr<Camera> graphicsCam = cam->getCameraObject();
 
+    float speed = m_input->isPressed(Qt::Key_Shift) ? PLAYER_SPRINT_SPEED : PLAYER_SPEED;
 
     glm::vec3 forward = graphicsCam->getLook();
     forward.y = 0;
-    forward = glm::normalize(forward) * PLAYER_SPEED;
+    forward = glm::normalize(forward) * speed;
 
     glm::vec3 left = glm::cross(graphicsCam->getUp(), graphicsCam->getLook());
     left.y = 0;
-    left = glm::normalize(left) * PLAYER_SPEED;
+    left = glm::normalize(left) * speed;
 
     QSetIterator<std::shared_ptr<CTransform>> it(m_transforms);
 
