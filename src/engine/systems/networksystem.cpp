@@ -7,6 +7,8 @@
 #include "engine/objectManagement/GameWorld.h"
 #include "engine/components/CRenderable.h"
 #include "engine/components/CAnimatedMesh.h"
+#include "engine/components/CCollider.h"
+#include "engine/components/volumes/CollCylinder.h"
 
 #define MAX_CLIENTS 10
 #define SERVER_PORT 60000
@@ -323,6 +325,8 @@ void NetworkSystem::addPlayer(PlayerObject *playerObject, QString name, NetworkI
     playerObject->networkComponent = netComp;
     player->addComponent(std::make_shared<CTransform>(player, false, glm::vec3(0.f, 22.0f, 50.0f), glm::vec3(0.0f), glm::vec3(0.2f)));
     player->addComponent(std::make_shared<CAnimatedMesh>(player, "/course/cs1950u/.archive/2019/student/vulpecula/fox.fbx", "PureWhite"));
+    auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -0.375f, 0.f), 0.75f, 0.8f);
+    player->addComponent(std::make_shared<CCollider>(player, coll, false));
 //    player->addComponent(std::make_shared<CRenderable>(player, "cube", "Star"));
 //                    auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -0.375f, 0.f), 0.75f, 0.8f);
 //                    auto comp = std::make_shared<CCollider>(player, coll, false);
