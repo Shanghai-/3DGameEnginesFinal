@@ -132,7 +132,7 @@ void MainScreen::initializeGame()
     auto comp = std::make_shared<CCollider>(player, coll, false);
     player->addComponent(comp);
     player->addComponent(std::make_shared<CInputReceiver>(player));
-    player->addComponent(std::make_shared<ColEllipsoid>(player, glm::vec3(1.25f, .25f, 1.25f)));
+    player->addComponent(std::make_shared<ColEllipsoid>(player, glm::vec3(1.5f, .25f, 1.5f)));
     player->addComponent(std::make_shared<CPhysics>(player, glm::vec3(0.f, -.2f, 0.f)));
     auto net = std::make_shared<NetworkComponent>(player, NULL);
     netSys->setPlayer(net);
