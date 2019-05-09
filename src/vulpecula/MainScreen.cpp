@@ -800,6 +800,7 @@ void MainScreen::createPrefab(MainScreen::PrefabType type, glm::vec3 position, g
         break;
     case BIG_DEAD_TREE:
         prefab->addComponent(std::make_shared<CRenderable>(prefab, basePath.append("BigDeadTree.obj"), "DeadTrees"));
+        break;
     case POWER_LINE:
         prefab->addComponent(std::make_shared<CRenderable>(prefab, basePath.append("wire.obj"), "PowerLine"));
         break;
