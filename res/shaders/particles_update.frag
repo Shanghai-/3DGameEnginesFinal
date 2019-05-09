@@ -41,14 +41,13 @@ vec2 calculateInitialVelocity(int index) {
 }
 
 vec4 initPosition(int index) {
-    return vec4(uv.x, uv.x, 0, 1);
-    const vec3 spawn = vec3(0);
-    return vec4(spawn, calculateLifetime(index));
+    return vec4(3.f * calculateInitialVelocity(index).x, 2.f, 0.f, calculateLifetime(index));
+    //return vec4(calculateInitialVelocity(index), 0.f, calculateLifetime(index));
 }
 
 vec4 initVelocity(int index) {
-    return vec4(0, 0, 0, 0);
-    return vec4(calculateInitialVelocity(index), 0, 1);
+    vec2 rand = calculateInitialVelocity(index);
+    return vec4(rand.x, -rand.y, 0, 1);
 }
 
 vec4 updatePosition(int index) {
@@ -56,10 +55,10 @@ vec4 updatePosition(int index) {
     // - sample prevPos and prevVel at uv
     // - xyz: pos + vel * dt
     // - w component is lifetime, so keep it from the previous position
-    vec3 p = texture(prevPos, uv).xyz;
-    vec3 v = texture(prevVel, uv).xyz;
-    vec3 xyz = p + v * dt;
-    return vec4(xyz,texture(prevPos, uv).w);
+    vec2 p = texture(prevPos, uv).xy;
+    vec2 v = texture(prevVel, uv).xy;
+    vec2 xy = p + v * dt;
+    return vec4(xy, 0.f, texture(prevPos, uv).w);
 }
 
 vec4 updateVelocity(int index) {
@@ -68,23 +67,25 @@ vec4 updateVelocity(int index) {
     // - sample prevVel at uv
     // - only force is gravity in y direction.  Add G * dt.
     // - w component is age, so add dt
-    vec3 v = texture(prevVel, uv).xyz;
+    vec2 v = texture(prevVel, uv).xy;
     v.y = v.y + G * dt;
-    return vec4(v, texture(prevVel, uv).w);
+    return vec4(v, texture(prevVel, uv).z + (dt / 7.f), texture(prevVel, uv).w);
 }
 
 void main() {
     int index = int(uv.x * numParticles);
     if (firstPass > 0.5) {
         pos = initPosition(index);
+        pos.y += .2f;
         vel = initVelocity(index);
     } else {
         pos = updatePosition(index);
         vel = updateVelocity(index);
 
-//        if (pos.w < vel.w) {
-//            pos = initPosition(index);
-//            vel = initVelocity(index);
-//        }
+        if (pos.w < vel.z) {
+            pos = initPosition(index);
+            pos.y += .2f;
+            vel = initVelocity(index);
+        }
     }
 }

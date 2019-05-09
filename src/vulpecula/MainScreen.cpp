@@ -158,9 +158,8 @@ void MainScreen::initializeGame()
     auto progressTracker = std::make_shared<ProgressTracker>(905, audioSys, starCounter);
     m_gw->registerForTick(progressTracker);
 
-//    auto partSys = std::make_shared<ParticleSys>(100);
-//    m_gw->registerForDraw(partSys);
-//    m_gw->registerForTick(partSys);
+    auto partSys = std::make_shared<ParticleSys>(100);
+    m_gw->registerForDraw(partSys);
 }
 
 void MainScreen::loadGraphics()
