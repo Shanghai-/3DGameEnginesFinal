@@ -21,6 +21,5 @@ void FullScreenQuadScript::onDraw()
 
 void FullScreenQuadScript::onResize(int w, int h)
 {
-    std::cout << "adkjsfasdf" << std::endl;
     m_targetQuad->getTransform()->setScale(glm::vec2(w, h));
 }

@@ -193,13 +193,26 @@ void AudioSystem::tick(float seconds)
         }
     }
 
+    for (int i = 0; i < m_fades.length(); i++) {
+        FadeInfo f = m_fades[i];
+        f.curTime += seconds;
+        float progress = glm::clamp(f.curTime / f.endingTime, 0.0f, 1.0f);
+        float newVol = glm::mix(f.startingVol, f.endingVol, progress);
+        setChannelVolume(f.channel, newVol);
+        if (newVol == 1.0f) {
+            m_fades.remove(i);
+            i--;
+        } else {
+            m_fades[i] = f;
+        }
+    }
+
     m_sys->update();
 }
 
 /**********************************
  * CHANNEL MANIPULATION FUNCTIONS *
  **********************************/
-
 
 void AudioSystem::createChannel(const QString &name)
 {
@@ -252,9 +265,20 @@ void AudioSystem::fadeChannelVolume(const QString &name, const float &targetVolu
 {
     FMOD::ChannelGroup *cg = m_channels.value(name);
     if (cg != nullptr) {
-        unsigned long long clock;
+        float startVol;
+        cg->getVolume(&startVol);
+
+        FadeInfo f;
+        f.channel = name;
+        f.endingTime = timeInSeconds;
+        f.startingVol = startVol;
+        f.endingVol = targetVolume;
+        f.curTime = 0.0f;
+
+        m_fades.append(f);
+        /* unsigned long long clock;
         cg->getDSPClock(&clock, nullptr);
-        cg->setFadePointRamp(clock + (timeInSeconds * 44100.0f), targetVolume);
+        cg->setFadePointRamp(clock + (timeInSeconds * 44100.0f), targetVolume); */
     }
 }
 

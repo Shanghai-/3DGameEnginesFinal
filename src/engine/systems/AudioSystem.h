@@ -7,6 +7,8 @@
 
 #include "fmod/fmod.hpp"
 
+#include <QVector>
+
 #define NUM_CHANNELS 128
 
 class QTemporaryFile;
@@ -38,6 +40,14 @@ public:
     void removeEffect(QString effectName, QString channelName);
 
 private:
+    struct FadeInfo {
+        QString channel = "";
+        float startingVol = 0;
+        float endingVol = 0;
+        float endingTime = 0;
+        float curTime = 0;
+    };
+
     void errChk(FMOD_RESULT res);
     void loadSound(std::shared_ptr<CAudioSource> s);
 
@@ -50,6 +60,7 @@ private:
     QHash<QString, QTemporaryFile *> m_files;
     QHash<QString, FMOD::ChannelGroup *> m_channels;
     QHash<QString, FMOD::DSP *> m_effects;
+    QVector<FadeInfo> m_fades;
 };
 
 #endif // AUDIOSYSTEM_H

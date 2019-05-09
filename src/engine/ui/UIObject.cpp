@@ -25,3 +25,8 @@ Anchor UIObject::getAnchor()
 {
     return m_pos;
 }
+
+QString UIObject::getName()
+{
+    return m_name;
+}

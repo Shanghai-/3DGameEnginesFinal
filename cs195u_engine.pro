@@ -262,7 +262,9 @@ SOURCES += \
     src/vulpecula/scripts/StarCountScript.cpp \
     src/engine/ui/scripts/UISpriteAnimator.cpp \
     src/vulpecula/systems/StarSpinner.cpp \
-    src/vulpecula/components/CStar.cpp
+    src/vulpecula/components/CStar.cpp \
+    src/vulpecula/CreditsScreen.cpp \
+    src/vulpecula/scripts/GoToCreds.cpp
 
 HEADERS += \
     libs/glew-1.10.0/include/GL/glew.h \
@@ -569,7 +571,9 @@ HEADERS += \
     src/vulpecula/scripts/StarCountScript.h \
     src/engine/ui/scripts/UISpriteAnimator.h \
     src/vulpecula/systems/StarSpinner.h \
-    src/vulpecula/components/CStar.h
+    src/vulpecula/components/CStar.h \
+    src/vulpecula/CreditsScreen.h \
+    src/vulpecula/scripts/GoToCreds.h
 
 FORMS += src/mainwindow.ui
 

@@ -23,6 +23,7 @@ public:
 
     QVector<std::shared_ptr<UIComponent>> getComponents();
     Anchor getAnchor();
+    QString getName();
 
 private:
     QString m_name;
