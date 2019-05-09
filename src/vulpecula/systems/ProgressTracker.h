@@ -4,10 +4,13 @@
 #include "engine/systems/AudioSystem.h"
 #include "vulpecula/scripts/StarCountScript.h"
 
+class Application;
+
 class ProgressTracker : public System
 {
 public:
     ProgressTracker(int priority, AudioSystem *audioSys,
+                    Application *app,
                     StarCountScript *starCounter);
     ~ProgressTracker();
 
@@ -17,6 +20,7 @@ public:
 
 private:
     AudioSystem *m_audioSys;
+    Application *m_app;
     StarCountScript *m_starCounter;
 
     int m_totalStars;

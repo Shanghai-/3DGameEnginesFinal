@@ -92,8 +92,8 @@ void TextDrawer::draw()
         m_graphics->scale(v3(t.getScale()));
 
         m_graphics->setMaterial(text->getMaterial());
-        m_graphics->drawText(text->getText(), text->getSize());
-        //m_graphics->drawText(text->getFontName(), text->getText(), text->getSize());
+        //m_graphics->drawText(text->getText(), text->getSize());
+        m_graphics->drawText(text->getFontName(), text->getText(), text->getSize());
     }
 
     if (oldCam != nullptr) m_graphics->setCamera(oldCam);

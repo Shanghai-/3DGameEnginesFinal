@@ -69,20 +69,6 @@ MainScreen::~MainScreen()
 
 void MainScreen::initializeGame()
 {
-    /* m_gw->registerForDraw(std::make_shared<RenderSystem>(100));
-    m_gw->registerForTick(std::make_shared<ThirdPersonCamSys>(401, 3.0f, 50.0f, 4.0f));
-
-    Material bah;
-    bah.useLighting = false;
-    bah.color = glm::vec3(0.95f);
-    Graphics::getGlobalInstance()->addMaterial("White", bah);
-
-    std::shared_ptr<GameObject> obj = std::make_shared<GameObject>("TestMesh", m_gw->getNewObjID());
-    obj->addComponent(std::make_shared<CTransform>(obj, true, glm::vec3(0.0f)));
-    obj->addComponent(std::make_shared<CRenderable>(obj, "/course/cs1950u/.archive/2019/student/vulpecula/terrain/Terrain33.obj", "White"));
-    obj->addComponent(std::make_shared<CCamera>(obj, glm::vec3(0.0f)));
-    m_gw->addGameObject(obj); */
-
     auto netSys = std::make_shared<NetworkSystem>(400, m_gw.get(), m_isServer);
     auto collSys = std::make_shared<CollisionSystem>(300);
     auto animSys = std::make_shared<AnimationSystem>(500);
@@ -146,7 +132,7 @@ void MainScreen::initializeGame()
     auto comp = std::make_shared<CCollider>(player, coll, false);
     player->addComponent(comp);
     player->addComponent(std::make_shared<CInputReceiver>(player));
-    player->addComponent(std::make_shared<ColEllipsoid>(player, glm::vec3(.5f, .5f, .5f)));
+    player->addComponent(std::make_shared<ColEllipsoid>(player, glm::vec3(1.25f, .25f, 1.25f)));
     player->addComponent(std::make_shared<CPhysics>(player, glm::vec3(0.f, -.2f, 0.f)));
     auto net = std::make_shared<NetworkComponent>(player, NULL);
     netSys->setPlayer(net);
@@ -155,7 +141,7 @@ void MainScreen::initializeGame()
     // Load the ambient audio, set up channels, etc.
     AudioSystem *audioSys = initializeAudio(player);
 
-    auto progressTracker = std::make_shared<ProgressTracker>(905, audioSys, starCounter);
+    auto progressTracker = std::make_shared<ProgressTracker>(905, audioSys, m_parent, starCounter);
     m_gw->registerForTick(progressTracker);
 
 //    auto partSys = std::make_shared<ParticleSys>(100);
@@ -596,6 +582,11 @@ void MainScreen::loadDecorations(std::shared_ptr<PlayerMovementSys> playSys)
     createPrefab(DEAD_TREES_1, glm::vec3(70.1346, -14.3803, -34.911), glm::vec3(14, 0, 0), glm::vec3(1.306));
     createPrefab(DEAD_TREES_1, glm::vec3(72.9787, -14.0343, -43.9335), glm::vec3(12, 51.2, 15), glm::vec3(1.031));
     createPrefab(DEAD_TREES_1, glm::vec3(54.4941, -15.3149, -25.5019), glm::vec3(0, 175, 0), glm::vec3(1.187));
+
+    createPrefab(BIG_DEAD_TREE, glm::vec3(79.2274, -5.47522, 49.5682), glm::vec3(0, -150, 0), glm::vec3(1.089));
+    createPrefab(BIG_DEAD_TREE, glm::vec3(41.6872, 1.7311, 10.6814), glm::vec3(13, -280, -2.27), glm::vec3(1.089));
+    createPrefab(BIG_DEAD_TREE, glm::vec3(58.1648, -9.41903, 18.2713), glm::vec3(0, -145, 0), glm::vec3(1.219));
+    createPrefab(BIG_DEAD_TREE, glm::vec3(83.7274, -11.8407, -35.7699), glm::vec3(0, -264, 0), glm::vec3(1.219));
 
     // Campfire pit thing
     std::shared_ptr<GameObject> pit = std::make_shared<GameObject>("FirePit", m_gw->getNewObjID());
