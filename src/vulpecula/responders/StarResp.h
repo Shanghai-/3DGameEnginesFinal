@@ -1,16 +1,16 @@
-#ifndef GUITARSTARRESP_H
-#define GUITARSTARRESP_H
+#ifndef STARRESP_H
+#define STARRESP_H
 
 #include "engine/components/responders/CollisionResponse.h"
 #include "engine/components/CAudioSource.h"
 
-class GuitarStarResp : public CollisionResponse
+class StarResp : public CollisionResponse
 {
 public:
-    GuitarStarResp(std::shared_ptr<GameObject> star,
+    StarResp(std::shared_ptr<GameObject> star,
                    std::shared_ptr<GameObject> zone,
                    GameWorld *gw);
-    ~GuitarStarResp();
+    ~StarResp();
 
     void onCollide(std::shared_ptr<GameObject> other);
     void onCollisionEnd(std::shared_ptr<GameObject> other);
@@ -20,4 +20,4 @@ private:
     GameWorld *m_gw;
 };
 
-#endif // GUITARSTARRESP_H
+#endif // STARRESP_H

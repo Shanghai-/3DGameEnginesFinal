@@ -16,7 +16,15 @@ StartButtonResp::~StartButtonResp()
 {
 }
 
+void StartButtonResp::onEnter()
+{
+}
+
 void StartButtonResp::onHover()
+{
+}
+
+void StartButtonResp::onExit()
 {
 }
 

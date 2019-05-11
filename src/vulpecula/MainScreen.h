@@ -9,6 +9,7 @@
 #include "vulpecula/scripts/StarCountScript.h"
 
 class Application;
+class ParticleSys;
 
 class MainScreen : public Screen
 {
@@ -44,7 +45,7 @@ private:
     void initializeGame();
     void loadGraphics();
     void loadMap(std::shared_ptr<PlayerMovementSys> playSys);
-    AudioSystem *initializeAudio(std::shared_ptr<GameObject> player);
+    AudioSystem *initializeAudio(std::shared_ptr<GameObject> player, ParticleSys *ps);
     StarCountScript *setupUI();
 
     void loadTerrain(std::shared_ptr<PlayerMovementSys> playSys);

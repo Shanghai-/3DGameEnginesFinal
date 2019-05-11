@@ -1,14 +1,14 @@
-#ifndef COLLGUITAR_H
-#define COLLGUITAR_H
+#ifndef ZONERESP_H
+#define ZONERESP_H
 
 #include "engine/components/responders/CollisionResponse.h"
 #include "vulpecula/components/RandomAudioSource.h"
 
-class GuitarZoneResp : public CollisionResponse
+class ZoneResp : public CollisionResponse
 {
 public:
-    GuitarZoneResp(std::shared_ptr<RandomAudioSource> s);
-    ~GuitarZoneResp();
+    ZoneResp(std::shared_ptr<RandomAudioSource> s);
+    ~ZoneResp();
 
     void onCollide(std::shared_ptr<GameObject> other);
     void onCollisionEnd(std::shared_ptr<GameObject> other);
@@ -17,4 +17,4 @@ private:
     std::shared_ptr<RandomAudioSource> m_src;
 };
 
-#endif // COLLGUITAR_H
+#endif // ZONERESP_H

@@ -3,8 +3,12 @@
 #include "UIHitbox.h"
 #include "engine/input/InputManager.h"
 
+#include <iostream>
+#include <glm/gtx/string_cast.hpp>
+
 UIClickSystem::UIClickSystem(int priority) :
-    UISystem(priority)
+    UISystem(priority),
+    m_height(1)
 {
     m_input = InputManager::getGlobalInstance();
 }
@@ -32,7 +36,12 @@ void UIClickSystem::removeComponent(const std::shared_ptr<UIComponent> &c)
 void UIClickSystem::tick(float seconds)
 {
     bool mouseDown = m_input->isPressed(Qt::LeftButton);
+
+    // By default, the mouse's position is measured from the top left,
+    // but all of our UI coordinates are from the bottom left, so we
+    // invert the y
     glm::vec2 mouse = m_input->getMousePos();
+    mouse = glm::vec2(mouse.x, m_height - mouse.y);
 
     for (int i = 0; i < m_hitboxes.size(); i++) {
         auto hb = m_hitboxes[i];
@@ -88,26 +97,44 @@ void UIClickSystem::tick(float seconds)
                 break;
         }
 
-        botLeft -= t.getOffset();
-        topRight -= t.getOffset();
+        glm::vec2 offset = t.getOffset();
+        botLeft += offset;
+        topRight += offset;
+
+        uint id = p->getID();
 
         if (mouse.x >= botLeft.x && mouse.x <= topRight.x
                 && mouse.y >= botLeft.y && mouse.y <= topRight.y)
         {
-            if (m_held.contains(i)) {
+            if (m_held.contains(id)) {
                 if (mouseDown) {
                     hb->getResponse()->onHold();
                 } else {
-                    m_held.remove(i);
+                    m_held.remove(id);
                     hb->getResponse()->onRelease();
                 }
             } else {
                 if (mouseDown) {
-                    m_held.insert(i);
+                    m_hovered.remove(id);
+                    m_held.insert(id);
                     hb->getResponse()->onPress();
                 } else {
-                    hb->getResponse()->onHover();
+                    if (m_hovered.contains(id)) {
+                        hb->getResponse()->onHover();
+                    } else {
+                        m_hovered.insert(id);
+                        hb->getResponse()->onEnter();
+                    }
                 }
+            }
+        } else {
+            if (m_hovered.contains(id)) {
+                m_hovered.remove(id);
+                hb->getResponse()->onExit();
+            }
+            if (m_held.contains(id)) {
+                m_held.remove(id);
+                hb->getResponse()->onExit();
             }
         }
     }
@@ -126,4 +153,6 @@ void UIClickSystem::resize(int w, int h)
     m_anchorPos[BOT_LEFT] = glm::vec2(0, 0);
     m_anchorPos[BOT_CENTER] = glm::vec2(w / 2, 0);
     m_anchorPos[BOT_RIGHT] = glm::vec2(w, 0);
+
+    m_height = h;
 }

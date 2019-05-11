@@ -11,7 +11,9 @@ public:
     StartButtonResp(Application *app);
     ~StartButtonResp();
 
+    void onEnter();
     void onHover();
+    void onExit();
     void onPress();
     void onHold();
     void onRelease();

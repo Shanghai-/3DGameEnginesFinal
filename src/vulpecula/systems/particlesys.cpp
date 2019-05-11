@@ -20,7 +20,8 @@ ParticleSys::ParticleSys(int priority)
       m_particlesFBO1(nullptr), m_particlesFBO2(nullptr),
       m_firstPass(true), m_evenPass(true),
       m_numParticles(5000),
-      m_angleX(-0.5f), m_angleY(0.5f), m_zoom(4.f)
+      m_angleX(-0.5f), m_angleY(0.5f), m_zoom(4.f),
+      m_hidden(false)
 {
 
     m_screenWidth = 800;
@@ -69,6 +70,11 @@ ParticleSys::ParticleSys(int priority)
 ParticleSys::~ParticleSys()
 {
     glDeleteVertexArrays(1, &m_particlesVAO);
+}
+
+void ParticleSys::setHidden(bool hide)
+{
+    m_hidden = hide;
 }
 
 void ParticleSys::drawParticles() {
@@ -131,10 +137,11 @@ void ParticleSys::rebuildMatrices() {
 }
 
 void ParticleSys::draw() {
+    if (m_hidden) return;
+
     glClear(GL_COLOR_BUFFER_BIT);
     drawParticles();
     glViewport(0, 0, m_screenWidth, m_screenHeight);
-//    update();
 }
 
 void ParticleSys::resize(int w, int h)

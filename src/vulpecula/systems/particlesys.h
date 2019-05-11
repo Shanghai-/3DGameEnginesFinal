@@ -21,6 +21,8 @@ public:
     ParticleSys(int priority);
     ~ParticleSys();
 
+    void setHidden(bool hide);
+
 private:
     void drawParticles();
     void setParticleViewport();
@@ -58,6 +60,8 @@ private:
 
     int m_screenWidth;
     int m_screenHeight;
+
+    bool m_hidden;
 
     // System interface
 public:

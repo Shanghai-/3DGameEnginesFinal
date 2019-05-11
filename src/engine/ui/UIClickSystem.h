@@ -25,9 +25,12 @@ public:
 private:
     InputManager *m_input;
 
+    int m_height;
+
     QVector<std::shared_ptr<UIHitbox>> m_hitboxes;
     QHash<Anchor, glm::vec2> m_anchorPos;
-    QSet<int> m_held;
+    QSet<uint> m_held;
+    QSet<uint> m_hovered;
 };
 
 #endif // UICLICKSYSTEM_H

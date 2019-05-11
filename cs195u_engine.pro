@@ -124,8 +124,6 @@ SOURCES += \
     src/vulpecula/components/RandomAudioSource.cpp \
     src/vulpecula/systems/RandomAudioManager.cpp \
     src/vulpecula/systems/PlayerMovementSys.cpp \
-    src/vulpecula/responders/GuitarZoneResp.cpp \
-    src/vulpecula/responders/GuitarStarResp.cpp \
     src/engine/graphics/RiggedMesh.cpp \
     src/engine/systems/AnimationSystem.cpp \
     src/engine/components/CAnimatedMesh.cpp \
@@ -264,7 +262,9 @@ SOURCES += \
     src/vulpecula/systems/StarSpinner.cpp \
     src/vulpecula/components/CStar.cpp \
     src/vulpecula/CreditsScreen.cpp \
-    src/vulpecula/scripts/GoToCreds.cpp
+    src/vulpecula/scripts/GoToCreds.cpp \
+    src/vulpecula/responders/StarResp.cpp \
+    src/vulpecula/responders/ZoneResp.cpp
 
 HEADERS += \
     libs/glew-1.10.0/include/GL/glew.h \
@@ -388,8 +388,6 @@ HEADERS += \
     src/vulpecula/components/RandomAudioSource.h \
     src/vulpecula/systems/RandomAudioManager.h \
     src/vulpecula/systems/PlayerMovementSys.h \
-    src/vulpecula/responders/GuitarZoneResp.h \
-    src/vulpecula/responders/GuitarStarResp.h \
     src/engine/graphics/RiggedMesh.h \
     src/engine/systems/AnimationSystem.h \
     src/engine/components/CAnimatedMesh.h \
@@ -573,7 +571,9 @@ HEADERS += \
     src/vulpecula/systems/StarSpinner.h \
     src/vulpecula/components/CStar.h \
     src/vulpecula/CreditsScreen.h \
-    src/vulpecula/scripts/GoToCreds.h
+    src/vulpecula/scripts/GoToCreds.h \
+    src/vulpecula/responders/StarResp.h \
+    src/vulpecula/responders/ZoneResp.h
 
 FORMS += src/mainwindow.ui
 

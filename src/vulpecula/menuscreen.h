@@ -32,10 +32,6 @@ public:
 private:
     std::shared_ptr<GameWorld> m_gw;
     Application *m_parent;
-
-//    bool m_particle;
-//    std::shared_ptr<ParticleSys> m_partSys;
-
 };
 
 #endif // MENUSCREEN_H

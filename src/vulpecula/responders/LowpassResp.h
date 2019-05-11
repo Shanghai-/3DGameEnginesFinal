@@ -5,10 +5,12 @@
 #include "engine/components/CTransform.h"
 #include "engine/systems/AudioSystem.h"
 
+#include "vulpecula/systems/particlesys.h"
+
 class LowpassResp : public CollisionResponse
 {
 public:
-    LowpassResp(glm::vec3 pos, AudioSystem *audio);
+    LowpassResp(glm::vec3 pos, AudioSystem *audio, ParticleSys *ps);
     ~LowpassResp();
 
     void onCollide(std::shared_ptr<GameObject> other);
@@ -17,6 +19,7 @@ public:
 private:
     glm::vec3 m_pos;
     AudioSystem *m_audio;
+    ParticleSys *m_particles;
 };
 
 #endif // LOWPASSRESP_H

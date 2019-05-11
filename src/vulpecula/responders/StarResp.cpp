@@ -1,4 +1,4 @@
-#include "GuitarStarResp.h"
+#include "StarResp.h"
 
 #include "engine/components/CCollider.h"
 #include "engine/components/CRenderable.h"
@@ -7,7 +7,7 @@
 #include "engine/graphics/Graphics.h"
 #include "vulpecula/components/CStar.h"
 
-GuitarStarResp::GuitarStarResp(std::shared_ptr<GameObject> star,
+StarResp::StarResp(std::shared_ptr<GameObject> star,
                                std::shared_ptr<GameObject> zone,
                                GameWorld *gw) :
     m_star(star),
@@ -16,11 +16,11 @@ GuitarStarResp::GuitarStarResp(std::shared_ptr<GameObject> star,
 {
 }
 
-GuitarStarResp::~GuitarStarResp()
+StarResp::~StarResp()
 {
 }
 
-void GuitarStarResp::onCollide(std::shared_ptr<GameObject> other)
+void StarResp::onCollide(std::shared_ptr<GameObject> other)
 {
     if (other->getName() == "Player") {
         auto audio = m_star->getComponent<CAudioSource>();
@@ -34,6 +34,6 @@ void GuitarStarResp::onCollide(std::shared_ptr<GameObject> other)
     }
 }
 
-void GuitarStarResp::onCollisionEnd(std::shared_ptr<GameObject> other)
+void StarResp::onCollisionEnd(std::shared_ptr<GameObject> other)
 {
 }

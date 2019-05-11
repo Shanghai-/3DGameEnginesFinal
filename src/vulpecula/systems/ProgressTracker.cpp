@@ -42,21 +42,15 @@ void ProgressTracker::removeComponent(const std::shared_ptr<Component> &c)
     switch (m_curStars) {
     case 2:
         m_audioSys->fadeChannelVolume("Music", 0.45f, 1.5f);
-        //m_audioSys->setChannelVolume("Music", 0.45f);
         m_audioSys->fadeChannelVolume("Ambient", 0.4f, 1.5f);
-        //m_audioSys->setChannelVolume("Ambient", 0.4f);
         break;
     case 3:
         m_audioSys->fadeChannelVolume("Music", 0.57f, 1.5f);
-        //m_audioSys->setChannelVolume("Music", 0.57f);
         m_audioSys->fadeChannelVolume("Ambient", 0.25f, 1.5f);
-        //m_audioSys->setChannelVolume("Ambient", 0.25f);
         break;
     case 4:
         m_audioSys->fadeChannelVolume("Music", 0.71f, 1.5f);
-        //m_audioSys->setChannelVolume("Music", 0.7f);
         m_audioSys->fadeChannelVolume("Ambient", 0.1f, 1.5f);
-        //m_audioSys->setChannelVolume("Ambient", 0.1f);
         break;
     }
 

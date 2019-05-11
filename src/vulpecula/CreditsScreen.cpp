@@ -26,7 +26,6 @@ CreditsScreen::CreditsScreen(Application *parent) :
     m_gw->registerUISystem(std::make_shared<TextDrawer>(100));
 
     Graphics *g = Graphics::getGlobalInstance();
-    g->addFont("Credits", "/course/cs1950u/.archive/2019/student/vulpecula/Lato-Thin.ttf");
 
     Material black;
     black.useLighting = false;
@@ -39,11 +38,7 @@ CreditsScreen::CreditsScreen(Application *parent) :
     darkG.color = glm::vec3(0.3f);
     darkG.alpha = 0.0f;
     g->addMaterial("UIDarkG", darkG);
-
-    Material white;
-    white.useLighting = false;
-    white.color = glm::vec3(1.0f);
-    g->addMaterial("UIWhite", white);
+    g->addMaterial("UIDarkGTwo", darkG);
 
     std::shared_ptr<UIObject> background = std::make_shared<UIObject>("Background", m_gw->getNewObjID(), BOT_LEFT);
     auto renderable = std::make_shared<UIRenderable>(background, UITransform(BOT_LEFT), "uiquad", "UIWhite");
@@ -56,7 +51,7 @@ CreditsScreen::CreditsScreen(Application *parent) :
 
     std::shared_ptr<UIObject> header = std::make_shared<UIObject>("Header", m_gw->getNewObjID(), CENTER);
     UITransform t = UITransform(TOP_CENTER, glm::vec2(0, 180));
-    auto headerText = std::make_shared<UIText>(header, t, "A game by:", fontSize, "UIBlack", "Credits");
+    auto headerText = std::make_shared<UIText>(header, t, "A game by:", fontSize, "UIBlack", "LatoThin");
     header->addComponent(headerText);
     auto fadeScript = std::make_shared<TimedFade>(headerText.get(), 1.5f);
     header->addComponent(std::make_shared<UIScriptComp>(header, fadeScript));
@@ -64,47 +59,64 @@ CreditsScreen::CreditsScreen(Application *parent) :
 
     std::shared_ptr<UIObject> name1 = std::make_shared<UIObject>("Brendan", m_gw->getNewObjID(), CENTER);
     t = UITransform(BOT_CENTER, glm::vec2(0, 40));
-    auto name1Text = std::make_shared<UIText>(name1, t, "Brendan Walsh", fontSize, "UIBlack", "Credits");
+    auto name1Text = std::make_shared<UIText>(name1, t, "Brendan Walsh", fontSize, "UIBlack", "LatoThin");
     name1->addComponent(name1Text);
     m_gw->addUIObject(name1);
 
     std::shared_ptr<UIObject> name2 = std::make_shared<UIObject>("Dain", m_gw->getNewObjID(), CENTER);
     t = UITransform(BOT_CENTER, glm::vec2(0, -20));
-    auto name2Text = std::make_shared<UIText>(name2, t, "Dain Woods", fontSize, "UIBlack", "Credits");
+    auto name2Text = std::make_shared<UIText>(name2, t, "Dain Woods", fontSize, "UIBlack", "LatoThin");
     name2->addComponent(name2Text);
     m_gw->addUIObject(name2);
 
     std::shared_ptr<UIObject> name3 = std::make_shared<UIObject>("Brandon", m_gw->getNewObjID(), CENTER);
     t = UITransform(TOP_CENTER, glm::vec2(0, -40));
-    auto name3Text = std::make_shared<UIText>(name3, t, "Brandon Li", fontSize, "UIBlack", "Credits");
+    auto name3Text = std::make_shared<UIText>(name3, t, "Brandon Li", fontSize, "UIBlack", "LatoThin");
     name3->addComponent(name3Text);
     m_gw->addUIObject(name3);
 
+    std::shared_ptr<UIObject> artCreds = std::make_shared<UIObject>("ArtStuff", m_gw->getNewObjID(), BOT_CENTER);
+    t = UITransform(BOT_CENTER, glm::vec2(0, 420));
+    QString txt = "Title art by Odin Vatne";
+    artCreds->addComponent(std::make_shared<UIText>(artCreds, t, txt, 42.0f, "UIDarkGTwo", "LatoThin"));
+    t = UITransform(BOT_CENTER, glm::vec2(0, 380));
+    txt = "UI art by Beatriz Mora";
+    auto artText = std::make_shared<UIText>(artCreds, t, txt, 42.0f, "UIDarkGTwo", "LatoThin");
+    artCreds->addComponent(artText);
+    auto artFade = std::make_shared<TimedFade>(artText.get(), 1.5f, 2.5f);
+    artCreds->addComponent(std::make_shared<UIScriptComp>(artCreds, artFade));
+    m_gw->addUIObject(artCreds);
+
     std::shared_ptr<UIObject> soundCreds = std::make_shared<UIObject>("SoundStuff", m_gw->getNewObjID(), BOT_LEFT);
-    t = UITransform(BOT_LEFT, glm::vec2(10, 130));
-    QString txt = "Wind chime sounds by giddster (freesound.org/people/giddster),";
-    auto soundText = std::make_shared<UIText>(soundCreds, t, txt, 32.0f, "UIDarkG", "Credits");
+    t = UITransform(BOT_LEFT, glm::vec2(20, 160));
+    txt = "Wind chime sounds by giddster (freesound.org/people/giddster),";
+    auto soundText = std::make_shared<UIText>(soundCreds, t, txt, 38.0f, "UIDarkG", "LatoThin");
     soundCreds->addComponent(soundText);
-    t = UITransform(BOT_LEFT, glm::vec2(278, 100));
+    t = UITransform(BOT_LEFT, glm::vec2(340, 125));
     txt = "acclivity (freesound.org/people/acclivity),";
-    soundText = std::make_shared<UIText>(soundCreds, t, txt, 32.0f, "UIDarkG", "Credits");
+    soundText = std::make_shared<UIText>(soundCreds, t, txt, 38.0f, "UIDarkG", "LatoThin");
     soundCreds->addComponent(soundText);
-    t = UITransform(BOT_LEFT, glm::vec2(278, 70));
+    t = UITransform(BOT_LEFT, glm::vec2(340, 90));
     txt = "and OPMartin (freesound.org/people/OPMartin).";
-    soundText = std::make_shared<UIText>(soundCreds, t, txt, 32.0f, "UIDarkG", "Credits");
+    soundText = std::make_shared<UIText>(soundCreds, t, txt, 38.0f, "UIDarkG", "LatoThin");
     soundCreds->addComponent(soundText);
-    t = UITransform(BOT_LEFT, glm::vec2(10, 40));
+    t = UITransform(BOT_LEFT, glm::vec2(20, 55));
     txt = "Wind sound by Bosk1 (freesound.org/people/Bosk1).";
-    soundText = std::make_shared<UIText>(soundCreds, t, txt, 32.0f, "UIDarkG", "Credits");
+    soundText = std::make_shared<UIText>(soundCreds, t, txt, 38.0f, "UIDarkG", "LatoThin");
     soundCreds->addComponent(soundText);
-    t = UITransform(BOT_LEFT, glm::vec2(10, 10));
+    t = UITransform(BOT_LEFT, glm::vec2(20, 20));
     txt = "All sounds licensed under Creative Commons with Attribution.";
-    soundText = std::make_shared<UIText>(soundCreds, t, txt, 32.0f, "UIDarkG", "Credits");
+    soundText = std::make_shared<UIText>(soundCreds, t, txt, 38.0f, "UIDarkG", "LatoThin");
     soundCreds->addComponent(soundText);
-    auto otherFadeScript = std::make_shared<TimedFade>(soundText.get(), 1.5f, 2.5f);
+    auto otherFadeScript = std::make_shared<TimedFade>(soundText.get(), 1.5f, 6.0f);
     soundCreds->addComponent(std::make_shared<UIScriptComp>(soundCreds, otherFadeScript));
     m_gw->addUIObject(soundCreds);
 
+    std::shared_ptr<UIObject> quitText = std::make_shared<UIObject>("QuitText", m_gw->getNewObjID(), TOP_LEFT);
+    t = UITransform(TOP_LEFT, glm::vec2(20, -20));
+    txt = "Press [Esc] to quit.";
+    quitText->addComponent(std::make_shared<UIText>(quitText, t, txt, 38.0f, "UIDarkG", "LatoThin"));
+    m_gw->addUIObject(quitText);
 }
 
 CreditsScreen::~CreditsScreen()

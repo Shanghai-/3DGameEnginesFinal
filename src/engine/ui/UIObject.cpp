@@ -13,11 +13,13 @@ UIObject::~UIObject()
 {
 }
 
-void UIObject::addComponent(std::shared_ptr<UIComponent> c) {
+void UIObject::addComponent(std::shared_ptr<UIComponent> c)
+{
     m_components.append(c);
 }
 
-QVector<std::shared_ptr<UIComponent>> UIObject::getComponents() {
+QVector<std::shared_ptr<UIComponent>> UIObject::getComponents()
+{
     return m_components;
 }
 
@@ -29,4 +31,9 @@ Anchor UIObject::getAnchor()
 QString UIObject::getName()
 {
     return m_name;
+}
+
+uint UIObject::getID()
+{
+    return m_id;
 }

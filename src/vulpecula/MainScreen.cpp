@@ -46,8 +46,8 @@
 #include "vulpecula/components/CStar.h"
 
 // CUSTOM RESPONDERS
-#include "vulpecula/responders/GuitarZoneResp.h"
-#include "vulpecula/responders/GuitarStarResp.h"
+#include "vulpecula/responders/ZoneResp.h"
+#include "vulpecula/responders/StarResp.h"
 #include "vulpecula/responders/Standable.h"
 #include "vulpecula/responders/LowpassResp.h"
 #include "vulpecula/responders/waterresponse.h"
@@ -86,7 +86,6 @@ void MainScreen::initializeGame()
 
     // This displays wireframes around all colliders
     //m_gw->registerForDraw(collSys);
-
 
     // 3rd person camera system
     m_gw->registerForTick(std::make_shared<ThirdPersonCamSys>(401, 3.0f, 50.0f, 4.0f));
@@ -138,14 +137,13 @@ void MainScreen::initializeGame()
     netSys->setPlayer(net);
     m_gw->addGameObject(player);
 
-    // Load the ambient audio, set up channels, etc.
-    AudioSystem *audioSys = initializeAudio(player);
-
-    auto progressTracker = std::make_shared<ProgressTracker>(905, audioSys, m_parent, starCounter);
-    m_gw->registerForTick(progressTracker);
-
     auto partSys = std::make_shared<ParticleSys>(100);
     m_gw->registerForDraw(partSys);
+
+    // Load the ambient audio, set up channels, etc.
+    AudioSystem *audioSys = initializeAudio(player, partSys.get());
+
+    m_gw->registerForTick(std::make_shared<ProgressTracker>(905, audioSys, m_parent, starCounter));
 }
 
 void MainScreen::loadGraphics()
@@ -269,7 +267,7 @@ void MainScreen::loadMap(std::shared_ptr<PlayerMovementSys> playSys)
     loadObjectives();
 }
 
-AudioSystem *MainScreen::initializeAudio(std::shared_ptr<GameObject> player)
+AudioSystem *MainScreen::initializeAudio(std::shared_ptr<GameObject> player, ParticleSys *ps)
 {
     std::shared_ptr<AudioSystem> audioSys = std::make_shared<AudioSystem>(900, player);
     audioSys->createChannel("Ambient");
@@ -315,11 +313,12 @@ AudioSystem *MainScreen::initializeAudio(std::shared_ptr<GameObject> player)
     audioSys->setChannelVolume("Music", 0.3f); // Music starts very quiet and gets louder with more tracks
     audioSys->setChannelVolume("SFX", 0.8f);
 
+    // This trigger puts a lowpass on the ambient sounds and music when the player enters the cave
     std::shared_ptr<GameObject> lowpassTrigger = std::make_shared<GameObject>("Lowpass", m_gw->getNewObjID());
     auto lowpassTrans = std::make_shared<CTransform>(lowpassTrigger, true, glm::vec3(-18.8043, -2.29797, 52.7059));
     lowpassTrigger->addComponent(lowpassTrans);
-    auto lowColl = std::make_shared<CollBox>(glm::vec3(0.0f), glm::vec3(1.0, 9.68446, 13.3109));
-    auto lowResp = std::make_shared<LowpassResp>(lowpassTrans->pos, audioSys.get());
+    auto lowColl = std::make_shared<CollBox>(glm::vec3(0.0f), glm::vec3(0.2, 9.68446, 13.3109));
+    auto lowResp = std::make_shared<LowpassResp>(lowpassTrans->pos, audioSys.get(), ps);
     lowpassTrigger->addComponent(std::make_shared<CCollider>(lowpassTrigger, lowColl, true, lowResp));
     m_gw->addGameObject(lowpassTrigger);
 
@@ -719,7 +718,7 @@ void MainScreen::createAudioZone(std::shared_ptr<GameObject> zoneObj, QStringLis
 
     zoneObj->addComponent(randomAudio);
 
-    auto resp = std::make_shared<GuitarZoneResp>(randomAudio);
+    auto resp = std::make_shared<ZoneResp>(randomAudio);
     auto comp = std::make_shared<CCollider>(zoneObj, vol, true, resp, CCollider::WORLD);
     // This isn't really necessary since all the static colliders ignore each other, but it's still good practice
     comp->ignoreLayer(CCollider::WORLD);
@@ -750,7 +749,7 @@ void MainScreen::createStar(std::shared_ptr<GameObject> starObj, QString file, s
     starObj->addComponent(music);
 
     auto collider = std::make_shared<CollCylinder>(glm::vec3(0.f, -2.0f, 0.f), 4.0f, 1.0f);
-    auto response = std::make_shared<GuitarStarResp>(starObj, zone, m_gw.get());
+    auto response = std::make_shared<StarResp>(starObj, zone, m_gw.get());
     auto component = std::make_shared<CCollider>(starObj, collider, true, response, CCollider::WORLD);
     component->ignoreLayer(CCollider::WORLD);
     starObj->addComponent(component);
