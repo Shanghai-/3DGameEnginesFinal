@@ -10,7 +10,6 @@
 #include "engine/ui/UIHitbox.h"
 #include "engine/ui/UIRenderable.h"
 #include "engine/ui/UIText.h"
-#include "engine/systems/AudioSystem.h"
 #include "vulpecula/responders/serverresponse.h"
 #include "vulpecula/responders/clientresponse.h"
 
@@ -54,9 +53,6 @@ MenuScreen::MenuScreen(Application *parent) : m_parent(parent)
     m_gw->registerUISystem(std::make_shared<UIClickSystem>(100));
     m_gw->registerUISystem(std::make_shared<UIDrawer>(200));
     m_gw->registerUISystem(std::make_shared<TextDrawer>(300));
-
-    auto audioSys = std::make_shared<AudioSystem>(100, );
-    m_gw->registerForTick(audioSys);
 
     // Nice fox art
     std::shared_ptr<UIObject> titleArt = std::make_shared<UIObject>("FoxArt", m_gw->getNewObjID(), TOP_CENTER);

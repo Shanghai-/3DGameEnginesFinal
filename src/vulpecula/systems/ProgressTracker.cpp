@@ -69,13 +69,19 @@ void ProgressTracker::removeComponent(const std::shared_ptr<Component> &c)
 
         auto winTrigger = std::make_shared<GameObject>("WinTrigger", m_gameWorld->getNewObjID());
         winTrigger->addComponent(std::make_shared<CTransform>(winTrigger, true,
-                                                              glm::vec3(-3.40133f, 12.4939f, 33.3993f)));
+                                                              glm::vec3(-3.40133f, 12.0f, 33.3993f)));
         auto coll = std::make_shared<CollCylinder>(glm::vec3(0.f, -2.f, 0.f), 20.0f, 3.5f);
         auto resp = std::make_shared<WinResp>(m_gameWorld, m_app, m_audioSys);
         winTrigger->addComponent(std::make_shared<CCollider>(winTrigger, coll, true, resp));
         winTrigger->addComponent(std::make_shared<CRenderable>(winTrigger,
-                                                               "/course/cs1950u/.archive/2019/student/vulpecula/env/LightPillar.obj", "LightPillar"));
-
+            "/course/cs1950u/.archive/2019/student/vulpecula/env/LightPillar.obj", "LightPillar"));
         m_gameWorld->addGameObject(winTrigger);
+
+        Light l;
+        l.type = Light::LIGHT_TYPE::POINT;
+        l.pos = glm::vec3(-3.40133f, 14.0f, 33.3993f);
+        l.color = glm::vec3(0.9f, 0.9f, 0.52549f);
+        l.att = glm::vec2(0.1f, 0.01f);
+        g->addLight(l);
     }
 }
