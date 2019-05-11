@@ -15,8 +15,6 @@ TextureCube::TextureCube(std::__cxx11::string dir, Cubemap c)
         QImage im((dir + skyboxFiles[i]).c_str());
         im = im.convertToFormat(QImage::Format_RGBA8888);
 
-        std::cout << skyboxFiles[i] << std::endl;
-
         assert(im.width() > 0);
         assert(im.height() > 0);
         assert(im.width() == im.height());

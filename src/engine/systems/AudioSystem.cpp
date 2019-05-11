@@ -142,11 +142,11 @@ void AudioSystem::tick(float seconds)
                 FMOD::ChannelGroup *cg = m_channels.value(channelGroupName);
 
                 if (cg == nullptr) {
-                    std::cout << "Channel group '" << qPrintable(channelGroupName) << "' created." << std::endl;
+                    //std::cout << "Channel group '" << qPrintable(channelGroupName) << "' created." << std::endl;
                     m_sys->createChannelGroup(qPrintable(channelGroupName), &cg);
                     m_channels.insert(channelGroupName, cg);
                 } else {
-                    std::cout << "Adding to existing channel group '" << qPrintable(channelGroupName) << "'." << std::endl;
+                    //std::cout << "Adding to existing channel group '" << qPrintable(channelGroupName) << "'." << std::endl;
                 }
 
                 // Add the sound to the group

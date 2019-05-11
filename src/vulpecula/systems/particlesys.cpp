@@ -1,16 +1,12 @@
 #include "particlesys.h"
 
 #include "Particles/ResourceLoader2.h"
-//#include "cs123_lib/errorchecker.h"
 #include <QMouseEvent>
 #include <QWheelEvent>
-#include <iostream>
-//#include "settings.h"
 
 #include "Particles/OpenGLShape.h"
 #include "engine/graphics/Texture2D.h"
 #include "engine/graphics/ShaderAttribLocations.h"
-//#include "sphere.h"
 
 ParticleSys::ParticleSys(int priority)
     : System(priority),
@@ -59,12 +55,6 @@ ParticleSys::ParticleSys(int priority)
     // TODO [Task 12] Create m_particlesFBO1 and 2 with std::make_shared
     m_particlesFBO1 = std::make_shared<FBO>(m_numParticles, 1, 2, 4, FBO::DEPTH_STENCIL_ATTACHMENT::NONE, Texture::FILTER_METHOD::NEAREST, Texture::WRAP_METHOD::CLAMP_TO_EDGE, Texture::DATA_TYPE::FLOAT);
     m_particlesFBO2 = std::make_shared<FBO>(m_numParticles, 1, 2, 4, FBO::DEPTH_STENCIL_ATTACHMENT::NONE, Texture::FILTER_METHOD::NEAREST, Texture::WRAP_METHOD::CLAMP_TO_EDGE, Texture::DATA_TYPE::FLOAT);
-
-    // Print the max FBO dimension.
-    GLint maxRenderBufferSize;
-    glGetIntegerv(GL_MAX_RENDERBUFFER_SIZE_EXT, &maxRenderBufferSize);
-    std::cout << "Max FBO size: " << maxRenderBufferSize << std::endl;
-
 }
 
 ParticleSys::~ParticleSys()

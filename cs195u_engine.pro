@@ -9,7 +9,7 @@ CONFIG += c++14
 unix:!macx {
     LIBS += -lGLU
     INCLUDEPATH += libs/fmod/
-    LIBS += -L"$$PWD/libs/fmod/" -lfmodL
+    LIBS += -L"$$PWD/libs/fmod/" -lfmod
     LIBS += -lassimp
 }
 macx {

@@ -18,7 +18,7 @@ CXXFLAGS      = -pipe -std=c++14 -g -g -W -Waddress -Warray-bounds -Wc++0x-compa
 INCPATH       = -I../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/mkspecs/linux-g++ -I. -Ilibs/fmod -Isrc -Ilibs -Iglm -Ilibs/glew-1.10.0/include -I../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include -I../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtOpenGL -I../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtWidgets -I../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui -I../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore -I. -I.
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/contrib/projects/qt5.2.0/5.2.0/gcc_64 -Wl,-rpath,/contrib/projects/qt5.2.0/5.2.0/gcc_64/lib
-LIBS          = $(SUBLIBS) -lGLU -L/gpfs/main/home/bwalsh1/course/cs195u/engine/libs/fmod/ -lfmodL -lassimp -L/contrib/projects/qt5.2.0/5.2.0/gcc_64/lib -lQt5OpenGL -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -lGLU -L/gpfs/main/home/bwalsh1/course/cs195u/engine/libs/fmod/ -lfmod -lassimp -L/contrib/projects/qt5.2.0/5.2.0/gcc_64/lib -lQt5OpenGL -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/qmake
@@ -932,17 +932,17 @@ compiler_rcc_make_all: qrc_shaders.cpp qrc_fonts.cpp qrc_images.cpp qrc_models.c
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_shaders.cpp qrc_fonts.cpp qrc_images.cpp qrc_models.cpp qrc_sounds.cpp
 qrc_shaders.cpp: res/shaders/shaders.qrc \
-		res/shaders/shader.frag \
 		res/shaders/animated.vert \
-		res/shaders/particles_draw.frag \
-		res/shaders/water.vert \
 		res/shaders/skybox.frag \
 		res/shaders/shader.vert \
-		res/shaders/quad.vert \
 		res/shaders/particles_draw.vert \
 		res/shaders/particles_update.frag \
+		res/shaders/water.frag \
 		res/shaders/skybox.vert \
-		res/shaders/water.frag
+		res/shaders/quad.vert \
+		res/shaders/shader.frag \
+		res/shaders/particles_draw.frag \
+		res/shaders/water.vert
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name shaders res/shaders/shaders.qrc -o qrc_shaders.cpp
 
 qrc_fonts.cpp: res/fonts/fonts.qrc \
@@ -950,14 +950,14 @@ qrc_fonts.cpp: res/fonts/fonts.qrc \
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name fonts res/fonts/fonts.qrc -o qrc_fonts.cpp
 
 qrc_images.cpp: res/images/images.qrc \
-		res/images/heart_empty.png \
-		res/images/gold.png \
 		res/images/grass.png \
-		res/images/chainlink.png \
 		res/images/dungeontex.png \
 		res/images/pylon.png \
 		res/images/title.png \
-		res/images/heart.png
+		res/images/heart.png \
+		res/images/gold.png \
+		res/images/heart_empty.png \
+		res/images/chainlink.png
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name images res/images/images.qrc -o qrc_images.cpp
 
 qrc_models.cpp: res/models/models.qrc \
@@ -966,75 +966,75 @@ qrc_models.cpp: res/models/models.qrc \
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name models res/models/models.qrc -o qrc_models.cpp
 
 qrc_sounds.cpp: res/sounds/sounds.qrc \
-		res/sounds/bell_07.ogg \
-		res/sounds/woodwind_05.ogg \
-		res/sounds/piano_07.ogg \
-		res/sounds/guitar_05.ogg \
-		res/sounds/mallet_08.ogg \
-		res/sounds/violin_07.ogg \
-		res/sounds/bell_02.ogg \
-		res/sounds/piano_02.ogg \
-		res/sounds/chm_hi_04.ogg \
-		res/sounds/chm_md_02.ogg \
-		res/sounds/guitar_09.ogg \
-		res/sounds/mallet_03.ogg \
-		res/sounds/violin_02.ogg \
-		res/sounds/star_swell.ogg \
-		res/sounds/bell_06.ogg \
-		res/sounds/woodwind_04.ogg \
-		res/sounds/piano_06.ogg \
-		res/sounds/guitar_04.ogg \
-		res/sounds/chm_md_06.ogg \
-		res/sounds/wind.ogg \
-		res/sounds/mallet_07.ogg \
-		res/sounds/violin_06.ogg \
-		res/sounds/bell_01.ogg \
-		res/sounds/piano_01.ogg \
-		res/sounds/chm_hi_03.ogg \
-		res/sounds/guitar_08.ogg \
-		res/sounds/chm_md_01.ogg \
-		res/sounds/mallet_02.ogg \
-		res/sounds/violin_01.ogg \
-		res/sounds/bell_05.ogg \
-		res/sounds/woodwind_03.ogg \
-		res/sounds/piano_05.ogg \
-		res/sounds/guitar_03.ogg \
-		res/sounds/mus_woodwind.ogg \
-		res/sounds/chm_md_05.ogg \
-		res/sounds/mallet_06.ogg \
-		res/sounds/violin_05.ogg \
-		res/sounds/mus_mallet.ogg \
-		res/sounds/bell_09.ogg \
-		res/sounds/chm_hi_02.ogg \
-		res/sounds/guitar_07.ogg \
-		res/sounds/mallet_01.ogg \
-		res/sounds/woodwind_02.ogg \
-		res/sounds/bell_04.ogg \
-		res/sounds/piano_04.ogg \
-		res/sounds/chm_hi_06.ogg \
-		res/sounds/guitar_02.ogg \
-		res/sounds/chm_md_04.ogg \
-		res/sounds/mus_bell.ogg \
-		res/sounds/mallet_05.ogg \
-		res/sounds/violin_04.ogg \
-		res/sounds/mallet_11.ogg \
-		res/sounds/mus_piano.ogg \
-		res/sounds/bell_08.ogg \
-		res/sounds/woodwind_06.ogg \
-		res/sounds/chm_hi_01.ogg \
 		res/sounds/guitar_06.ogg \
-		res/sounds/mus_violin.ogg \
+		res/sounds/piano_05.ogg \
 		res/sounds/mallet_09.ogg \
-		res/sounds/mus_guitar.ogg \
-		res/sounds/woodwind_01.ogg \
-		res/sounds/bell_03.ogg \
-		res/sounds/piano_03.ogg \
+		res/sounds/bell_01.ogg \
 		res/sounds/chm_hi_05.ogg \
+		res/sounds/mus_guitar.ogg \
+		res/sounds/mus_woodwind.ogg \
 		res/sounds/guitar_01.ogg \
 		res/sounds/chm_md_03.ogg \
 		res/sounds/mallet_04.ogg \
 		res/sounds/violin_03.ogg \
-		res/sounds/mallet_10.ogg
+		res/sounds/mallet_10.ogg \
+		res/sounds/woodwind_02.ogg \
+		res/sounds/mus_violin.ogg \
+		res/sounds/bell_05.ogg \
+		res/sounds/guitar_05.ogg \
+		res/sounds/piano_04.ogg \
+		res/sounds/mallet_08.ogg \
+		res/sounds/violin_07.ogg \
+		res/sounds/mus_bell.ogg \
+		res/sounds/woodwind_06.ogg \
+		res/sounds/bell_09.ogg \
+		res/sounds/chm_hi_04.ogg \
+		res/sounds/guitar_09.ogg \
+		res/sounds/chm_md_02.ogg \
+		res/sounds/mallet_03.ogg \
+		res/sounds/violin_02.ogg \
+		res/sounds/woodwind_01.ogg \
+		res/sounds/bell_04.ogg \
+		res/sounds/guitar_04.ogg \
+		res/sounds/star_swell.ogg \
+		res/sounds/piano_03.ogg \
+		res/sounds/chm_md_06.ogg \
+		res/sounds/mallet_07.ogg \
+		res/sounds/violin_06.ogg \
+		res/sounds/woodwind_05.ogg \
+		res/sounds/bell_08.ogg \
+		res/sounds/chm_hi_03.ogg \
+		res/sounds/guitar_08.ogg \
+		res/sounds/chm_md_01.ogg \
+		res/sounds/piano_07.ogg \
+		res/sounds/mallet_02.ogg \
+		res/sounds/violin_01.ogg \
+		res/sounds/bell_03.ogg \
+		res/sounds/guitar_03.ogg \
+		res/sounds/piano_02.ogg \
+		res/sounds/chm_md_05.ogg \
+		res/sounds/mallet_06.ogg \
+		res/sounds/violin_05.ogg \
+		res/sounds/woodwind_04.ogg \
+		res/sounds/bell_07.ogg \
+		res/sounds/mus_mallet.ogg \
+		res/sounds/chm_hi_02.ogg \
+		res/sounds/guitar_07.ogg \
+		res/sounds/piano_06.ogg \
+		res/sounds/mallet_01.ogg \
+		res/sounds/bell_02.ogg \
+		res/sounds/chm_hi_06.ogg \
+		res/sounds/guitar_02.ogg \
+		res/sounds/chm_md_04.ogg \
+		res/sounds/piano_01.ogg \
+		res/sounds/mallet_05.ogg \
+		res/sounds/violin_04.ogg \
+		res/sounds/wind.ogg \
+		res/sounds/mallet_11.ogg \
+		res/sounds/woodwind_03.ogg \
+		res/sounds/mus_piano.ogg \
+		res/sounds/bell_06.ogg \
+		res/sounds/chm_hi_01.ogg
 	/contrib/projects/qt5.2.0/5.2.0/gcc_64/bin/rcc -name sounds res/sounds/sounds.qrc -o qrc_sounds.cpp
 
 compiler_moc_header_make_all: moc_mainwindow.cpp moc_view.cpp
@@ -14494,6 +14494,8 @@ MainScreen.o: src/vulpecula/MainScreen.cpp src/vulpecula/MainScreen.h \
 		src/vulpecula/systems/StarSpinner.h \
 		src/vulpecula/components/CStar.h \
 		src/warmup1/CustomComponents/CPhysics.h \
+		src/vulpecula/responders/ZoneResp.h \
+		src/vulpecula/responders/StarResp.h \
 		src/vulpecula/responders/Standable.h \
 		src/vulpecula/responders/LowpassResp.h \
 		src/vulpecula/responders/waterresponse.h \
@@ -21985,7 +21987,83 @@ LowpassResp.o: src/vulpecula/responders/LowpassResp.cpp src/vulpecula/responders
 		libs/glm/gtc/type_ptr.inl \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QVector \
 		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qvector.h \
-		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qpoint.h
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qpoint.h \
+		src/vulpecula/systems/particlesys.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtOpenGL/QGLWidget \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtOpenGL/qgl.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qopengl.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qt_windows.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qopengles2ext.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qopenglext.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtWidgets/qwidget.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qwindowdefs.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qobjectdefs.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qwindowdefs_win.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qobject.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qcoreevent.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qscopedpointer.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qmetatype.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qvarlengtharray.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qcontainerfwd.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qisenum.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qobject_impl.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qmargins.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qrect.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qsize.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpaintdevice.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpalette.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qcolor.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qrgb.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstringlist.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qdatastream.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qiodevice.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qregexp.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qstringmatcher.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qbrush.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qmatrix.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpolygon.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qregion.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qline.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qtransform.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpainterpath.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qimage.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpixmap.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qsharedpointer.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qshareddata.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qfont.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qfontmetrics.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qfontinfo.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtWidgets/qsizepolicy.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qcursor.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qkeysequence.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qevent.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qvariant.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qmap.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qdebug.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qtextstream.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qlocale.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qcontiguouscache.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qurl.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qurlquery.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qfile.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qfiledevice.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qvector2d.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qtouchdevice.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpaintengine.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpainter.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qtextoption.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qpen.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtOpenGL/qglcolormap.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtOpenGL/qtopenglglobal.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/QSurfaceFormat \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtGui/qsurfaceformat.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/QTimer \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qtimer.h \
+		../../../../../sys/shared/psfu/contrib/projects/qt5.2.0/5.2.0/gcc_64/include/QtCore/qbasictimer.h \
+		src/engine/graphics/FBO.h \
+		src/engine/graphics/Texture.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o LowpassResp.o src/vulpecula/responders/LowpassResp.cpp
 
 waterresponse.o: src/vulpecula/responders/waterresponse.cpp src/vulpecula/responders/waterresponse.h \
